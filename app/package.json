@@ -7,6 +7,7 @@
   "copyright": "© 2016, your company here",
   "main": "background.js",
   "dependencies": {
+    "ffi": "^2.0.0",
     "fs-jetpack": "^0.7.0"
   },
   "packageNameTemplate": "{{name}}-v{{version}}-{{platform}}-{{arch}}",
@@ -19,5 +20,8 @@
       "MAS": "3rd Party Mac Developer Application: Company Name (APPIDENTITY)",
       "MASInstaller": "3rd Party Mac Developer Installer: Company Name (APPIDENTITY)"
     }
+  },
+  "scripts": {
+    "postinstall": "node ../tasks/rebuild_native_modules"
   }
 }
