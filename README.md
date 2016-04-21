@@ -5,15 +5,18 @@ Constructing a cross platform ANT+ client for indoor trainer control.
 This boiler plate is copied from https://github.com/szwacz/electron-boilerplate as a starting point.
 
 # Quick start
-The only development dependency of this project is [Node.js](https://nodejs.org). So just make sure you have it installed.
+Install git (https://git-scm.com/download)
+The only development dependency of this project is [Node.js](https://nodejs.org). So just make sure you have it installed.  This was tested against Node.js 4.x.
 Then type few commands known to every Node developer...
 ```
-git clone <!-- this repository -->
-cd <!-- dir -->
+git clone https://github.com/delormej/irt_client.git
+cd irt_client
 npm install
 npm start
-```
-... and boom! You have running desktop application on your screen.
+
+You should now have a working IRT client.  
+
+Ignore the remainder of this document for now.
 
 # Structure of the project
 
