@@ -1,42 +1,51 @@
-// This is main process of Electron, started as first thing when your
-// app starts. This script is running through entire life of your application.
-// It doesn't have any windows which you can see on screen, but we can open
-// window from here.
+'use strict';
+const electron = require('electron');
+const app = electron.app;  // Module to control application life.
+const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+const sprintf = require('sprintf-js').sprintf;
+const ipcMain = require('electron').ipcMain;
+//const antService = require('./ant/ant_service.js');
 
-import { app, Menu } from 'electron';
-import { devMenuTemplate } from './helpers/dev_menu_template';
-import { editMenuTemplate } from './helpers/edit_menu_template';
-import createWindow from './helpers/window';
+// Report crashes to our server.
+//electron.crashReporter.start();
 
-// Special module holding environment variables which you declared
-// in config/env_xxx.json file.
-import env from './env';
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow;
 
-var mainWindow;
-
-var setApplicationMenu = function () {
-    var menus = [editMenuTemplate];
-    if (env.name !== 'production') {
-        menus.push(devMenuTemplate);
-    }
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
-};
-
-app.on('ready', function () {
-    setApplicationMenu();
-
-    var mainWindow = createWindow('main', {
-        width: 1000,
-        height: 600
-    });
-
-    mainWindow.loadURL('file://' + __dirname + '/app.html');
-
-    if (env.name !== 'production') {
-        mainWindow.openDevTools();
-    }
+// Quit when all windows are closed.
+app.on('window-all-closed', function() {
+  
+  //antService.close();
+  
+  // On OS X it is common for applications and their menu bar
+  // to stay active until the user quits explicitly with Cmd + Q
+  if (process.platform != 'darwin') {
+    app.quit();
+  }
 });
 
-app.on('window-all-closed', function () {
-    app.quit();
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+app.on('ready', function() {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({width: 800, height: 600});
+ 
+  // and load the index.html of the app.
+  //mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/views/main.html`);
+
+  // Load the ANT+ library and open the channel.
+  //antService.load(mainWindow);
+
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
+
+  // Emitted when the window is closed.
+  mainWindow.on('closed', function() {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null;
+  });
 });

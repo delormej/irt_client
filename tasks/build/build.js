@@ -9,7 +9,7 @@ var batch = require('gulp-batch');
 var plumber = require('gulp-plumber');
 var jetpack = require('fs-jetpack');
 
-var bundle = require('./bundle');
+// var bundle = require('./bundle'); // Bundle causes pain, because angular actually needs global variables.
 var generateSpecImportsFile = require('./generate_spec_imports');
 var utils = require('../utils');
 
@@ -21,9 +21,10 @@ var paths = {
     copyFromAppDir: [
         './node_modules/**',
         './helpers/**',
-        './**/*.html',
+        './**/*+(html|js)',
         './**/*.+(jpg|png|svg)',
-        './ant/**'
+        './ant/**',
+        './main/**'
     ],
 };
 
@@ -54,13 +55,13 @@ var copyTask = function () {
 gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
 
-
+/*
 var bundleApplication = function () {
     return Q.all([
             bundle(srcDir.path('background.js'), destDir.path('background.js')),
             bundle(srcDir.path('app.js'), destDir.path('app.js')),
         ]);
-};
+};*/
 
 var bundleSpecs = function () {
     return generateSpecImportsFile().then(function (specEntryPointPath) {
@@ -125,4 +126,4 @@ gulp.task('watch', function () {
     }));
 });
 
-gulp.task('build', ['bundle', 'less', 'copy', 'finalize']);
+gulp.task('build', [/*'bundle',*/ 'less', 'copy', 'finalize']);
