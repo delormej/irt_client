@@ -22,9 +22,13 @@ var paths = {
         './node_modules/**',
         './helpers/**',
         './**/*.html',
-        './**/*.+(jpg|png|svg)'
+        './**/*.+(jpg|png|svg)',
+        './ant/**'
     ],
 };
+
+// Specify the path where ant native dlls / libraries live.
+var antNativePath = 'app/ant_native'; 
 
 // -------------------------------------
 // Tasks
@@ -39,6 +43,12 @@ var copyTask = function () {
     return projectDir.copyAsync('app', destDir.path(), {
             overwrite: true,
             matching: paths.copyFromAppDir
+        }).then(function() {
+            // Copy all ant native libraries to the root of the build folder.
+            projectDir.copyAsync(antNativePath, destDir.path(), {
+                overwrite: true,
+                matching: ['*.*']
+            });
         });
 };
 gulp.task('copy', ['clean'], copyTask);
@@ -114,6 +124,5 @@ gulp.task('watch', function () {
         gulp.start('less-watch', done);
     }));
 });
-
 
 gulp.task('build', ['bundle', 'less', 'copy', 'finalize']);

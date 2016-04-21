@@ -17,6 +17,10 @@ var appDir = jetpack.cwd(app.getAppPath());
 // here files like it is node.js! Welcome to Electron world :)
 console.log('The author of this app is:', appDir.read('package.json', 'json').author);
 
+const antlib = require('./ant/antlib.js');
+antlib.init();
+console.log("Loaded ANT: ", antlib.antVersion());
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('greet').innerHTML = greet();
     document.getElementById('platform-info').innerHTML = os.platform();
