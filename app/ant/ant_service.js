@@ -85,7 +85,15 @@ const AntService = function() {
                 scope.servoOffset = data.servoOffset;
                 scope.settings = data.settings;
             }
-            
+            else if (event === "commandStatus") {
+                scope.lastCommand = data.lastCommand;
+                scope.lastCommandTime = now(); // now doesn't work, need a function here.
+            }
+            else if (event === "userConfig") {
+                console.log("User config arrived.");
+                scope.userWeightKg = data.userWeightKg;
+                scope.bikeWeightKg = data.bikeWeightKg;
+            }
             scope.$apply();
         });
         

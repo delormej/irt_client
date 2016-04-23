@@ -215,7 +215,15 @@ const AntFec = function() {
         //console.log(page);
         return page;
     }
-        
+    
+    // Parses the user configuration page.
+    function parseUserConfig() {
+        var page = {
+            userWeightKg : (fecChannelEventBuffer[2] | fecChannelEventBuffer[3] << 8) / 100.0,
+            bikeWeightKg : (fecChannelEventBuffer[5] & 0xF | fecChannelEventBuffer[6] << 8) / 0.05  
+        };
+        return page;
+    }        
     // Parse IRT manufacturer specific settings.
     function parseIrtSettings() {
         var buffer = fecChannelEventBuffer;
@@ -253,6 +261,9 @@ const AntFec = function() {
                 break;
             case FE_CAPABILITIES_PAGE:
                 self.emit('message', 'feCapabilities', parseFeCapabilites());
+                break;
+            case USER_CONFIGURATION_PAGE:
+                self.emit('message', 'userConfig', parseUserConfig());
                 break;
             case antlib.PRODUCT_PAGE:
                 self.emit('message', 'productInfo', 
@@ -351,8 +362,8 @@ const AntFec = function() {
         transmitBuffer[0] = USER_CONFIGURATION_PAGE;
         
         userWeightKg = Math.round(userWeightKg * 100);
-        transmitBuffer[1] = userWeightKg & 0xFF00;
-        transmitBuffer[2] = userWeightKg & 0x00FF;
+        transmitBuffer[1] = userWeightKg & 0xFF;
+        transmitBuffer[2] = userWeightKg << 8;
         transmitBuffer[3] = 0xFF; // Reserved.
         
         if (wheelDiameterOffset == null) {
@@ -396,6 +407,12 @@ const AntFec = function() {
     function getSettings() {
         console.log("ant_fec requesting settings.");
         antlib.sendRequestDataPage(fecChannelId, IRT_SETTINGS_PAGE, transmitBuffer);
+        // Async ask for the user settings in 250ms after sending last request.
+        setTimeout(function () {
+                antlib.sendRequestDataPage(fecChannelId, USER_CONFIGURATION_PAGE, 
+                    transmitBuffer);
+                console.log("Requesting user config page.");
+            }, 250);
     }
 
     AntFec.prototype.openChannel = openChannel;
