@@ -352,7 +352,6 @@ function parseManufacturerInfo(buffer) {
 
 // Common function that parses Common ANT page 81.
 function parseProductInfo(buffer) {
-    console.log(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8]);
     var page = {
         swRevision : getSwRevision(buffer[3], buffer[4]),
         serial : buffer[8] << 32 |
