@@ -331,8 +331,8 @@ function getSwRevision(supplemental, main) {
     Supplemental is the build #
     Main is broken into 2 nibbles; Major (MSN), Minor (LSN) 
     */
-    var major = main & 0xC;
-    var minor = main & 0x3;
+    var major = main >> 4; // Most significant nibble.
+    var minor = main & 0xF; // Lean significant nibble.
     var build = supplemental;
 
     // Create a string.
@@ -352,7 +352,7 @@ function parseManufacturerInfo(buffer) {
 
 // Common function that parses Common ANT page 81.
 function parseProductInfo(buffer) {
-    console.log(buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8]);
+    console.log(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8]);
     var page = {
         swRevision : getSwRevision(buffer[3], buffer[4]),
         serial : buffer[8] << 32 |
