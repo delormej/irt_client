@@ -327,8 +327,17 @@ function close() {
 
 // Returns a string from 2 byte revision.
 function getSwRevision(supplemental, main) {
-    var rev = (main / 10) + supplemental * 0.01;
-    return rev.toFixed(3); 
+    /*
+    Supplemental is the build #
+    Main is broken into 2 nibbles; Major (MSN), Minor (LSN) 
+    */
+    var major = main & 0xC;
+    var minor = main & 0x3;
+    var build = supplemental;
+
+    // Create a string.
+    var rev = major + "." + minor + "." + build;
+    return rev;
 }
 
 // Commmon function that parses Common ANT page 80.
@@ -343,6 +352,7 @@ function parseManufacturerInfo(buffer) {
 
 // Common function that parses Common ANT page 81.
 function parseProductInfo(buffer) {
+    console.log(buffer[3], buffer[4], buffer[5], buffer[6], buffer[7], buffer[8]);
     var page = {
         swRevision : getSwRevision(buffer[3], buffer[4]),
         serial : buffer[8] << 32 |
@@ -350,6 +360,17 @@ function parseProductInfo(buffer) {
             buffer[6] << 16 |
             buffer[5] << 8 |
             buffer[4] 
+    };
+    return page;
+}
+
+// Common function to parse IRT manufacturer specific data sent on FEC and BP channels.
+function parseIrtExtraInfo(buffer) {
+    var page = {
+        servoPosition : buffer[2] | buffer[3] << 8,
+        target :   buffer[4] | buffer[5] << 8,
+        flywheelRevs : buffer[6] | buffer[7] << 8,
+        temperature : buffer[8]
     };
     return page;
 }
@@ -385,6 +406,7 @@ exports.setLowPrioirtySearch = setLowPrioirtySearch;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;
+exports.parseIrtExtraInfo = parseIrtExtraInfo;
 
 exports.MESG_MAX_SIZE_VALUE = MESG_MAX_SIZE_VALUE;
 exports.ANT_STANDARD_DATA_PAYLOAD_SIZE = ANT_STANDARD_DATA_PAYLOAD_SIZE; 

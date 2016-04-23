@@ -27,6 +27,8 @@ const AntFec = function() {
     const GENERAL_SETTINGS_PAGE = 0x11;
     const SPECIFIC_TRAINER_DATA_PAGE = 0x19;
     const COMMAND_STATUS_PAGE = 0x47;
+    const IRT_EXTRA_INFO_PAGE =	0xF1;   // Manufacturer specific page sending servo position, etc...
+    const IRT_SETTINGS_PAGE	= 0xF2;   // Manufacturer specific page sending device specific settings.
 
     // Enum of device status.
     const FEStateEnum = {
@@ -213,6 +215,18 @@ const AntFec = function() {
         //console.log(page);
         return page;
     }
+        
+    // Parse IRT manufacturer specific settings.
+    function parseIrtSettings() {
+        var buffer = fecChannelEventBuffer;
+        var page = {
+            drag : (buffer[2] | buffer[3] << 8) / 1000000.0,
+            rr :  (buffer[4] | buffer[5] << 8) / 1000.0,
+            servoOffset : buffer[6] | buffer[7] << 8,
+            settings : buffer[8]
+        };
+        return page;
+    }
 
     // Function called back by the ant library when a message arrives.
     function fecChannelEvent(channelId, eventId) { 
@@ -247,6 +261,15 @@ const AntFec = function() {
             case antlib.MANUFACTURER_PAGE:
                 self.emit('message', 'manufacturerInfo', 
                     antlib.parseManufacturerInfo(fecChannelEventBuffer));
+                break;
+            case IRT_EXTRA_INFO_PAGE:
+                console.log('Extra Info');
+                self.emit('message', 'irtExtraInfo', 
+                    antlib.parseIrtExtraInfo(fecChannelEventBuffer));            
+                break;
+            case IRT_SETTINGS_PAGE:
+                self.emit('message', 'irtSettings', 
+                    parseIrtSettings());            
                 break;
             default:
                 console.log('Unrecognized message.', messagedId);

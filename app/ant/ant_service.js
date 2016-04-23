@@ -73,6 +73,12 @@ const AntService = function() {
             else if (event === "specificTrainerData") {
                 scope.trainerPower = data.instantPower;
             }
+            else if (event === "irtExtraInfo") {
+                scope.servoPosition = data.servoPosition;
+            }
+            else if (event == "productInfo") {
+                scope.swRevision = data.swRevision;
+            }
             
             scope.$apply();
         });
