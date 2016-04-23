@@ -300,9 +300,9 @@ const AntFec = function() {
         fecChannelId = antlib.openChannel(FEC_CHANNEL_CONFIG, fecChannelEventBuffer);     
     }
 
-    // Send a message requesting the last command, usually used to verify the last succeeded.
+    // Send a message requesting the last command, should be used to verify the last succeeded.
     function requestLastCommand() {
-        // Async we should ask for page 71 (command status)
+        // Async request of page 71 (command status)
         setTimeout(function () {
                 antlib.sendRequestDataPage(fecChannelId, COMMAND_STATUS_PAGE, transmitBuffer);
             }, 1000);
@@ -391,12 +391,18 @@ const AntFec = function() {
         
         antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
     }
+    
+    // Requests the IRT settings page.
+    function getSettings() {
+        console.log("ant_fec requesting settings.");
+        antlib.sendRequestDataPage(fecChannelId, IRT_SETTINGS_PAGE, transmitBuffer);
+    }
 
     AntFec.prototype.openChannel = openChannel;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    
-    
+    AntFec.prototype.getSettings = getSettings;
 };
 
 util.inherits(AntFec, EventEmitter);

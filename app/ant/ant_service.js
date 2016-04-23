@@ -79,6 +79,12 @@ const AntService = function() {
             else if (event == "productInfo") {
                 scope.swRevision = data.swRevision;
             }
+            else if (event === "irtSettings") {
+                scope.drag = data.drag;
+                scope.rr = data.rr;
+                scope.servoOffset = data.servoOffset;
+                scope.settings = data.settings;
+            }
             
             scope.$apply();
         });
@@ -103,10 +109,16 @@ const AntService = function() {
         fec.setTargetPower(power);
     }
 
+    function getSettings() {
+        console.log('ant_service::getSettings() called.');
+        fec.getSettings();
+    }
+
     AntService.prototype.load = load;
     AntService.prototype.close = close;
     AntService.prototype.setBasicResistance = setBasicResistance;
-    AntService.prototype.setTargetPower = setTargetPower;   
+    AntService.prototype.setTargetPower = setTargetPower;
+    AntService.prototype.getSettings = getSettings;   
 }
 
 module.exports = AntService;

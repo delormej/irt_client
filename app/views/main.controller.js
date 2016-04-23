@@ -40,4 +40,6 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
                     break; 
             }
         }
+        
+        $scope.getSettings = function() { antService.getSettings(); };
 }]);
