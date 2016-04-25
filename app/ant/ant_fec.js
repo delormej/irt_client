@@ -89,7 +89,7 @@ const AntFec = function() {
 
     // 0-100% in 0.5% increments.
     function getResistance(resistance) {
-        return (resistance/0xFE);
+        return (resistance/200);
     }
 
     function getCapabilitiesState(byte) {
@@ -220,7 +220,8 @@ const AntFec = function() {
     function parseUserConfig() {
         var page = {
             userWeightKg : (fecChannelEventBuffer[2] | fecChannelEventBuffer[3] << 8) / 100.0,
-            bikeWeightKg : (fecChannelEventBuffer[5] & 0xF | fecChannelEventBuffer[6] << 8) / 0.05  
+            // 1.5 byte field length in 0.05kg increments. 
+            bikeWeightKg : (fecChannelEventBuffer[5] & 0xF | fecChannelEventBuffer[6] << 4) * 0.05  
         };
         return page;
     }        

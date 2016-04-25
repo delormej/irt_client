@@ -70,6 +70,11 @@ const AntService = function() {
                 scope.elapsedTime = data.elapsedTime; // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
             }
+            else if (event === "generalSettings") {
+                scope.resistanceLevel = data.resistanceLevel;
+                scope.wheelCircumference = data.wheelCircumference;
+                scope.state = data.state; 
+            }
             else if (event === "specificTrainerData") {
                 scope.trainerPower = data.instantPower;
             }
@@ -87,7 +92,7 @@ const AntService = function() {
             }
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
-                scope.lastCommandTime = now(); // now doesn't work, need a function here.
+                scope.lastCommandTime = new Date().toTimeString();
             }
             else if (event === "userConfig") {
                 console.log("User config arrived.");
@@ -99,7 +104,7 @@ const AntService = function() {
         
         // Configure the channel.
         fec.openChannel();
-        bp.openChannel(101); // specify device Id
+        bp.openChannel(); // specify device Id
         
         scope.cadence = 'n/a';
     }
