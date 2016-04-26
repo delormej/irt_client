@@ -26,6 +26,11 @@ const ANT_CHANNEL_ID = 0;
 const RESPONSE_NO_ERROR = 0;
 const EVENT_RX_SEARCH_TIMEOUT = 0x01;
 const EVENT_RX_FAIL= 0x02;
+const EVENT_RX_BROADCAST = 0x9A;           // returned when module receives broadcast data
+const EVENT_RX_ACKNOWLEDGED = 0x9B;           // returned when module receives acknowledged data
+const EVENT_RX_BURST_PACKET = 0x9C;           // returned when module receives burst data
+const EVENT_CHANNEL_CLOSED = 0x07;
+const EVENT_RX_FAIL_GO_TO_SEARCH = 0x08;
 
 const MESG_STARTUP_MESG_ID = 0x6F;
 const MESG_CHANNEL_STATUS_ID = 0x52;
@@ -48,6 +53,10 @@ const REQUEST_DATA_PAGE = 0x46;
 const MANUFACTURER_PAGE = 0x50;
 const PRODUCT_PAGE = 0x51;
 
+const STATUS_UNASSIGNED_CHANNEL = 0x00;
+const STATUS_ASSIGNED_CHANNEL = 0x01;
+const STATUS_SEARCHING_CHANNEL = 0x02;
+const STATUS_TRACKING_CHANNEL = 0x03;
 
 // Internal memory structures used by ANT library for sending and recieving messages. 
 const responseBuffer = new Buffer(MESG_MAX_SIZE_VALUE);
@@ -87,6 +96,30 @@ function antVersion() {
     return antlib.ANT_LibVersion();    
 }
 
+// Called when a channed status message is received.
+function checkChannelStatus(channelId) {
+    var status = responseBuffer[1] & 0x3;
+    
+    if (channelConfigs[channelId].status != status) {
+        console.log('MESG_CHANNEL_STATUS_ID, channel:', channelId, status); 
+
+        // Update state.
+        channelConfigs[channelId].status = status;
+        // Notify channel that status has changed.
+        channelConfigs[channelId].channelCallback(channelId, MESG_CHANNEL_STATUS_ID);    
+    }
+}
+
+// Called when a channel Id message is received which contains the device it found.
+function parseChannelId(channelId) {
+    channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
+    channelConfigs[channelId].deviceType = responseBuffer[4];
+    channelConfigs[channelId].transmissionType = responseBuffer[5];
+    console.log('Channel Id, Device Id: ', channelId, channelConfigs[channelId].deviceId);
+    // Request channel status.
+    requestMessage(channelId, MESG_CHANNEL_STATUS_ID);    
+}
+
 // Callback for ANT device responses.
 function deviceResponse(channelId, messageId) {
     if (channelConfigs[channelId] == null) {
@@ -108,7 +141,7 @@ function deviceResponse(channelId, messageId) {
             console.log('EVENT_RX_SEARCH_TIMEOUT, channel:', channelId);
             break;
         case MESG_CHANNEL_STATUS_ID:
-            console.log('MESG_CHANNEL_STATUS_ID, channel:', channelId);
+            checkChannelStatus(channelId);
             break;
         case MESG_RESPONSE_EVENT_ID:
             switch (responseBuffer[1]) {
@@ -159,8 +192,13 @@ function deviceResponse(channelId, messageId) {
                     }                
                     break;
                 default:
+                    console.log('Unhandled channel event: ', responseBuffer[1]);
                     break;
             }
+            break;
+        case MESG_CHANNEL_ID_ID:
+            // Arrives when you ask for channel ID.
+            parseChannelId(channelId);
             break;
         default:
             console.log('response:', messageId, responseBuffer);
@@ -170,19 +208,31 @@ function deviceResponse(channelId, messageId) {
 
 // Called when channel events occur.
 function channelEvent(channelId, eventId) {
-    switch (eventId) {
-        case EVENT_RX_FAIL:
-            console.log("EVENT_RX_FAIL, channel: ", channelId);
-            break;
-            
-        default:
-            if (channelConfigs[channelId] != null) {
+    if (channelConfigs[channelId] != null) {
+        // If this is the first time we've seen data, get channel details.
+        if (channelConfigs[channelId].deviceId == 0) {
+            // Get the channel config if we're not tracking.
+            requestMessage(channelId, MESG_CHANNEL_ID_ID);
+        }                
+        
+        switch(eventId) {
+            case EVENT_RX_FAIL:
+                console.log('EVENT_RX_FAIL channel:', channelId);
+                break;
+            case EVENT_RX_SEARCH_TIMEOUT:
+            case EVENT_CHANNEL_CLOSED:
+            case EVENT_RX_FAIL_GO_TO_SEARCH:
+                // Get the channel status.
+                requestMessage(channelId, MESG_CHANNEL_STATUS_ID);
+                break;
+            default:
+                // Invoke the channel's callback.
                 channelConfigs[channelId].channelCallback(channelId, eventId);
-            }
-            else {
-                console.log('no channel.');
-            }
-            break;        
+                break;
+        }
+    }
+    else {
+        console.log('no channel.');
     }
 }
 
@@ -251,27 +301,37 @@ function init() {
 // Opens a chanel.
 function openChannel(config, buffer) {
     // Get the first empty channel.
-    var index = 0;
-    for (; index < channelConfigs.length; index++) {
-        if (channelConfigs[index] == null) {
+    var channelId = 0;
+    for (; channelId < channelConfigs.length; channelId++) {
+        if (channelConfigs[channelId] == null) {
             break;
         }
     }
 
     // Assign channel configuration.
-    channelConfigs[index] = config;
-    if (!antlib.ANT_AssignChannel(index, config.channelType, ANT_NETWORK)) {
+    channelConfigs[channelId] = config;
+    if (!antlib.ANT_AssignChannel(channelId, config.channelType, ANT_NETWORK)) {
         throw new Error('Unable to assign channel.');
     }
 
-    antlib.ANT_AssignChannelEventFunction(index, channelEventCallback, buffer);
+    antlib.ANT_AssignChannelEventFunction(channelId, channelEventCallback, buffer);
     
-    return index;
+    return channelId;
 }
 
 // Closes the ANT channel.
 function closeChannel(channelId) {
     return antlib.ANT_CloseChannel(channelId);
+}
+
+// This message is sent to the device to request a specific information message from the device.
+function requestMessage(channelId, messageId) {
+    return antlib.ANT_RequestMessage(channelId, messageId);
+}
+
+// Requests channel details; device number, device type id, trans type. 
+function requestChannelId(channelId) {
+    requestMessage(channelId, MESG_CHANNEL_ID_ID);
 }
 
 // Sends acknowledged data on the ANT channel. 
@@ -399,16 +459,25 @@ exports.openChannel = openChannel;
 exports.sendBroadcastData = sendBroadcastData;
 exports.sendAcknowledgedData = sendAcknowledgedData;
 exports.closeChannel = closeChannel;
+exports.requestMessage = requestMessage;
 exports.sendRequestDataPage = sendRequestDataPage;
 exports.setDeviceExclusionList = setDeviceExclusionList;
 exports.setLowPrioirtySearch = setLowPrioirtySearch;
+exports.requestChannelId = requestChannelId;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;
 exports.parseIrtExtraInfo = parseIrtExtraInfo;
 
 exports.MESG_MAX_SIZE_VALUE = MESG_MAX_SIZE_VALUE;
+exports.MESG_CHANNEL_STATUS_ID = MESG_CHANNEL_STATUS_ID;
 exports.ANT_STANDARD_DATA_PAYLOAD_SIZE = ANT_STANDARD_DATA_PAYLOAD_SIZE; 
 exports.MANUFACTURER_PAGE = MANUFACTURER_PAGE;
 exports.PRODUCT_PAGE = PRODUCT_PAGE;
 exports.REQUEST_DATA_PAGE = REQUEST_DATA_PAGE;
+
+exports.EVENT_RX_SEARCH_TIMEOUT = EVENT_RX_SEARCH_TIMEOUT;
+exports.EVENT_RX_FAIL= EVENT_RX_SEARCH_TIMEOUT;
+exports.EVENT_RX_BROADCAST = EVENT_RX_BROADCAST;
+exports.EVENT_RX_ACKNOWLEDGED = EVENT_RX_ACKNOWLEDGED;
+exports.EVENT_RX_BURST_PACKET = EVENT_RX_BURST_PACKET;

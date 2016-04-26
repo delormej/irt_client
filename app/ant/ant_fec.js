@@ -240,52 +240,71 @@ const AntFec = function() {
     // Function called back by the ant library when a message arrives.
     function fecChannelEvent(channelId, eventId) { 
         //printBuffer(channelId, fecChannelEventBuffer);
-       
         if (channelId != fecChannelId) {
             console.log('Wrong channel.');
             return;
         }
         
-        var messagedId = fecChannelEventBuffer[1];
-        switch (messagedId) {
-            case GENERAL_FE_DATA_PAGE:
-                self.emit('message', 'generalFEData', parseGeneralFEData());
+        switch(eventId) {
+            case antlib.EVENT_RX_BROADCAST:
+                var messagedId = fecChannelEventBuffer[1];
+                switch (messagedId) {
+                    case GENERAL_FE_DATA_PAGE:
+                        self.emit('message', 'generalFEData', parseGeneralFEData());
+                        break;
+                    case GENERAL_SETTINGS_PAGE:
+                        self.emit('message', 'generalSettings', parseGeneralSettings());
+                        break;
+                    case SPECIFIC_TRAINER_DATA_PAGE:
+                        self.emit('message', 'specificTrainerData', parseSpecificTrainerData());
+                        break;
+                    case COMMAND_STATUS_PAGE:
+                        self.emit('message', 'commandStatus', parseCommandStatus());
+                        break;
+                    case FE_CAPABILITIES_PAGE:
+                        self.emit('message', 'feCapabilities', parseFeCapabilites());
+                        break;
+                    case USER_CONFIGURATION_PAGE:
+                        self.emit('message', 'userConfig', parseUserConfig());
+                        break;
+                    case antlib.PRODUCT_PAGE:
+                        self.emit('message', 'productInfo', 
+                            antlib.parseProductInfo(fecChannelEventBuffer));
+                        break;
+                    case antlib.MANUFACTURER_PAGE:
+                        self.emit('message', 'manufacturerInfo', 
+                            antlib.parseManufacturerInfo(fecChannelEventBuffer));
+                        break;
+                    case IRT_EXTRA_INFO_PAGE:
+                        self.emit('message', 'irtExtraInfo', 
+                            antlib.parseIrtExtraInfo(fecChannelEventBuffer));            
+                        break;
+                    case IRT_SETTINGS_PAGE:
+                        self.emit('message', 'irtSettings', 
+                            parseIrtSettings());            
+                        break;
+                    default:
+                        console.log('Unrecognized message.', 
+                            fecChannelEventBuffer[0],
+                            fecChannelEventBuffer[1],
+                            fecChannelEventBuffer[2],
+                            fecChannelEventBuffer[3],
+                            fecChannelEventBuffer[4],
+                            fecChannelEventBuffer[5],
+                            fecChannelEventBuffer[6],
+                            fecChannelEventBuffer[7],
+                            fecChannelEventBuffer[8]
+                        );
+                        break;
+                }
+                break; // EVENT_RX_BROADCAST
+            case antlib.MESG_CHANNEL_STATUS_ID:
+                // status changed
+                console.log('Channel status changed:', FEC_CHANNEL_CONFIG);
                 break;
-            case GENERAL_SETTINGS_PAGE:
-                self.emit('message', 'generalSettings', parseGeneralSettings());
-                break;
-            case SPECIFIC_TRAINER_DATA_PAGE:
-                self.emit('message', 'specificTrainerData', parseSpecificTrainerData());
-                break;
-            case COMMAND_STATUS_PAGE:
-                self.emit('message', 'commandStatus', parseCommandStatus());
-                break;
-            case FE_CAPABILITIES_PAGE:
-                self.emit('message', 'feCapabilities', parseFeCapabilites());
-                break;
-            case USER_CONFIGURATION_PAGE:
-                self.emit('message', 'userConfig', parseUserConfig());
-                break;
-            case antlib.PRODUCT_PAGE:
-                self.emit('message', 'productInfo', 
-                    antlib.parseProductInfo(fecChannelEventBuffer));
-                break;
-            case antlib.MANUFACTURER_PAGE:
-                self.emit('message', 'manufacturerInfo', 
-                    antlib.parseManufacturerInfo(fecChannelEventBuffer));
-                break;
-            case IRT_EXTRA_INFO_PAGE:
-                console.log('Extra Info');
-                self.emit('message', 'irtExtraInfo', 
-                    antlib.parseIrtExtraInfo(fecChannelEventBuffer));            
-                break;
-            case IRT_SETTINGS_PAGE:
-                self.emit('message', 'irtSettings', 
-                    parseIrtSettings());            
-                break;
-            default:
-                console.log('Unrecognized message.', messagedId);
-                break;
+            default: // eventId
+                console.log('Unrecognized event.', eventId);
+                break;                
         }
     }
     
@@ -296,8 +315,9 @@ const AntFec = function() {
         deviceType: 0x11, 
         transmissionType: 0, 
         frequency: 57, 
-        channelPeriod: 8192, 
-        channelCallback: fecChannelEvent 
+        channelPeriod: 8192,         
+        channelCallback: fecChannelEvent,
+        status: 0
     };
     
     // Opens the FE-C channel.
@@ -424,4 +444,5 @@ const AntFec = function() {
 };
 
 util.inherits(AntFec, EventEmitter);
+
 module.exports = AntFec;
