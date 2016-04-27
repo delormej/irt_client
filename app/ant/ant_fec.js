@@ -70,10 +70,11 @@ const AntFec = function() {
         return accumulator;        
     }
 
+    // Returns accumulated time in seconds.
     function getElapsedSeconds(time) {
-        // Elapsed time is stored in 1/4 seconds, divide by 4 to get seconds.
-        elapsedTime = accumulateByte(elapsedTime, (time / 4));
-        return elapsedTime;
+        elapsedTime = accumulateByte(elapsedTime, time);
+        // Elapsed time is stored in 0.25 seconds, divide by 4 to get seconds.
+        return elapsedTime / 4;
     }
 
     // Distance is a single byte, this method accumulates distance into a 32 bit unsigned int.
