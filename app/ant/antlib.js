@@ -31,6 +31,7 @@ const EVENT_RX_ACKNOWLEDGED = 0x9B;           // returned when module receives a
 const EVENT_RX_BURST_PACKET = 0x9C;           // returned when module receives burst data
 const EVENT_CHANNEL_CLOSED = 0x07;
 const EVENT_RX_FAIL_GO_TO_SEARCH = 0x08;
+const EVENT_CHANNEL_COLLISION = 0x09;
 
 const MESG_STARTUP_MESG_ID = 0x6F;
 const MESG_CHANNEL_STATUS_ID = 0x52;
@@ -218,6 +219,9 @@ function channelEvent(channelId, eventId) {
         switch(eventId) {
             case EVENT_RX_FAIL:
                 console.log('EVENT_RX_FAIL channel:', channelId);
+                break;
+            case EVENT_CHANNEL_COLLISION:
+                console.log('EVENT_CHANNEL_COLLISION channel:', channelId);
                 break;
             case EVENT_RX_SEARCH_TIMEOUT:
             case EVENT_CHANNEL_CLOSED:
@@ -481,3 +485,5 @@ exports.EVENT_RX_FAIL= EVENT_RX_SEARCH_TIMEOUT;
 exports.EVENT_RX_BROADCAST = EVENT_RX_BROADCAST;
 exports.EVENT_RX_ACKNOWLEDGED = EVENT_RX_ACKNOWLEDGED;
 exports.EVENT_RX_BURST_PACKET = EVENT_RX_BURST_PACKET;
+
+exports.STATUS_TRACKING_CHANNEL = STATUS_TRACKING_CHANNEL;

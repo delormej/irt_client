@@ -99,18 +99,26 @@ const AntBikePower = function() {
         transmissionType: 0, 
         frequency: 57, 
         channelPeriod: 8182, 
-        channelCallback: bpChannelEvent 
+        channelCallback: bpChannelEvent,
+        status: 0
     };
     
     // Opens the FE-C channel.
     function openChannel(deviceId) {
-        // Start.    
-        antlib.init();
-        
-        if (deviceId != null) {
-            BP_CHANNEL_CONFIG.deviceId = deviceId;
+
+        // TODO: Expose externally the channel status through a method/property on this object?
+        if (BP_CHANNEL_CONFIG.status != antlib.STATUS_TRACKING_CHANNEL) {
+            // Start.    
+            antlib.init();
+            
+            if (deviceId != null) {
+                BP_CHANNEL_CONFIG.deviceId = deviceId;
+            }
+            bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG, bpChannelEventBuffer);
         }
-        bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG, bpChannelEventBuffer);     
+        else {
+            console.log('bp channel already open.');
+        }     
     }
 
     AntBikePower.prototype.openChannel = openChannel;

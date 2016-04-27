@@ -31,19 +31,6 @@ const AntService = function() {
         fec = new AntFec();
         bp = new AntBikePower();
         
-        // exclude ID of the FE-C device from power meter search.
-        var exclude = [
-            {
-                deviceNumber : 37894,
-                deviceTypeId : 0,
-                transmissionType : 0,
-            }
-        ];
-        /* Configure channel 1.
-        antlib.setDeviceExclusionList(1, exclude);
-        antlib.setLowPrioirtySearch(1); */
-        
-        
         // Process bike power messages.
         bp.on('message', (event, data) => {
             if (event === "standardPowerOnly") {
@@ -66,8 +53,9 @@ const AntService = function() {
             scope.hello = event;
             if (event === "generalFEData") {
                 scope.speed = (data.speedMps * 2.23).toFixed(1);
-                scope.distanceTravelled = data.distanceTravelled;
-                scope.elapsedTime = data.elapsedTime; // Accumulated Seconds
+                // Convert to miles from meters.
+                scope.distanceTravelled = (data.distanceTravelled / 621.371).toFixed(2);
+                scope.elapsedTime = (data.elapsedTime); // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
             }
             else if (event === "generalSettings") {
@@ -102,9 +90,30 @@ const AntService = function() {
             scope.$apply();
         });
         
+        fec.on('channel_status', (status, deviceId) => {
+            // Once we've connected to the FE-C, try connecting to other devices.
+            if (status == antlib.STATUS_TRACKING_CHANNEL) {
+                // TODO: ensure that bike power isn't already opened.
+                // exclude ID of the FE-C device from power meter search.
+            
+                var exclude = [
+                    {
+                        deviceNumber : deviceId,
+                        deviceTypeId : 0,
+                        transmissionType : 0,
+                    }
+                ];
+                // TODO: how do we know this is channel "1"... should this be hardcoded?
+                // Configure channel 1 to exclude the FE-C.
+                antlib.setDeviceExclusionList(1, exclude);
+                antlib.setLowPrioirtySearch(1);
+                
+                bp.openChannel(); // specify device Id         
+            }              
+        });
+        
         // Configure the channel.
         fec.openChannel();
-        bp.openChannel(); // specify device Id
         
         scope.cadence = 'n/a';
     }

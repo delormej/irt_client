@@ -64,7 +64,8 @@ const AntFec = function() {
             elapsedTime = elapsedTime << 1;
         }
         
-        elapsedTime = (elapsedTime & 0xFFFFFF00) | time; 
+        // >>> 0 ensures it stays an unsigned int.
+        elapsedTime = ((elapsedTime & 0xFFFFFF00) | time) >>> 0; 
         
         // Elapsed time is stored in 1/4 seconds, divide by 4 to get seconds.
         return elapsedTime / 4;
@@ -77,7 +78,8 @@ const AntFec = function() {
             accumulatedDistance = accumulatedDistance << 1;
         }
         
-        accumulatedDistance = (accumulatedDistance & 0xFFFFFF00) | distance; 
+        // >>> 0 should keep accumulatedDistance as unsigned int.
+        accumulatedDistance = ((accumulatedDistance & 0xFFFFFF00) | distance) >>>0; 
 
         return accumulatedDistance;
     }
@@ -301,6 +303,9 @@ const AntFec = function() {
             case antlib.MESG_CHANNEL_STATUS_ID:
                 // status changed
                 console.log('Channel status changed:', FEC_CHANNEL_CONFIG);
+                // Raise an event. 
+                self.emit('channel_status', FEC_CHANNEL_CONFIG.status,
+                    FEC_CHANNEL_CONFIG.deviceId);
                 break;
             default: // eventId
                 console.log('Unrecognized event.', eventId);
