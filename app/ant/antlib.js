@@ -427,11 +427,18 @@ function parseProductInfo(buffer) {
     return page;
 }
 
+// Target has a unique encoding.
+function decodeTarget(lsb, msb) {
+    // Encodes the resistance mode into the 2 most significant bits.
+    var target = lsb | ((msb & 0x3F) << 8); 
+    return target;
+}
+
 // Common function to parse IRT manufacturer specific data sent on FEC and BP channels.
 function parseIrtExtraInfo(buffer) {
     var page = {
         servoPosition : buffer[2] | buffer[3] << 8,
-        target :   buffer[4] | buffer[5] << 8,
+        target : decodeTarget(buffer[4], buffer[5]),
         flywheelRevs : buffer[6] | buffer[7] << 8,
         temperature : buffer[8]
     };

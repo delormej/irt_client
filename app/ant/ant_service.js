@@ -71,6 +71,8 @@ const AntService = function() {
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
+                scope.target = data.target;
+                scope.flywheelRevs = data.flywheelRevs;
             }
             else if (event == "productInfo") {
                 scope.swRevision = data.swRevision;
