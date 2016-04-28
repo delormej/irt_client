@@ -42,4 +42,9 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
         
         $scope.getSettings = function() { antService.getSettings(); };
+        
+        $scope.setSettings = function() { 
+            console.log('main.controller::setSettings');
+            antService.setSettings();
+        };
 }]);

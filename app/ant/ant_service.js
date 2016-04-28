@@ -11,6 +11,7 @@ const AntService = function() {
     const AntBikePower = require('../ant/ant_bp.js');
     var fec = null; 
     var bp = null;
+    var scope = null;
 
     // Loads the ANT library.
     /* This is loaded in main.js otherwise it goes out of scope and gets GC'd.
@@ -18,6 +19,7 @@ const AntService = function() {
     * to the renderer process.
     */
     function load(scope) {
+        this.scope = scope;
         antlib.init();
         //console.log("Loaded ANT: ", antlib.antVersion());
         scope.version = antlib.antVersion();
@@ -136,11 +138,37 @@ const AntService = function() {
         fec.getSettings();
     }
 
+    function setSettings() {
+        // Read scope.
+        try {
+            fec.setUserConfiguration(this.scope.userWeightKg,  
+                this.scope.bikeWeightKg,
+                this.scope.wheelDiameter,
+                null /*gearRatio */);
+        }
+        catch (err) {
+            // just log to console for right now.
+            console.log('setSettigs', err);
+        }
+        
+        try {
+            fec.setIrtSettings(this.scope.drag,
+                this.scope.rr,
+                this.scope.servoOffset,
+                this.scope.settings);
+        }
+        catch (err) {
+            // just log to console for right now.
+            console.log('setUserConfiguration', err);
+        }        
+    }
+
     AntService.prototype.load = load;
     AntService.prototype.close = close;
     AntService.prototype.setBasicResistance = setBasicResistance;
     AntService.prototype.setTargetPower = setTargetPower;
-    AntService.prototype.getSettings = getSettings;   
+    AntService.prototype.getSettings = getSettings;
+    AntService.prototype.setSettings = setSettings;      
 }
 
 module.exports = AntService;

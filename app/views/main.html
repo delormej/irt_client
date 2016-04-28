@@ -17,7 +17,6 @@
   <p>Nothing here {{hello + '!'}}</p>
   Version:<span>{{version}}</span>
   <p/>
-  <input ng-init="message='test'" ng-model="message" />
   <input type="text" ng-model="resistanceLevel" />
   <select id="resistanceSelect" ng-model="resistanceSelect">
       <option ng-repeat="option in resistanceOptions" value="{{option.id}}">
@@ -26,6 +25,7 @@
   <input ng-model="resistanceType" />
   <button ng-click="setResistance();">Set Resistance</button>
   <button ng-click="getSettings();">Get Settings</button>
+  <button ng-click="setSettings();">Set Settings</button>
   <br/>Speed:<span>{{speed}} mp/h</span>  
   <br/>Distance:<span>{{distanceTravelled}} miles</span>
   <br/>Time:<span>{{elapsedTime}}</span>
@@ -35,16 +35,16 @@
   
   <br/>ServoPosition:<span>{{servoPosition}}</span>
   <br/>swRevision:<span>{{swRevision}}</span>
-  <br/>Settings:<span>{{settings}}</span>
-  <br/>Drag:<span>{{drag}}</span>
-  <br/>RR:<span>{{rr}}</span>
-  <br/>Servo Offset:<span>{{servoOffset}}</span>
+  <br/>Settings:<input type="text" ng-model="settings"/>
+  <br/>Drag:<input type="text" ng-model="drag"/>
+  <br/>RR:<input type="text" ng-model="rr"/>
+  <br/>Servo Offset:<input type="text" ng-model="servoOffset"/>
   <br/>Last command:<span>{{lastCommand}}</span>
   <br/>Last command time:<span>{{lastCommandTime}}</span>
   
-  <br/>User weight kg:<span>{{userWeightKg}}</span>
-  <br/>Bike weight kg:<span>{{bikeWeightKg}}</span>
-  <br/>Resistance Level:<span>{{resistanceLevel}}</span>  
+  <br/>User weight kg:<input type="text" ng-model="userWeightKg"/>
+  <br/>Bike weight kg:<input type="text" ng-model="bikeWeightKg"/>
+  <br/>Resistance Level:<input type="text" ng-model="resistanceLevel"/>  
   
 </body>
 </html>

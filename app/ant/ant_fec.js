@@ -222,7 +222,8 @@ const AntFec = function() {
         var page = {
             userWeightKg : (fecChannelEventBuffer[2] | fecChannelEventBuffer[3] << 8) / 100.0,
             // 1.5 byte field length in 0.05kg increments. 
-            bikeWeightKg : (fecChannelEventBuffer[5] & 0xF | fecChannelEventBuffer[6] << 4) * 0.05  
+            bikeWeightKg : (fecChannelEventBuffer[5] & 0xF | fecChannelEventBuffer[6] << 4) * 0.05 
+            // TODO: Bicycle Wheel Diameter.  But this doesn't really matter. 
         };
         return page;
     }        
@@ -382,37 +383,62 @@ const AntFec = function() {
     }
 
     // Sends a command to the device set user configuration.
-    function setUserConfiguration(userWeightKg, wheelDiameterOffset,
-            bikeWeightKg, wheelDiameter, gearRatio) {
+    function setUserConfiguration(userWeightKg, bikeWeightKg, wheelDiameter, gearRatio) {
+        console.log('setUserConfiguration');
+        var hasChanges = false;
+        
         transmitBuffer[0] = USER_CONFIGURATION_PAGE;
         
-        userWeightKg = Math.round(userWeightKg * 100);
-        transmitBuffer[1] = userWeightKg & 0xFF;
-        transmitBuffer[2] = userWeightKg << 8;
-        transmitBuffer[3] = 0xFF; // Reserved.
-        
-        if (wheelDiameterOffset == null) {
-            transmitBuffer[5] = 0xF;
+        if (userWeightKg != null) {
+            userWeightKg = Math.round(userWeightKg * 100);
+            transmitBuffer[1] = userWeightKg & 0xFF;
+            transmitBuffer[2] = userWeightKg << 8;
+            hasChanges = true;
         }
         else {
+            // Set to invalid.
+            transmitBuffer[1] = 0xFF;
+            transmitBuffer[1] = 0xFF;            
+        }
+        
+        transmitBuffer[3] = 0xFF; // Reserved.
+        
+        //wheelDiameterOffset
+        if (wheelDiameter != null) {
+            // Wheel diameter 0-2.54m
+            if (wheelDiameter > 2.54) {
+                throw new RangeError('Wheel diameter must be less than 2.54m');
+            }
+            transmitBuffer[7] = Math.round(wheelDiameter * 100);
+
+            var wheelDiameterOffset = 
+                (wheelDiameter * 100) - Math.round(wheelDiameter * 100);
+
             transmitBuffer[5] = parseInt(wheelDiameterOffset) & 0xF;
+            hasChanges = true;
+        }
+        else {
+            transmitBuffer[5] = 0xF;
+            transmitBuffer[7] = 0xFF;
         } 
         
-        if (bikeWeightKg >= 51) {
-            throw new RangeError('Bike Weight is too high.');
+        if (bikeWeightKg != null) {
+            if (bikeWeightKg >= 51) {
+                throw new RangeError('Bike Weight is too high.');
+            }
+            
+            var bikeWeightValue = Math.round(bikeWeightKg / 0.05); 
+            transmitBuffer[5] = transmitBuffer[5] | 
+                bikeWeightValue & 0xF00;
+            transmitBuffer[6] = bikeWeightValue & 0xFF;
+            
+            hasChanges = true;
         }
-        
-        var bikeWeightValue = Math.round(bikeWeightKg / 0.05); 
-        transmitBuffer[5] = transmitBuffer[5] | 
-            bikeWeightValue & 0xF00;
-        transmitBuffer[6] = bikeWeightValue & 0xFF;
-        
-        // Wheel diameter 0-2.54m
-        if (wheelDiameter > 2.54) {
-            throw new RangeError('Wheel diameter must be less than 2.54m');
+        else {
+            transmitBuffer[5] |= 0xF00;
+            transmitBuffer[6] = 0xFF;
         }
-        transmitBuffer[7] = Math.round(wheelDiameter * 100);
-        
+
         if (gearRatio == null) {
             transmitBuffer[8] = 0;
         }
@@ -423,9 +449,73 @@ const AntFec = function() {
             } 
             
             transmitBuffer[8] = gearRatio / 0.03;
+            hasChanges = true;
         }
         
-        antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
+        if (hasChanges) {
+            antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
+        }
+        else {
+            throw new Error('No valid configuration values to set.');
+        }
+    }
+    
+    // Sends the manufacturer specific page to set device settings.
+    function setIrtSettings(drag, rr, servoOffset, settings) {
+        console.log('setIrtSettings');
+        var hasChanges = false;
+        transmitBuffer[0] = IRT_SETTINGS_PAGE;
+        
+        /*
+            drag : (buffer[2] | buffer[3] << 8) / 1000000.0,
+            rr :  (buffer[4] | buffer[5] << 8) / 1000.0,
+            servoOffset : buffer[6] | buffer[7] << 8,
+            settings : buffer[8]
+        */        
+        if (drag != null) {
+            transmitBuffer[1] =  (drag * 1000000) & 0xFF; // DragLSB
+            transmitBuffer[2] =  (drag * 1000000) >> 8; //DragMSB
+            hasChanges = true;
+        }
+        else {
+            transmitBuffer[1] = 0xFF;
+            transmitBuffer[2] = 0xFF;
+        }
+
+        if (rr != null) {
+            transmitBuffer[3] =  (drag * 1000) & 0xFF; // RRLSB
+            transmitBuffer[4] =  (drag * 1000) >> 8; //RRMSB
+            hasChanges = true;
+        }
+        else {
+            transmitBuffer[3] = 0xFF;
+            transmitBuffer[4] = 0xFF;
+        }            
+            
+        if (servoOffset != null) {
+            transmitBuffer[5] = servoOffset & 0xFF; // ServoOffsetLSB  
+            transmitBuffer[6] = servoOffset >> 8; // ServoOffsetMSB  
+            hasChanges = true;
+        }
+        else {
+            transmitBuffer[5] = 0xFF;
+            transmitBuffer[6] = 0xFF;
+        }            
+            
+        if (settings != null) {
+            transmitBuffer[7] = settings & 0xFF; // Settings
+            hasChanges = true;
+        }
+        else {
+            transmitBuffer[7] = 0xFF;
+        }
+        
+        if (hasChanges) {
+            antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);            
+        }
+        else {
+            throw new Error('No valid settings to set.');
+        }
     }
     
     // Requests the IRT settings page.
@@ -445,6 +535,8 @@ const AntFec = function() {
     AntFec.prototype.setTargetPower = setTargetPower;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    
     AntFec.prototype.getSettings = getSettings;
+    AntFec.prototype.setIrtSettings = setIrtSettings;
+    AntFec.prototype.setUserConfiguration = setUserConfiguration;
 };
 
 util.inherits(AntFec, EventEmitter);
