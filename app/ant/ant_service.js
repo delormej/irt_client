@@ -12,6 +12,7 @@ const AntService = function() {
     var fec = null; 
     var bp = null;
     var scope = null;
+    var self = this;
 
     // Loads the ANT library.
     /* This is loaded in main.js otherwise it goes out of scope and gets GC'd.
@@ -19,7 +20,7 @@ const AntService = function() {
     * to the renderer process.
     */
     function load(scope) {
-        this.scope = scope;
+        self.scope = scope;
         antlib.init();
         //console.log("Loaded ANT: ", antlib.antVersion());
         scope.version = antlib.antVersion();
@@ -138,29 +139,33 @@ const AntService = function() {
         fec.getSettings();
     }
 
+    // Reads values from scope and updates user config and IRT settings on the device.
     function setSettings() {
-        // Read scope.
         try {
-            fec.setUserConfiguration(this.scope.userWeightKg,  
-                this.scope.bikeWeightKg,
-                this.scope.wheelDiameter,
-                null /*gearRatio */);
-        }
-        catch (err) {
-            // just log to console for right now.
-            console.log('setSettigs', err);
-        }
-        
-        try {
-            fec.setIrtSettings(this.scope.drag,
-                this.scope.rr,
-                this.scope.servoOffset,
-                this.scope.settings);
+            fec.setIrtSettings(self.scope.drag,
+                self.scope.rr,
+                self.scope.servoOffset,
+                self.scope.settings);
         }
         catch (err) {
             // just log to console for right now.
             console.log('setUserConfiguration', err);
         }        
+        
+        // Send 2nd command 1/2 second later.
+        setTimeout(function () {
+            try {
+                fec.setUserConfiguration(
+                    self.scope.userWeightKg,  
+                    self.scope.bikeWeightKg,
+                    self.scope.wheelDiameter,
+                    null /*gearRatio */);
+            }
+            catch (err) {
+                // just log to console for right now.
+                console.log('setSettings', err);
+            }
+        }, 500);        
     }
 
     AntService.prototype.load = load;

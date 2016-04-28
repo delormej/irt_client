@@ -86,7 +86,7 @@ const AntBikePower = function() {
                     antlib.parseManufacturerInfo(bpChannelEventBuffer));
                 break;                
             default:
-                console.log('Unrecognized message.', messagedId);
+                //console.log('Unrecognized message.', messagedId);
                 break;
         }
     }

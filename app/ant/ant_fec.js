@@ -392,13 +392,13 @@ const AntFec = function() {
         if (userWeightKg != null) {
             userWeightKg = Math.round(userWeightKg * 100);
             transmitBuffer[1] = userWeightKg & 0xFF;
-            transmitBuffer[2] = userWeightKg << 8;
+            transmitBuffer[2] = userWeightKg >> 8;
             hasChanges = true;
         }
         else {
             // Set to invalid.
             transmitBuffer[1] = 0xFF;
-            transmitBuffer[1] = 0xFF;            
+            transmitBuffer[2] = 0xFF;            
         }
         
         transmitBuffer[3] = 0xFF; // Reserved.
@@ -409,17 +409,18 @@ const AntFec = function() {
             if (wheelDiameter > 2.54) {
                 throw new RangeError('Wheel diameter must be less than 2.54m');
             }
-            transmitBuffer[7] = Math.round(wheelDiameter * 100);
+            transmitBuffer[6] = Math.round(wheelDiameter * 100);
 
             var wheelDiameterOffset = 
                 (wheelDiameter * 100) - Math.round(wheelDiameter * 100);
 
-            transmitBuffer[5] = parseInt(wheelDiameterOffset) & 0xF;
+            // Only store a nibble of data (0.5 byte) in bits 0-3.
+            transmitBuffer[4] = (parseInt(wheelDiameterOffset) & 0xF) << 4; // bits 0-3
             hasChanges = true;
         }
         else {
-            transmitBuffer[5] = 0xF;
-            transmitBuffer[7] = 0xFF;
+            transmitBuffer[4] = 0xF0; // bits 0-3
+            transmitBuffer[6] = 0xFF;
         } 
         
         if (bikeWeightKg != null) {
@@ -428,19 +429,18 @@ const AntFec = function() {
             }
             
             var bikeWeightValue = Math.round(bikeWeightKg / 0.05); 
-            transmitBuffer[5] = transmitBuffer[5] | 
-                bikeWeightValue & 0xF00;
-            transmitBuffer[6] = bikeWeightValue & 0xFF;
+            transmitBuffer[4] |= bikeWeightValue & 0xF; // LSN
+            transmitBuffer[5] = (bikeWeightValue & 0xFF0) >> 4; // MSB
             
             hasChanges = true;
         }
         else {
-            transmitBuffer[5] |= 0xF00;
-            transmitBuffer[6] = 0xFF;
+            transmitBuffer[4] |= 0xF;
+            transmitBuffer[5] = 0xFF;
         }
 
         if (gearRatio == null) {
-            transmitBuffer[8] = 0;
+            transmitBuffer[7] = 0;
         }
         else {
             // TODO: check bounds
@@ -448,11 +448,12 @@ const AntFec = function() {
                 throw new RangeError('Gear ratio must be betwee 0.03 and 7.65');
             } 
             
-            transmitBuffer[8] = gearRatio / 0.03;
+            transmitBuffer[7] = gearRatio / 0.03;
             hasChanges = true;
         }
         
         if (hasChanges) {
+            console.log('Sending user configuration.');
             antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
         }
         else {
@@ -483,8 +484,8 @@ const AntFec = function() {
         }
 
         if (rr != null) {
-            transmitBuffer[3] =  (drag * 1000) & 0xFF; // RRLSB
-            transmitBuffer[4] =  (drag * 1000) >> 8; //RRMSB
+            transmitBuffer[3] =  (rr * 1000) & 0xFF; // RRLSB
+            transmitBuffer[4] =  (rr * 1000) >> 8; //RRMSB
             hasChanges = true;
         }
         else {
@@ -511,6 +512,7 @@ const AntFec = function() {
         }
         
         if (hasChanges) {
+            console.log('Sending IRT Settings.');
             antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);            
         }
         else {
