@@ -8,7 +8,6 @@
 const ref = require('ref');
 const ffi = require('ffi');
 const process2 = require('process');
-const sprintf = require('sprintf-js').sprintf;
 
 const BAUD_RATE = 57600;
 const PORT_TYPE_USB = 0;

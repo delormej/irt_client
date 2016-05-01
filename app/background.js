@@ -2,7 +2,6 @@
 const electron = require('electron');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
-const sprintf = require('sprintf-js').sprintf;
 const ipcMain = require('electron').ipcMain;
 //const antService = require('./ant/ant_service.js');
 
