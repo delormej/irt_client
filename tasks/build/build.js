@@ -19,13 +19,15 @@ var destDir = projectDir.cwd('./build');
 
 var paths = {
     copyFromAppDir: [
-        './node_modules/**',
         './helpers/**',
-        './**/*+(html|js)',
+        './**/*+(html|js|css)',
         './**/*.+(jpg|png|svg)',
         './ant/**',
         './main/**'
     ],
+    copyFromModules: [
+        './node_modules/**'
+    ]
 };
 
 // Specify the path where ant native dlls / libraries live.
@@ -41,16 +43,31 @@ gulp.task('clean', function () {
 
 
 var copyTask = function () {
-    return projectDir.copyAsync('app', destDir.path(), {
+        projectDir.copy('app', destDir.path(), {
             overwrite: true,
             matching: paths.copyFromAppDir
-        }).then(function() {
+        });
+
+        //
+        // Swallow any errors trying to copy native binaries since they will be 'in use' and
+        // will prevent the 'watch' tasks from working that enable rapid development with the
+        // non-binary components of the app.
+        //  
+        try {
             // Copy all ant native libraries to the root of the build folder.
-            projectDir.copyAsync(antNativePath, destDir.path(), {
+            projectDir.copy(antNativePath, destDir.path(), {
                 overwrite: true,
                 matching: ['*.*']
             });
-        });
+        
+            projectDir.copy('app', destDir.path(), {
+                overwrite: true,
+                matching: paths.copyFromModules
+            });            
+        }
+        catch (err) {
+            //console.log(err);
+        } 
 };
 gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
