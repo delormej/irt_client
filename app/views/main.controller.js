@@ -20,7 +20,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         
         $scope.setResistance = function() {
             var mode = $scope.resistanceSelect;
-            var level = parseInt($scope.resistanceLevel);
+            var level = parseInt($scope.txtResistanceLevel);
             
             if (isNaN(level)) {
                 console.log("Error, must set a valid level.");
