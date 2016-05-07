@@ -12,9 +12,13 @@ body {
     font-family: sans-serif;
 }
 
-#speed {
+#speed, #trainerPower, #bikePower {
     font-family: sans-serif;
     font-size: 30px;
+}
+
+#speedUnit, .powerUnit {
+    font-size: 14px;
 }
 
 a {
