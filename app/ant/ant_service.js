@@ -6,6 +6,7 @@
  */
 
 const AntService = function() {
+    const util = require('util');
     const antlib = require('../ant/antlib.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
@@ -61,8 +62,8 @@ const AntService = function() {
             if (event === "generalFEData") {
                 scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
                 // Convert to miles from meters.
-                scope.distanceTravelled = (data.distanceTravelled * METERS_TO_MILES).toFixed(2);
-                scope.elapsedTime = (data.elapsedTime); // Accumulated Seconds
+                scope.distanceTravelled = formatDistance(data.distanceTravelled);
+                scope.elapsedTime = formatTime(data.elapsedTime); // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
             }
             else if (event === "generalSettings") {
@@ -173,6 +174,21 @@ const AntService = function() {
             }
         }, 500);        
     }
+
+    // Converts distance in meters to miles and formats to 2 decimal places.     
+    function formatDistance(distance) {
+        return (distance * METERS_TO_MILES).toFixed(2);        
+    }
+    
+    // Returns a string in hh:mm:ss format from seconds.
+    function formatTime(time) {
+        var hours = Math.floor(time / 3600);       
+        var minutes = Math.floor( ((time - (hours * 3600)) / 60) );
+        var seconds =  Math.floor(time - ((hours * 3600) + (minutes * 60))); 
+        
+        return util.format('%s:%s:%s', hours, minutes, seconds);
+    }
+    
 
     AntService.prototype.load = load;
     AntService.prototype.close = close;
