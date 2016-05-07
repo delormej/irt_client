@@ -20,6 +20,8 @@
           <table>
             <tr><td id="speed">{{speed}}&nbsp;<span id="speedUnit">mph</span></td></tr>
             <tr><td id="cadence">{{cadence}}&nbsp;<span id="cadenceUnit">rpm</span></td></tr>
+            <tr><td id="distanceTravelled">{{distanceTravelled}}&nbsp;<span id="distanceUnit">miles</span></td></tr>
+            <tr><td id="elapsedTime">{{elapsedTime}}</td></tr>
           </table>
       </td>
       <td></td>
@@ -44,13 +46,7 @@
         <button ng-click="setResistance();">Set Resistance</button>
         <button ng-click="getSettings();">Get Settings</button>
         <button ng-click="setSettings();">Set Settings</button>
-        <br/>Speed:<span>{{speed}} mp/h</span>  
-        <br/>Distance:<span>{{distanceTravelled}} miles</span>
-        <br/>Time:<span>{{elapsedTime}}</span>
-        <br/>Trainer Power:<span>{{trainerPower}}</span>
-        <br/>Bike Power:<span>{{bikePower}}</span>
-        <br/>Cadence:<span>{{cadence}}</span>
-        
+
         <br/>ServoPosition:<span>{{servoPosition}}</span>
         <br/>swRevision:<span>{{swRevision}}</span>
         <br/>Settings:<input type="text" ng-model="settings"/>

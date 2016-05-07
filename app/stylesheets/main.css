@@ -12,12 +12,12 @@ body {
     font-family: sans-serif;
 }
 
-#speed, #trainerPower, #bikePower, #targetPower, #cadence {
+#speed, #trainerPower, #bikePower, #targetPower, #cadence, #distanceTravelled, #elapsedTime {
     font-family: sans-serif;
     font-size: 30px;
 }
 
-#speedUnit, .powerUnit, #cadenceUnit {
+#speedUnit, .powerUnit, #cadenceUnit, #distanceUnit {
     font-size: 14px;
 }
 

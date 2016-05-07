@@ -7,6 +7,7 @@
 
 const AntService = function() {
     const util = require('util');
+    const zpad = require('zpad');
     const antlib = require('../ant/antlib.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
@@ -186,9 +187,11 @@ const AntService = function() {
         var minutes = Math.floor( ((time - (hours * 3600)) / 60) );
         var seconds =  Math.floor(time - ((hours * 3600) + (minutes * 60))); 
         
-        return util.format('%s:%s:%s', hours, minutes, seconds);
+        return util.format('%s:%s:%s', 
+            zpad(hours,2), 
+            zpad(minutes, 2),
+            zpad(seconds,2));
     }
-    
 
     AntService.prototype.load = load;
     AntService.prototype.close = close;
