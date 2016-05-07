@@ -16,12 +16,18 @@
 
   <table width="90%">
     <tr>
-      <td width="25%" id="speed">{{speed}}&nbsp;<span id="speedUnit">mph</span></td>
+      <td width="25%">
+          <table>
+            <tr><td id="speed">{{speed}}&nbsp;<span id="speedUnit">mph</span></td></tr>
+            <tr><td id="cadence">{{cadence}}&nbsp;<span id="cadenceUnit">rpm</span></td></tr>
+          </table>
+      </td>
       <td></td>
       <td width="25%">
         <table>
-          <tr><td id="trainerPower">{{trainerPower}}&nbsp;<span class="powerUnit">watts</span></td></tr>
-          <tr><td id="bikePower">{{bikePower}}&nbsp;<span class="powerUnit">watts</span></td></tr>
+          <tr><td id="trainerPower">{{trainerPower}}&nbsp;<span class="powerUnit">watts (trainer)</span></td></tr>
+          <tr><td id="bikePower">{{bikePower}}&nbsp;<span class="powerUnit">watts (bike)</span></td></tr>
+          <tr><td id="targetPower">{{target}}&nbsp;<span class="powerUnit">watts (target)</span></td></tr>
         </table>
       </td>
     </tr> 
