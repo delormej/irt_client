@@ -78,7 +78,7 @@ var bundleApplication = function () {
             bundle(srcDir.path('background.js'), destDir.path('background.js')),
             bundle(srcDir.path('app.js'), destDir.path('app.js')),
         ]);
-};*/
+};
 
 var bundleSpecs = function () {
     return generateSpecImportsFile().then(function (specEntryPointPath) {
@@ -94,7 +94,7 @@ var bundleTask = function () {
 };
 gulp.task('bundle', ['clean'], bundleTask);
 gulp.task('bundle-watch', bundleTask);
-
+*/
 
 var lessTask = function () {
     return gulp.src('app/stylesheets/main.less')
