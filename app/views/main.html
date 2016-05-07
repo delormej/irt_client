@@ -4,15 +4,25 @@
   <meta charset="utf-8">
   <title>ANT+ Trainer</title>
   <!--
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="css/app.css">
-  -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
+  <link rel="stylesheet" href="../stylesheets/main.css">
+  
   <script src="../node_modules/angular/angular.js"></script>
   <!--<script src="../bower_components/angular-resource/angular-resource.js"></script>-->
   <script src="../app.js"></script>
   <script src="main.controller.js"></script>
 </head>
 <body ng-controller="mainCtrl">
+
+  <table width="90%">
+    <tr>f
+      <td width="25%" id="speed">{{speed}} mph</td>
+      <td></td>
+      <td width="25%" id="power">{{trainerPower}}</td>
+    </tr> 
+    <tr>
+    </tr>
+  </table>
 
   <p>Nothing here {{hello + '!'}}</p>
   Version:<span>{{version}}</span>
