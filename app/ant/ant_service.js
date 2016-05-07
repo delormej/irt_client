@@ -9,6 +9,10 @@ const AntService = function() {
     const antlib = require('../ant/antlib.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
+    
+    const METERS_TO_MILES = 0.000621371;
+    const MPS_TO_MPH = 2.23694;
+    
     var fec = null; 
     var bp = null;
     var scope = null;
@@ -55,9 +59,9 @@ const AntService = function() {
         fec.on('message', (event, data) => {
             scope.hello = event;
             if (event === "generalFEData") {
-                scope.speed = (data.speedMps * 2.23).toFixed(1);
+                scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
                 // Convert to miles from meters.
-                scope.distanceTravelled = (data.distanceTravelled / 621.371).toFixed(2);
+                scope.distanceTravelled = (data.distanceTravelled * METERS_TO_MILES).toFixed(2);
                 scope.elapsedTime = (data.elapsedTime); // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
             }
