@@ -3,7 +3,6 @@ const electron = require('electron');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 const ipcMain = require('electron').ipcMain;
-//const antService = require('./ant/ant_service.js');
 
 // Report crashes to our server.
 //electron.crashReporter.start();
@@ -27,15 +26,19 @@ app.on('window-all-closed', function() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
+  // Prevent windows from going to sleep while the app is running.
+  if (process.platform === 'win32') {
+    var win_utility = require('./helpers/win_utility.js')
+    var val = win_utility.preventShutdown();
+    console.log('preventShutdown', val);
+  }
+  
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
  
   // and load the index.html of the app.
   //mainWindow.loadURL(`file://${__dirname}/index.html`);
   mainWindow.loadURL(`file://${__dirname}/views/main.html`);
-
-  // Load the ANT+ library and open the channel.
-  //antService.load(mainWindow);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
