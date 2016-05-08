@@ -52,6 +52,11 @@ const AntFec = function() {
     var elapsedTime = 0;  // 1/4 seconds.
     var accumulatedDistance = 0; // Meters
 
+    // Keep a running accumuation.
+    var accumulatedPower = 0;
+    var eventCount = 0;
+    var powerEvents = [];
+
     // Placeholder function.
     function printBuffer(channelId, buffer) {
         console.log(buffer);
@@ -167,8 +172,8 @@ const AntFec = function() {
     // Parses page 25 and emits an event with human readable values.
     function parseSpecificTrainerData() {
         var page = {
-            eventCount : fecChannelEventBuffer[2],
-            accumulatedPower : (fecChannelEventBuffer[5] << 8 |
+            eventCount : getEventCount(fecChannelEventBuffer[2]),
+            accumulatedPower : getAccumulatedPower(fecChannelEventBuffer[5] << 8 |
                 fecChannelEventBuffer[4]),
             instantPower : ( (fecChannelEventBuffer[7] & 0x0F) << 8 |
                 fecChannelEventBuffer[6] ),
@@ -176,7 +181,11 @@ const AntFec = function() {
             flags : fecChannelEventBuffer[8] & 0x0F,
             feState : fecChannelEventBuffer[7] & 0xF0
         };
-        //console.log(page);
+
+        // Accumulate power events.
+        powerEvents.push({count: eventCount, power: accumulatedPower});
+        
+        console.log('trainer', eventCount, accumulatedPower);
         return page;
     }
 
@@ -519,6 +528,23 @@ const AntFec = function() {
             }, 250);
     }
 
+    // Accumulates power beyond the 16 bits.
+    function getAccumulatedPower(power) {   
+        accumulatedPower = antlib.accumulateDoubleByte(accumulatedPower, power);
+        return accumulatedPower;
+    }
+    
+    // Accumulates event count beyond the 8 bits.
+    function getEventCount(events) {
+        eventCount = antlib.accumulateByte(eventCount, events);
+        return eventCount;
+    }
+    
+    // Gets the average power for a specified period of seconds. 
+    function getAveragePower(seconds) {  
+        return antlib.getAveragePower(seconds, eventCount, powerEvents);
+    }
+
     AntFec.prototype.openChannel = openChannel;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
@@ -526,6 +552,7 @@ const AntFec = function() {
     AntFec.prototype.getSettings = getSettings;
     AntFec.prototype.setIrtSettings = setIrtSettings;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
+    AntFec.prototype.getAveragePower = getAveragePower; 
 };
 
 util.inherits(AntFec, EventEmitter);

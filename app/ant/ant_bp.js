@@ -11,8 +11,6 @@ const EventEmitter = require('events').EventEmitter;
 
 const AntBikePower = function() { 
     var self = this;
-    var powerEvents = [];
-        
     const antlib = require('./antlib.js');
     
     var bpChannelId = 0;
@@ -24,10 +22,10 @@ const AntBikePower = function() {
     // Keep a running accumuation.
     var accumulatedPower = 0;
     var eventCount = 0;
+    var powerEvents = [];
 
     // Accumulates power beyond the 16 bits.
-    function getAccumulatedPower(power) {
-        
+    function getAccumulatedPower(power) {   
         accumulatedPower = antlib.accumulateDoubleByte(accumulatedPower, power);
         return accumulatedPower;
     }
@@ -113,27 +111,8 @@ const AntBikePower = function() {
     }
     
     // Gets the average power for a specified period of seconds. 
-    function getAveragePower(seconds) {
-        // Events are ~2hz, so 2 events per second.
-        var targetEvent = eventCount - (seconds * 2);
-        
-        var length = powerEvents.length - 1;
-        var index =  length;
-        
-        while (index > 0 && powerEvents[index].count > targetEvent)
-            index--;
-            
-        var deltaEvents = powerEvents[length].count - powerEvents[index].count;
-        var deltaPower = powerEvents[length].power - powerEvents[index].power;
-        
-        var average = (deltaPower / deltaEvents);
-        
-        if (!isNaN(average)) {
-            return Math.round(average);
-        }
-        else { 
-            return 0;
-        }
+    function getAveragePower(seconds) {  
+        return antlib.getAveragePower(seconds, eventCount, powerEvents);
     }
 
     AntBikePower.prototype.openChannel = openChannel;

@@ -487,6 +487,31 @@ function accumulateDoubleByte(accumulator, byte) {
     return accumulator;        
 }
 
+// Gets the average power for a specified period of seconds. 
+function getAveragePower(seconds, eventCount, powerEvents) {
+    // Events are ~2hz, so 2 events per second.
+    var targetEvent = eventCount - (seconds * 2);
+    
+    var length = powerEvents.length - 1;
+    var index =  length;
+    
+    while (index > 0 && powerEvents[index].count > targetEvent)
+        index--;
+        
+    var deltaEvents = powerEvents[length].count - powerEvents[index].count;
+    var deltaPower = powerEvents[length].power - powerEvents[index].power;
+    
+    var average = (deltaPower / deltaEvents);
+    
+    if (!isNaN(average)) {
+        return Math.round(average);
+    }
+    else { 
+        return 0;
+    }
+}
+
+
 // Define module exports.
 exports.init = init;  
 exports.close = close;
@@ -502,6 +527,7 @@ exports.setLowPrioirtySearch = setLowPrioirtySearch;
 exports.requestChannelId = requestChannelId;
 exports.accumulateByte = accumulateByte;
 exports.accumulateDoubleByte = accumulateDoubleByte;
+exports.getAveragePower = getAveragePower;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;

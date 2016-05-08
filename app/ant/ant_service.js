@@ -47,6 +47,7 @@ const AntService = function() {
                 
                 // Get 10 second average.
                 scope.averageBikePower = bp.getAveragePower(10);
+                scope.averageTrainerPower = fec.getAveragePower(10);
                 
                 if (data.instantCadence != 0xFF) {
                     scope.cadence = data.instantCadence;
