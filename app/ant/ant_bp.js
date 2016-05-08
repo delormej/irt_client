@@ -11,6 +11,7 @@ const EventEmitter = require('events').EventEmitter;
 
 const AntBikePower = function() { 
     var self = this;
+    var powerEvents = [];
         
     const antlib = require('./antlib.js');
     
@@ -26,27 +27,14 @@ const AntBikePower = function() {
 
     // Accumulates power beyond the 16 bits.
     function getAccumulatedPower(power) {
-        // Did a rollover occur?
-        if (power < (accumulatedPower & 0xFFFF)) {
-            // Bitshift accumulator over 1.
-            accumulatedPower = accumulatedPower << 1;
-        }
         
-        accumulatedPower = (accumulatedPower & 0xFFFF0000) | power; 
-
+        accumulatedPower = antlib.accumulateDoubleByte(accumulatedPower, power);
         return accumulatedPower;
     }
 
     // Accumulates event count beyond the 8 bits.
     function getEventCount(events) {
-        // Did a rollover occur?
-        if (events < (eventCount & 0xFF)) {
-            // Bitshift accumulator over 1.
-            eventCount = eventCount << 1;
-        }
-        
-        eventCount = (eventCount & 0xFFFFFF00) | events; 
-        
+        eventCount = antlib.accumulateByte(eventCount, events);
         return eventCount;
     }
 
@@ -61,6 +49,9 @@ const AntBikePower = function() {
                 bpChannelEventBuffer[5]),
             instantPower : bpChannelEventBuffer[8] << 8 | bpChannelEventBuffer[7]   
         };
+        
+        // Accumulate power events.
+        powerEvents.push({count: eventCount, power: accumulatedPower});
         
         return page;
     }
@@ -120,8 +111,31 @@ const AntBikePower = function() {
             console.log('bp channel already open.');
         }     
     }
+    
+    // Gets the average power for a specified period of seconds. 
+    function getAveragePower(seconds) {
+        // Events are ~2hz, so 2 events per second.
+        var targetEvent = eventCount - (seconds * 2);
+        
+        var length = powerEvents.length;
+        var index =  length - 1;
+        
+        while (index > 0 && powerEvents[index].count > targetEvent)
+            index--;
+        
+        if (index == 0)
+            return 0;
+            
+        var deltaEvents = powerEvents[length-1].count - powerEvents[index].count;
+        var deltaPower = powerEvents[length-1].power - powerEvents[index].power;
+        
+        var average = (deltaPower / deltaEvents);
+        
+        return Math.round(average);
+    }
 
     AntBikePower.prototype.openChannel = openChannel;
+    AntBikePower.prototype.getAveragePower = getAveragePower;
 };
 
 util.inherits(AntBikePower, EventEmitter);

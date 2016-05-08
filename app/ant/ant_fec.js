@@ -57,29 +57,16 @@ const AntFec = function() {
         console.log(buffer);
     }
 
-    // This method accumulates a single byte into a 32 bit unsigned int.
-    function accumulateByte(accumulator, byte) {
-        // Did a rollover occur?
-        if (byte < (accumulator & 0xFF)) {
-            accumulator += 0xFF;
-        }
-        
-        // >>>0 keeps this a 32 bit *un*signed int.
-        accumulator = (accumulator >>>0 & 0xFFFFFF00) + byte 
-
-        return accumulator;        
-    }
-
     // Returns accumulated time in seconds.
     function getElapsedSeconds(time) {
-        elapsedTime = accumulateByte(elapsedTime, time);
+        elapsedTime = antlib.accumulateByte(elapsedTime, time);
         // Elapsed time is stored in 0.25 seconds, divide by 4 to get seconds.
         return elapsedTime / 4;
     }
 
     // Distance is a single byte, this method accumulates distance into a 32 bit unsigned int.
     function getDistance(distance) {
-        accumulatedDistance = accumulateByte(accumulatedDistance, distance); 
+        accumulatedDistance = antlib.accumulateByte(accumulatedDistance, distance); 
         return accumulatedDistance;
     }
 

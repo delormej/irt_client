@@ -461,6 +461,32 @@ function sendRequestDataPage(channelId, pageNumber, buffer) {
     }
 }
 
+// This method accumulates a single byte into a 32 bit unsigned int.
+function accumulateByte(accumulator, byte) {
+    // Did a rollover occur?
+    if (byte < (accumulator & 0xFF)) {
+        accumulator += 0xFF;
+    }
+    
+    // >>>0 keeps this a 32 bit *un*signed int.
+    accumulator = (accumulator >>>0 & 0xFFFFFF00) + byte 
+
+    return accumulator;        
+}
+
+// This method accumulates a double byte into a 32 bit unsigned int.
+function accumulateDoubleByte(accumulator, byte) {
+    // Did a rollover occur?
+    if (byte < (accumulator & 0xFFFF)) {
+        accumulator += 0xFFFF;
+    }
+    
+    // >>>0 keeps this a 32 bit *un*signed int.
+    accumulator = (accumulator >>>0 & 0xFFFF0000) + byte 
+
+    return accumulator;        
+}
+
 // Define module exports.
 exports.init = init;  
 exports.close = close;
@@ -474,6 +500,8 @@ exports.sendRequestDataPage = sendRequestDataPage;
 exports.setDeviceExclusionList = setDeviceExclusionList;
 exports.setLowPrioirtySearch = setLowPrioirtySearch;
 exports.requestChannelId = requestChannelId;
+exports.accumulateByte = accumulateByte;
+exports.accumulateDoubleByte = accumulateDoubleByte;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;

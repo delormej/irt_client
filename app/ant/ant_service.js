@@ -44,6 +44,10 @@ const AntService = function() {
         bp.on('message', (event, data) => {
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
+                
+                // Get 10 second average.
+                scope.averageBikePower = bp.getAveragePower(10);
+                
                 if (data.instantCadence != 0xFF) {
                     scope.cadence = data.instantCadence;
                 }
@@ -52,7 +56,7 @@ const AntService = function() {
                 }
             }
             else {
-                scope.bikePower = 'no data';
+                scope.bikePower = 0;
             }
             scope.$apply();
         });
