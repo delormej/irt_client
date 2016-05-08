@@ -54,19 +54,19 @@ var copyTask = function () {
         // non-binary components of the app.
         //  
         try {
+            projectDir.copy('app', destDir.path(), {
+                overwrite: true,
+                matching: paths.copyFromModules
+            });
+                        
             // Copy all ant native libraries to the root of the build folder.
             projectDir.copy(antNativePath, destDir.path(), {
                 overwrite: true,
                 matching: ['*.*']
             });
-        
-            projectDir.copy('app', destDir.path(), {
-                overwrite: true,
-                matching: paths.copyFromModules
-            });            
         }
         catch (err) {
-            //console.log(err);
+            console.log('Unable to copy native libraries.', err);
         } 
 };
 gulp.task('copy', ['clean'], copyTask);
