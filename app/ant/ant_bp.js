@@ -117,21 +117,23 @@ const AntBikePower = function() {
         // Events are ~2hz, so 2 events per second.
         var targetEvent = eventCount - (seconds * 2);
         
-        var length = powerEvents.length;
-        var index =  length - 1;
+        var length = powerEvents.length - 1;
+        var index =  length;
         
         while (index > 0 && powerEvents[index].count > targetEvent)
             index--;
-        
-        if (index == 0)
-            return 0;
             
-        var deltaEvents = powerEvents[length-1].count - powerEvents[index].count;
-        var deltaPower = powerEvents[length-1].power - powerEvents[index].power;
+        var deltaEvents = powerEvents[length].count - powerEvents[index].count;
+        var deltaPower = powerEvents[length].power - powerEvents[index].power;
         
         var average = (deltaPower / deltaEvents);
         
-        return Math.round(average);
+        if (!isNaN(average)) {
+            return Math.round(average);
+        }
+        else { 
+            return 0;
+        }
     }
 
     AntBikePower.prototype.openChannel = openChannel;
