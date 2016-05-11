@@ -6,8 +6,10 @@
   <!--
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
   <link rel="stylesheet" href="../stylesheets/main.css">
-  
+    
   <script src="../node_modules/angular/angular.js"></script>
+  <script src="../node_modules/chart.js/dist/Chart.js"></script>
+  <script src="../node_modules/angular-chart.js/dist/angular-chart.js"></script>
   <!--<script src="../bower_components/angular-resource/angular-resource.js"></script>-->
   <script src="../app.js"></script>
   <script src="main.controller.js"></script>
@@ -24,7 +26,10 @@
             <tr><td id="elapsedTime">{{elapsedTime}}</td></tr>
           </table>
       </td>
-      <td></td>
+      <td>
+        <canvas id="doughnut" class="chart chart-doughnut chart-xs" chart-data="data"
+              chart-labels="labels" chart-legend="false"></canvas>
+      </td>
       <td width="25%">
         <table>
           <tr><td id="trainerPower">{{trainerPower}}&nbsp;<span class="powerUnit">watts (trainer)</span></td></tr>
