@@ -82,7 +82,14 @@ const AntService = function() {
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
-                scope.servoData = [2000 - scope.servoPosition, scope.servoPosition];
+                
+                if (scope.servoPosition < 1600) {
+                    var pctOn = (1600 - scope.servoPosition) / 800;
+                    scope.servoChartData = [pctOn, 1 - pctOn];
+                } 
+                else {
+                    scope.servoChartData = [0, 1];                    
+                } 
                 
                 scope.target = data.target;
                 scope.flywheelRevs = data.flywheelRevs;
