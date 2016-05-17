@@ -2,8 +2,10 @@
 trainerApp.controller('mainCtrl', ['$scope', 'antService', 
     function ($scope, antService) {
         
-        $scope.labels = ["Servo Off", "Servo Position", "Remaining Servo Spectrum"];
-        $scope.data = [10, 10, 80];
+        //$scope.labels = ["Servo Off", "Servo Position", "Remaining Servo Spectrum"];
+        //$scope.data = [10, 10, 80];
+        $scope.servoChartLabels = ["Servo Position", "Reminaing"];
+        $scope.servoChartData = [2000, 0];
         
         const BASIC_RESISTANCE = '48';
         const TARGET_POWER_RESISTANCE = '49';
