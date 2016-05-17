@@ -2,12 +2,8 @@
 trainerApp.controller('mainCtrl', ['$scope', 'antService', 
     function ($scope, antService) {
         
-        $scope.labels =["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"];
-
-        $scope.data = [
-            [65, 59, 90, 81, 56, 55, 40],
-            [28, 48, 40, 19, 96, 27, 100]
-        ];        
+        $scope.labels = ["Servo Off", "Servo Position", "Remaining Servo Spectrum"];
+        $scope.data = [10, 10, 80];
         
         const BASIC_RESISTANCE = '48';
         const TARGET_POWER_RESISTANCE = '49';
