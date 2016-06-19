@@ -27,6 +27,10 @@ var copyRuntime = function () {
     return projectDir.copyAsync('node_modules/electron-prebuilt/dist/Electron.app', finalAppDir.path());
 };
 
+var copyNativeANT = function() {
+    return projectDir.copyAsync('app/ant_native', readyAppDir.path(), { matching: ['*.a', '*.dylib' ], overwrite: true });
+};
+
 var cleanupRuntime = function () {
     finalAppDir.remove('Contents/Resources/default_app');
     finalAppDir.remove('Contents/Resources/atom.icns');
@@ -184,6 +188,7 @@ var cleanClutter = function () {
 module.exports = function () {
     return init()
         .then(copyRuntime)
+        .then(copyNativeANT)
         .then(cleanupRuntime)
         .then(packageBuiltApp)
         .then(finalize)
