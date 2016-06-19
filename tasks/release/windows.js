@@ -27,6 +27,10 @@ var copyRuntime = function () {
     return projectDir.copyAsync('node_modules/electron-prebuilt/dist', readyAppDir.path(), { overwrite: true });
 };
 
+var copyNativeANT = function() {
+    return projectDir.copyAsync('app/ant_native', readyAppDir.path(), { matching: '*.dll', overwrite: true });
+};
+
 var cleanupRuntime = function () {
     return readyAppDir.removeAsync('resources/default_app');
 };
@@ -126,6 +130,7 @@ var cleanClutter = function () {
 module.exports = function () {
     return init()
         .then(copyRuntime)
+        .then(copyNativeANT)
         .then(cleanupRuntime)
         .then(packageBuiltApp)
         .then(finalize)
