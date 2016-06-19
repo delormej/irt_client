@@ -28,7 +28,7 @@ var copyRuntime = function () {
 };
 
 var copyNativeANT = function() {
-    return projectDir.copyAsync('app/ant_native', readyAppDir.path(), { matching: ['*.a', '*.dylib' ], overwrite: true });
+    return projectDir.copyAsync('app/ant_native', finalAppDir.path(), { matching: ['*.a', '*.dylib' ], overwrite: true });
 };
 
 var cleanupRuntime = function () {
