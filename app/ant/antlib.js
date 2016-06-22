@@ -247,19 +247,24 @@ function libPath() {
         lib = 'ANT_DLL';
     }
     else 
+    {
+        // MacOSX impementation:
+        var remote = require('remote');
+        var app = remote.require('app');
+        var path = require('path');
 
-{
-	var remote = require('remote');
-	var app = remote.require('app');
-	//var path = app.getAppPath();
+        var base = path.combine(
+            path.parse(app.getAppPath(),
+            '..', '..'));
 
-	var path = require('path');
-	var parsed = path.parse(app.getAppPath());
-
-	console.log('dir', parsed.dir);
-	console.log('lib', path.join(parsed.dir, '..', '..', 'libANT'));
-
-        lib = parsed.dir + '/../../libANT';
+        if (base.endsWith('.app')) {
+            // If *installed* on a Mac, it's deployed into [AppName].app/Content/Resources/...
+            lib = path.join(base, 'libANT');
+        }
+        else {
+            // In development mode, just find the library.
+            lib = 'libANT';
+        }
     }    
 
     return lib;
