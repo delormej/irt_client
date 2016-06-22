@@ -253,9 +253,9 @@ function libPath() {
         var app = remote.require('app');
         var path = require('path');
 
-        var base = path.combine(
-            path.parse(app.getAppPath(),
-            '..', '..'));
+        var base = path.join(
+            path.parse(app.getAppPath()).dir,
+            '..', '..');
 
         if (base.endsWith('.app')) {
             // If *installed* on a Mac, it's deployed into [AppName].app/Content/Resources/...
