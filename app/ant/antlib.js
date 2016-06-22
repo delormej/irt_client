@@ -246,8 +246,20 @@ function libPath() {
     if (isWindows) {
         lib = 'ANT_DLL';
     }
-    else {
-        lib = 'libANT';
+    else 
+
+{
+	var remote = require('remote');
+	var app = remote.require('app');
+	//var path = app.getAppPath();
+
+	var path = require('path');
+	var parsed = path.parse(app.getAppPath());
+
+	console.log('dir', parsed.dir);
+	console.log('lib', path.join(parsed.dir, '..', '..', 'libANT'));
+
+        lib = parsed.dir + '/../../libANT';
     }    
 
     return lib;
