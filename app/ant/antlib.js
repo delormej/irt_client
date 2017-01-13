@@ -85,6 +85,7 @@ const antlib = ffi.Library(libPath(), {
     'ANT_SetLowPriorityChannelSearchTimeout': ['bool', ['uchar', 'uchar'] ],
     'ANT_SetChannelSearchTimeout': ['bool', ['uchar', 'uchar'] ],
     'ANT_Nap': ['void', ['ulong'] ],
+    'ANT_SetDebugLogDirectory': ['bool', ['string'] ],
     'ANT_Close': ['void', [] ]
 });
 
@@ -94,6 +95,19 @@ var initialized = false;
 // Returns a string representing the ANT Library version.
 function antVersion() {
     return antlib.ANT_LibVersion();    
+}
+
+// Sets the debug log directory.
+// NOTE: This is ignored unless running a debug build of the ANT_DLL.
+function setDebugLogDirectory(directory) {
+    var status = antlib.ANT_SetDebugLogDirectory(directory);
+    if (status) {
+        console.log('SUCCESS: Set debug log directory to ', directory);
+    } else {
+        console.log('ERROR: Failed to set debug log directory to ', directory);
+    }
+
+    return status;
 }
 
 // Called when a channed status message is received.
@@ -533,6 +547,7 @@ function getAveragePower(seconds, eventCount, powerEvents) {
 exports.init = init;  
 exports.close = close;
 exports.antVersion = antVersion;
+exports.setDebugLogDirectory = setDebugLogDirectory;
 exports.openChannel = openChannel;
 exports.sendBroadcastData = sendBroadcastData;
 exports.sendAcknowledgedData = sendAcknowledgedData;

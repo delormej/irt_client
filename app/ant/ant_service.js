@@ -28,7 +28,8 @@ const AntService = function() {
     function load(scope) {
         self.scope = scope;
         antlib.init();
-        //console.log("Loaded ANT: ", antlib.antVersion());
+        //antlib.setDebugLogDirectory("c:\\users\\jason\\workspace\\");
+        console.log("Loaded ANT: ", antlib.antVersion());
         scope.version = antlib.antVersion();
         
         /* Once you've found the FEC device, try searching for a power meter 
