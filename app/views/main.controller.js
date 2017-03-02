@@ -15,7 +15,9 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.load($scope);
         }
         catch (e) {
-            $scope.hello = e;
+            console.error('There was an error loading ANT module.', e);
+            $scope.version = e.message;
+            //$window.close();
         }
         
         $scope.resistanceOptions = [
