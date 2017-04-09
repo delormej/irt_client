@@ -458,7 +458,7 @@ const AntFec = function() {
     }
     
     // Sends the manufacturer specific page to set device settings.
-    function setIrtSettings(drag, rr, servoOffset, settings) {
+    function setIrtSettings(drag, rr, servoOffset, settings, persist) {
         console.log('setIrtSettings');
         var hasChanges = false;
         transmitBuffer[0] = IRT_SETTINGS_PAGE;
@@ -491,14 +491,24 @@ const AntFec = function() {
             
         if (servoOffset != null) {
             transmitBuffer[5] = servoOffset & 0xFF; // ServoOffsetLSB  
-            transmitBuffer[6] = servoOffset >> 8; // ServoOffsetMSB  
+            // most significant bit is reserved for preventing persistence flag 
+            // flagged 1 means whole message is not persisted on the device.
+            transmitBuffer[6] = (servoOffset & 0x7F) >> 8; // ServoOffsetMSB  
             hasChanges = true;
         }
         else {
             transmitBuffer[5] = 0xFF;
             transmitBuffer[6] = 0xFF;
         }            
-            
+
+        // save changes? 
+        if (persist) { 
+            transmitBuffer[6] = 0xFF;
+        }
+        else { // flag not to persist.
+            transmitBuffer[6] = 0x7F;
+        }
+
         if (settings != null) {
             transmitBuffer[7] = settings & 0xFF; // Settings
             hasChanges = true;

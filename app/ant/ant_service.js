@@ -168,7 +168,8 @@ const AntService = function() {
             fec.setIrtSettings(self.scope.drag,
                 self.scope.rr,
                 self.scope.servoOffset,
-                self.scope.settings);
+                self.scope.settings,
+                self.scope.persist);
         }
         catch (err) {
             // just log to console for right now.

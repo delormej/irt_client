@@ -14,9 +14,9 @@ const PowerAdjuster = function() {
 
     // Enum of module state.
     const TargetStateEnum = {
-        NO_TARGET : 0,
-        TARGET_READY : 1,
-        TARGET_NOT_READY : 2
+        NO_TARGET : 0, // no target set.
+        TARGET_NOT_READY : 1, // just received, wait for average to get calculated.
+        TARGET_READY : 2 // ready to calculate any offset required.
     };
 
     var target_state = NO_TARGET;
@@ -32,17 +32,28 @@ const PowerAdjuster = function() {
         
     function init(ant_bp, ant_fec) {
         bp = ant_bp;
+        // register listeners for bike power messages.
+        
         fec = ant_fec;
+        // register listeners for fec messages.
     }
 
     // invoked when message from fec comes? todo: figure this out.
     function process() {
 
-        var speed_mps = 0.0; // need to get this from fec messages.
-        var average_power = 0.0; // need to get this from bp messages.
-        // last_target_power -- gets set processing fec messages.
 
-        var new_rr = calc_rr(last_rr, drag, speed_mps, last_target_power, average_power);
+
+        var speed_mps = 0.0; // need to get this from fec messages.
+        var target_power = 0.0; // need to get this from fec messages.
+        var average_power = 0.0; // need to get this from bp messages.
+        
+        if (speed_mps <= 0.0 || target_power <= 0.0 || 
+                target_power == last_target_power) {
+           // nothing to be done.
+            return;
+        }
+
+        var new_rr = calc_rr(last_rr, drag, speed_mps, target_power, average_power);
 
         // TOOD: Should check here that setting is worthwhile, i.e. it's over a certain
         // threshold of change.
@@ -50,6 +61,9 @@ const PowerAdjuster = function() {
         // Send the new rr to the device.
         setRR(new_rr);
         
+        // update state.
+        last_target_power = target_power;
+
         // Emit event; calculated new rr.
         self.emit('message', 'SET_RR', new_rr, last_rr, actual_power, target_power);
 
