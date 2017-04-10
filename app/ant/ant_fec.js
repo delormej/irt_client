@@ -459,7 +459,7 @@ const AntFec = function() {
     
     // Sends the manufacturer specific page to set device settings.
     function setIrtSettings(drag, rr, servoOffset, settings, persist) {
-        console.log('setIrtSettings');
+        console.log('setIrtSettings, persist? ', persist);
         var hasChanges = false;
         transmitBuffer[0] = IRT_SETTINGS_PAGE;
         

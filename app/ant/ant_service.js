@@ -32,6 +32,8 @@ const AntService = function() {
         console.log("Loaded ANT: ", antlib.antVersion());
         scope.version = antlib.antVersion();
         
+        scope.persistSettings = false; // Set default.
+        
         /* Once you've found the FEC device, try searching for a power meter 
         * (low prioirty) so that it doesn't conflict with the FE-C channel.  
         * Setup an exclusion list so that it doesn't attach the IRT roller device
@@ -169,7 +171,7 @@ const AntService = function() {
                 self.scope.rr,
                 self.scope.servoOffset,
                 self.scope.settings,
-                self.scope.persist);
+                self.scope.persistSettings);
         }
         catch (err) {
             // just log to console for right now.
