@@ -488,26 +488,16 @@ const AntFec = function() {
             transmitBuffer[3] = 0xFF;
             transmitBuffer[4] = 0xFF;
         }            
-            
+
         if (servoOffset != null) {
             transmitBuffer[5] = servoOffset & 0xFF; // ServoOffsetLSB  
-            // most significant bit is reserved for preventing persistence flag 
-            // flagged 1 means whole message is not persisted on the device.
-            transmitBuffer[6] = (servoOffset & 0x7F) >> 8; // ServoOffsetMSB  
+            transmitBuffer[6] = servoOffset >> 8; // ServoOffsetMSB  
             hasChanges = true;
         }
         else {
             transmitBuffer[5] = 0xFF;
             transmitBuffer[6] = 0xFF;
         }            
-
-        // save changes? 
-        if (persist) { 
-            transmitBuffer[6] = 0xFF;
-        }
-        else { // flag not to persist.
-            transmitBuffer[6] = 0x7F;
-        }
 
         if (settings != null) {
             transmitBuffer[7] = settings & 0xFF; // Settings
@@ -516,7 +506,17 @@ const AntFec = function() {
         else {
             transmitBuffer[7] = 0xFF;
         }
-        
+
+        // Send flag as to whether these settings should be persisted to device flash or not.
+        // servoOfset only uses 15 least significant bits. MSBit is reserved for a flag 
+        // to determine whether all settings changes should be persisted (1) or not (0).
+        if (persist) { 
+            transmitBuffer[6] |= 0x80; // Set MSB to 1.
+        }
+        else { 
+            transmitBuffer[6] &= 0x7F; // Set MSB to 0.
+        }
+
         if (hasChanges) {
             console.log('Sending IRT Settings.');
             antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);            
