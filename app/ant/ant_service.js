@@ -246,19 +246,34 @@ const AntService = function() {
 
     // Gets the average power for a specified period of seconds. 
     function getAveragePower(seconds) {  
-        return antlib.getAveragePower(seconds, powerEvents);
+        if (powerEvents.length > 1) {
+            return antlib.getAveragePower(seconds, powerEvents);
+        }
+        else {
+            return 0;
+        }
     }    
 
     // Gets the average trainer power for a specified period of seconds. 
     function getAverageTrainerPower(seconds) {  
-        return antlib.getAveragePower(seconds, trainerPowerEvents);
+        if (trainerPowerEvents.length > 1) {
+            return antlib.getAveragePower(seconds, trainerPowerEvents);
+        }
+        else {
+            return 0;
+        }
     }    
 
     // Gets the average speed for a specified period of seconds. 
     function getAverageSpeed(seconds) {  
         //return antlib.getAveragePower(seconds, eventCount, powerEvents);
         // TOOD: we're not averaging yet.
-        return speedEvents[speedEvents.length-1].speedMps;
+        if (speedEvents.length > 1) {
+            return speedEvents[speedEvents.length-1].speedMps;
+        }
+        else {
+            return 0;
+        }
     }    
 
     AntService.prototype.load = load;
