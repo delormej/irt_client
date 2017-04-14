@@ -49,7 +49,7 @@ const AntService = function() {
 
         fec = new AntFec();
         bp = new AntBikePower();
-        powerAdjuster = new PowerAdjuster();
+        powerAdjuster = new PowerAdjuster(fec);
         
         // Process bike power messages.
         bp.on('message', (event, data) => {
@@ -165,23 +165,12 @@ const AntService = function() {
         
         scope.cadence = 'n/a';
 
-                // Send 2nd command 1/2 second later.
         setInterval(function () {
             try {
-                // Can't do this until we have drag #s
-                if (irtSettings == null)
-                    return;
-
-                if (scope.new_rr == 0) {
-                    scope.new_rr = irtSettings.rr;
-                }
-
-                scope.new_rr = powerAdjuster.calc_rr(scope.new_rr, 
-                    irtSettings.drag, 
+                scope.new_rr = powerAdjuster.adjust(
                     getAverageSpeed(3), 
-                    getAverageTrainerPower(3),
-                    getAveragePower(3) );
-                
+                    getAveragePower(3),
+                    getAverageTrainerPower(3) );
             }
             catch (err) {
                 // just log to console for right now.

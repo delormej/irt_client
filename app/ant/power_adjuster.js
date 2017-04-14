@@ -12,7 +12,7 @@ const EventEmitter = require('events').EventEmitter;
 const METERS_TO_MILES = 0.000621371;
 const MPS_TO_MPH = 2.23694;
 
-const PowerAdjuster = function() { 
+const PowerAdjuster = function(ant_fec) { 
     var self = this;
 
     // Enum of module state.
@@ -23,85 +23,84 @@ const PowerAdjuster = function() {
     };
 
     var target_state = TargetStateEnum.NO_TARGET;
-    var average_seconds = 5;
-    var drag;
-    var original_rr;
-    var bp; // bike power module for actual power events
     var fec; // trainer for target power, speed, settings (read/write)
-    var bp_accum_power;
-    var bp_event_count;
-    var last_target_power;
-    var last_rr;
-        
-    function init(ant_bp, ant_fec) {
-        bp = ant_bp;
-        fec = ant_fec;
-    }
+    var irtSettings = null; // store FEC settings.
 
-    // invoked when message from fec comes? todo: figure this out.
-    function process() {
-        var speed_mps = 0.0; // need to get this from fec messages.
-        var target_power = 0.0; // need to get this from fec messages.
-        var average_power = 0.0; // need to get this from bp messages.
-        
-        if (speed_mps <= 0.0 || target_power <= 0.0 || 
-                target_power == last_target_power) {
+    fec = ant_fec;
+
+    // Process FE-C messages.
+    fec.on('message', (event, data) => {
+        if (event === "irtSettings") {
+            irtSettings = data;
+        }
+    });
+
+    // Adjusts rolling resistance calibration dynamically based on actual power 
+    // from power meter versus estimated trainer power.
+    function adjust(speed_mps, actual_power, trainer_power) {
+
+        if (speed_mps <= 0.0 || actual_power <= 0.0) {
            // nothing to be done.
             return;
         }
 
-        var new_rr = calc_rr(last_rr, drag, speed_mps, target_power, average_power);
+        if (irtSettings == null || isNaN(irtSettings.rr)) {
+            console.log("IRT Settings not received yet, no rr to calculate adjustment with.");
+            return;
+        }
+
+        // TODO:  check if we're in the right TargetStateEnum ?
+
+        var new_rr = calc_rr(irtSettings.rr, irtSettings.drag, speed_mps, 
+            actual_power, trainer_power);
 
         // TOOD: Should check here that setting is worthwhile, i.e. it's over a certain
-        // threshold of change.
+        // threshold of change. 
 
         // Send the new rr to the device.
         setRR(new_rr);
-        
-        // update state.
-        last_target_power = target_power;
 
         // Emit event; calculated new rr.
-        self.emit('message', 'SET_RR', new_rr, last_rr, actual_power, target_power);
+        self.emit('message', 'SET_RR', new_rr, irtSettings.rr, actual_power, trainer_power);
 
+        // TODO: is this module going to figure out when it's time to adjust?
         // Reset the status to reset timer for next interval.
-        target_state = TARGET_NOT_READY;
+        // target_state = TargetStateEnum.TARGET_NOT_READY;
 
-        return;        
+        // TODO: force that we don't set within 3 seconds of a new rr adjustment.
+
+        return new_rr;        
     }
 
-    // Sets the time window to average actual power in seconds.
-    function setAverageSeconds(seconds)  {
-        // do some evalutation on bounds
-        //if (seconds <= 0 || seconds > (60 * 60))
-        //    throw new Exception("Average out of bounds.");
-
-        average_seconds = seconds;
-    }
-
-    // invokes ant_fec to set the new rr value.
+    // Invokes ant_fec to set the new rr value and request that it was set.
     function setRR(new_rr) {
         // TOOD: try/catch here, in case it fails.
-        fec.setIrtSettings(null, new_rr, null, null);
+        fec.setIrtSettings(null, new_rr, null, null, false);
+        
+        // Send request 1/4 second later to request the same value to confirm.
+        setTimeout(function () {
+            fec.getIrtSettings();
+        }, 250);        
     }
 
     // Calculates new rolling resistance value based on difference between 
-    // target and actual power and existing rr, drag (k), velocity in mps.
-    function calc_rr(rr, k, v, target_power, actual_power) {
+    // estimated and actual power and existing rr, drag (k), velocity in mps.
+    function calc_rr(rr, k, v, actual_power, trainer_power) {
         // formula to solve for 'm' (current magnet force).
-        var m = (actual_power/v) - (k*v) - rr;
+        var m = (trainer_power/v) - (k*v) - rr;
 
         if (isNaN(m) || m <= 0) {
             throw new Error('Could not calculate magnet power.');
         }
 
-        var delta_force = (target_power - actual_power) / v;
+        var delta_force = (actual_power - trainer_power) / v;
         var new_rr = rr + delta_force;
 
         return new_rr;
     }
 
     PowerAdjuster.prototype.calc_rr = calc_rr;
+    PowerAdjuster.prototype.adjust = adjust;
 
 };
 

@@ -522,15 +522,23 @@ const AntFec = function() {
         }
     }
     
-    // Requests the IRT settings page.
-    function getSettings() {
-        console.log("ant_fec requesting settings.");
+    function getIrtSettings() {
+        console.log("ant_fec requesting IRT settings.");
         antlib.sendRequestDataPage(fecChannelId, IRT_SETTINGS_PAGE, transmitBuffer);
+    }
+
+    function getUserConfiguration() {
+        console.log("Requesting user config page.");
+        antlib.sendRequestDataPage(fecChannelId, USER_CONFIGURATION_PAGE, 
+            transmitBuffer);
+    }
+
+    // Requests the IRT settings & user configuration pages (2 requests).
+    function getSettings() {
+        getIrtSettings();
         // Async ask for the user settings in 250ms after sending last request.
         setTimeout(function () {
-                antlib.sendRequestDataPage(fecChannelId, USER_CONFIGURATION_PAGE, 
-                    transmitBuffer);
-                console.log("Requesting user config page.");
+                getUserConfiguration();
             }, 250);
     }
 
@@ -551,6 +559,8 @@ const AntFec = function() {
     AntFec.prototype.setTargetPower = setTargetPower;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    
     AntFec.prototype.getSettings = getSettings;
+    AntFec.prototype.getUserConfiguration = getUserConfiguration;
+    AntFec.prototype.getIrtSettings = getIrtSettings;
     AntFec.prototype.setIrtSettings = setIrtSettings;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
 };
