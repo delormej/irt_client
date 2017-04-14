@@ -22,7 +22,7 @@ const PowerAdjuster = function() {
         TARGET_READY : 2 // ready to calculate any offset required.
     };
 
-    var target_state = NO_TARGET;
+    var target_state = TargetStateEnum.NO_TARGET;
     var average_seconds = 5;
     var drag;
     var original_rr;
@@ -96,7 +96,7 @@ const PowerAdjuster = function() {
         }
 
         var delta_force = (target_power - actual_power) / v;
-        var new_rr = last_rr + delta_force;
+        var new_rr = rr + delta_force;
 
         return new_rr;
     }
@@ -106,4 +106,5 @@ const PowerAdjuster = function() {
 };
 
 util.inherits(PowerAdjuster, EventEmitter);
+
 module.exports = PowerAdjuster;

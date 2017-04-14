@@ -11,12 +11,14 @@ const AntService = function() {
     const antlib = require('../ant/antlib.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
+    const PowerAdjuster = require('../ant/power_adjuster.js');
     
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
     
     var fec = null; 
     var bp = null;
+    var powerAdjuster = null;
     var scope = null;
     var self = this;
 
@@ -36,7 +38,7 @@ const AntService = function() {
         //antlib.setDebugLogDirectory("c:\\users\\jason\\workspace\\");
         console.log("Loaded ANT: ", antlib.antVersion());
         scope.version = antlib.antVersion();
-        
+        scope.new_rr = 0;        
         scope.persistSettings = false; // Set default.
         
         /* Once you've found the FEC device, try searching for a power meter 
@@ -47,6 +49,7 @@ const AntService = function() {
 
         fec = new AntFec();
         bp = new AntBikePower();
+        powerAdjuster = new PowerAdjuster();
         
         // Process bike power messages.
         bp.on('message', (event, data) => {
@@ -161,6 +164,30 @@ const AntService = function() {
         fec.openChannel();
         
         scope.cadence = 'n/a';
+
+                // Send 2nd command 1/2 second later.
+        setInterval(function () {
+            try {
+                // Can't do this until we have drag #s
+                if (irtSettings == null)
+                    return;
+
+                if (scope.new_rr == 0) {
+                    scope.new_rr = irtSettings.rr;
+                }
+
+                scope.new_rr = powerAdjuster.calc_rr(scope.new_rr, 
+                    irtSettings.drag, 
+                    getAverageSpeed(3), 
+                    getAverageTrainerPower(3),
+                    getAveragePower(3) );
+                
+            }
+            catch (err) {
+                // just log to console for right now.
+                console.log('??', err);
+            }
+        }, 3000);  // Every 3 seconds
     }
 
     function close() {
