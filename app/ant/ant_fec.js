@@ -55,7 +55,6 @@ const AntFec = function() {
     // Keep a running accumuation.
     var accumulatedPower = 0;
     var eventCount = 0;
-    var powerEvents = [];
 
     // Placeholder function.
     function printBuffer(channelId, buffer) {
@@ -181,11 +180,8 @@ const AntFec = function() {
             flags : fecChannelEventBuffer[8] & 0x0F,
             feState : fecChannelEventBuffer[7] & 0xF0
         };
-
-        // Accumulate power events.
-        powerEvents.push({count: eventCount, power: accumulatedPower});
         
-        console.log('trainer', eventCount, accumulatedPower);
+        console.log('trainer', page.eventCount, page.accumulatedPower);
         return page;
     }
 
@@ -550,11 +546,6 @@ const AntFec = function() {
         return eventCount;
     }
     
-    // Gets the average power for a specified period of seconds. 
-    function getAveragePower(seconds) {  
-        return antlib.getAveragePower(seconds, eventCount, powerEvents);
-    }
-
     AntFec.prototype.openChannel = openChannel;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
@@ -562,7 +553,6 @@ const AntFec = function() {
     AntFec.prototype.getSettings = getSettings;
     AntFec.prototype.setIrtSettings = setIrtSettings;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
-    AntFec.prototype.getAveragePower = getAveragePower; 
 };
 
 util.inherits(AntFec, EventEmitter);

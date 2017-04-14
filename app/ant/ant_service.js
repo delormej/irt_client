@@ -20,6 +20,11 @@ const AntService = function() {
     var scope = null;
     var self = this;
 
+    var speedEvents = [];
+    var powerEvents = [];
+    var trainerPowerEvents = [];
+    var irtSettings = null; // hang on to the last settings we recieved.
+
     // Loads the ANT library.
     /* This is loaded in main.js otherwise it goes out of scope and gets GC'd.
     * however this creates a problem in that we need to use ipc to communicate 
@@ -48,16 +53,17 @@ const AntService = function() {
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
                 
-                // Get 10 second average.
-                scope.averageBikePower = bp.getAveragePower(10);
-                scope.averageTrainerPower = fec.getAveragePower(10);
-                
                 if (data.instantCadence != 0xFF) {
                     scope.cadence = data.instantCadence;
                 }
                 else {
                     scope.cadence = 0;
                 }
+
+                // Accumulate power events.
+                powerEvents.push(data);
+                // Get 10 second average.
+                scope.averageBikePower = getAveragePower(10);                
             }
             else {
                 scope.bikePower = 0;
@@ -74,6 +80,7 @@ const AntService = function() {
                 scope.distanceTravelled = formatDistance(data.distanceTravelled);
                 scope.elapsedTime = formatTime(data.elapsedTime); // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
+                speedEvents.push(data);
             }
             else if (event === "generalSettings") {
                 scope.resistanceLevel = data.resistanceLevel;
@@ -82,6 +89,9 @@ const AntService = function() {
             }
             else if (event === "specificTrainerData") {
                 scope.trainerPower = data.instantPower;
+                // Accumulate power events.
+                trainerPowerEvents.push(data);
+                scope.averageTrainerPower = getAverageTrainerPower(10);
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
@@ -105,6 +115,8 @@ const AntService = function() {
                 scope.rr = data.rr;
                 scope.servoOffset = data.servoOffset;
                 scope.settings = data.settings;
+
+                irtSettings = data;
             }
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
@@ -121,6 +133,11 @@ const AntService = function() {
         fec.on('channel_status', (status, deviceId) => {
             // Once we've connected to the FE-C, try connecting to other devices.
             if (status == antlib.STATUS_TRACKING_CHANNEL) {
+                // Grab settings from the FEC if we haven't already.
+                if (irtSettings == null) { 
+                    getSettings();
+                }
+
                 // TODO: ensure that bike power isn't already opened.
                 // exclude ID of the FE-C device from power meter search.
             
@@ -210,6 +227,23 @@ const AntService = function() {
             zpad(minutes, 2),
             zpad(seconds,2));
     }
+
+    // Gets the average power for a specified period of seconds. 
+    function getAveragePower(seconds) {  
+        return antlib.getAveragePower(seconds, powerEvents);
+    }    
+
+    // Gets the average trainer power for a specified period of seconds. 
+    function getAverageTrainerPower(seconds) {  
+        return antlib.getAveragePower(seconds, trainerPowerEvents);
+    }    
+
+    // Gets the average speed for a specified period of seconds. 
+    function getAverageSpeed(seconds) {  
+        //return antlib.getAveragePower(seconds, eventCount, powerEvents);
+        // TOOD: we're not averaging yet.
+        return speedEvents[speedEvents.length-1].speedMps;
+    }    
 
     AntService.prototype.load = load;
     AntService.prototype.close = close;

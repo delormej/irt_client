@@ -519,18 +519,21 @@ function accumulateDoubleByte(accumulator, byte) {
 }
 
 // Gets the average power for a specified period of seconds. 
-function getAveragePower(seconds, eventCount, powerEvents) {
-    // Events are ~2hz, so 2 events per second.
-    var targetEvent = eventCount - (seconds * 2);
-    
+function getAveragePower(seconds,  powerEvents) {
+   
     var length = powerEvents.length - 1;
     var index =  length;
+    // Grab last event count.
+    var eventCount = powerEvents[length].eventCount;
+
+    // Events are ~2hz, so 2 events per second.  Find the oldest event we want to avg from.
+    var targetEvent = eventCount - (seconds * 2);
     
-    while (index > 0 && powerEvents[index].count > targetEvent)
+    while (index > 0 && powerEvents[index].eventCount > targetEvent)
         index--;
         
-    var deltaEvents = powerEvents[length].count - powerEvents[index].count;
-    var deltaPower = powerEvents[length].power - powerEvents[index].power;
+    var deltaEvents = powerEvents[length].eventCount - powerEvents[index].eventCount;
+    var deltaPower = powerEvents[length].accumulatedPower - powerEvents[index].accumulatedPower;
     
     var average = (deltaPower / deltaEvents);
     

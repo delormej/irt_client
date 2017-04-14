@@ -9,6 +9,9 @@
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
 
+const METERS_TO_MILES = 0.000621371;
+const MPS_TO_MPH = 2.23694;
+
 const PowerAdjuster = function() { 
     var self = this;
 
@@ -32,17 +35,11 @@ const PowerAdjuster = function() {
         
     function init(ant_bp, ant_fec) {
         bp = ant_bp;
-        // register listeners for bike power messages.
-        
         fec = ant_fec;
-        // register listeners for fec messages.
     }
 
     // invoked when message from fec comes? todo: figure this out.
     function process() {
-
-
-
         var speed_mps = 0.0; // need to get this from fec messages.
         var target_power = 0.0; // need to get this from fec messages.
         var average_power = 0.0; // need to get this from bp messages.
@@ -103,6 +100,9 @@ const PowerAdjuster = function() {
 
         return new_rr;
     }
+
+    PowerAdjuster.prototype.calc_rr = calc_rr;
+
 };
 
 util.inherits(PowerAdjuster, EventEmitter);

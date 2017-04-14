@@ -22,7 +22,6 @@ const AntBikePower = function() {
     // Keep a running accumuation.
     var accumulatedPower = 0;
     var eventCount = 0;
-    var powerEvents = [];
 
     // Accumulates power beyond the 16 bits.
     function getAccumulatedPower(power) {   
@@ -47,9 +46,6 @@ const AntBikePower = function() {
                 bpChannelEventBuffer[5]),
             instantPower : bpChannelEventBuffer[8] << 8 | bpChannelEventBuffer[7]   
         };
-        
-        // Accumulate power events.
-        powerEvents.push({count: eventCount, power: accumulatedPower});
         
         return page;
     }
@@ -109,14 +105,8 @@ const AntBikePower = function() {
             console.log('bp channel already open.');
         }     
     }
-    
-    // Gets the average power for a specified period of seconds. 
-    function getAveragePower(seconds) {  
-        return antlib.getAveragePower(seconds, eventCount, powerEvents);
-    }
 
     AntBikePower.prototype.openChannel = openChannel;
-    AntBikePower.prototype.getAveragePower = getAveragePower;
 };
 
 util.inherits(AntBikePower, EventEmitter);
