@@ -80,7 +80,7 @@ const AntService = function() {
             else {
                 scope.bikePower = 0;
             }
-            scope.$apply();
+            scope.safeApply();
         });
         
         // Process FE-C messages.
@@ -138,7 +138,7 @@ const AntService = function() {
                 scope.userWeightKg = data.userWeightKg;
                 scope.bikeWeightKg = data.bikeWeightKg;
             }
-            scope.$apply();
+            scope.safeApply();
         });
         
         fec.on('channel_status', (status, deviceId) => {
