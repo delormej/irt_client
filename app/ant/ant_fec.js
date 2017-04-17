@@ -507,10 +507,10 @@ const AntFec = function() {
         // servoOfset only uses 15 least significant bits. MSBit is reserved for a flag 
         // to determine whether all settings changes should be persisted (1) or not (0).
         if (persist) { 
-            transmitBuffer[6] | 0x80; // Set MSB to 1.
+            transmitBuffer[6] |= 0x80; // Set MSB to 1.
         }
         else { 
-            transmitBuffer[6] & 0x7F; // Set MSB to 0.
+            transmitBuffer[6] &= 0x7F; // Set MSB to 0.
         }
 
         if (hasChanges) {
