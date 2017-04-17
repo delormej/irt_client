@@ -9,12 +9,16 @@
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
 
-const METERS_TO_MILES = 0.000621371;
-const MPS_TO_MPH = 2.23694;
-
 const PowerAdjuster = function(ant_fec) { 
     var self = this;
 
+    // adjust() can be called at any frequency.  This flag indicates when it is
+    // benefitial to attempt adjustment. 
+    var readyToAdjust = true;
+        
+    const THRESHOLD_WATTS = 3; // Don't adjust unless we're off by +/- 'n' watts.
+    const ADJUST_FREQUENCY = 5000; // Don't adjust more than once every 'n' seconds.
+    
     // Enum of module state.
     const TargetStateEnum = {
         NO_TARGET : 0, // no target set.
@@ -39,35 +43,41 @@ const PowerAdjuster = function(ant_fec) {
     // from power meter versus estimated trainer power.
     function adjust(speed_mps, actual_power, trainer_power) {
 
+        if (readyToAdjust == false) {
+            return;
+        }
+
         if (speed_mps <= 0.0 || actual_power <= 0.0) {
            // nothing to be done.
             return;
         }
 
-        if (irtSettings == null || isNaN(irtSettings.rr)) {
-            console.log("IRT Settings not received yet, no rr to calculate adjustment with.");
+        // Check to see that power is off enough to be worth adjusting.
+        if (!aboveThreshold(THRESHOLD_WATTS, actual_power, trainer_power)) {
             return;
         }
 
-        // TODO:  check if we're in the right TargetStateEnum ?
+        if (irtSettings == null || isNaN(irtSettings.rr)) {
+            console.log("IRT Settings not received yet, no rr to calculate adjustment with.");
+            // Call to get for next time.
+            fec.getIrtSettings();
+            return;
+        }
 
         var new_rr = calc_rr(irtSettings.rr, irtSettings.drag, speed_mps, 
             actual_power, trainer_power);
 
-        // TOOD: Should check here that setting is worthwhile, i.e. it's over a certain
-        // threshold of change. 
+        readyToAdjust = false;
 
         // Send the new rr to the device.
         setRR(new_rr);
+        // Wait a few seconds before allowing another adjustment.
+        setTimeout(function() {
+            readyToAdjust = true;
+        }, ADJUST_FREQUENCY);
 
         // Emit event; calculated new rr.
         self.emit('message', 'SET_RR', new_rr, irtSettings.rr, actual_power, trainer_power);
-
-        // TODO: is this module going to figure out when it's time to adjust?
-        // Reset the status to reset timer for next interval.
-        // target_state = TargetStateEnum.TARGET_NOT_READY;
-
-        // TODO: force that we don't set within 3 seconds of a new rr adjustment.
 
         return new_rr;        
     }
@@ -86,17 +96,28 @@ const PowerAdjuster = function(ant_fec) {
     // Calculates new rolling resistance value based on difference between 
     // estimated and actual power and existing rr, drag (k), velocity in mps.
     function calc_rr(rr, k, v, actual_power, trainer_power) {
-        // formula to solve for 'm' (current magnet force).
-        var m = (trainer_power/v) - (k*v) - rr;
+        /* formula to solve for 'm' (current magnet force).
+        // this is wrong: var m = (trainer_power/v) - (k*v) - rr;
 
         if (isNaN(m) || m <= 0) {
-            throw new Error('Could not calculate magnet power.');
+            m = 0;
         }
-
+        */
         var delta_force = (actual_power - trainer_power) / v;
         var new_rr = rr + delta_force;
 
+        if (new_rr <= 0) {
+            throw new Error("Invalid new_rr calculation: ", 
+                rr, new_rr, delta_force, m, actual_power, trainer_power);
+        }
+
         return new_rr;
+    }
+
+    // Determines if a value is above a threshold range.
+    function aboveThreshold(threshold, new_value, old_value) {
+        return ( new_value >= (old_value + threshold) || 
+            new_value <= (old_value - threshold) );
     }
 
     PowerAdjuster.prototype.calc_rr = calc_rr;

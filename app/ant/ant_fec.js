@@ -381,7 +381,7 @@ const AntFec = function() {
         
         transmitBuffer[0] = USER_CONFIGURATION_PAGE;
         
-        if (userWeightKg != null) {
+        if (userWeightKg != null && !isNaN(userWeightKg)) {
             userWeightKg = Math.round(userWeightKg * 100);
             transmitBuffer[1] = userWeightKg & 0xFF;
             transmitBuffer[2] = userWeightKg >> 8;
@@ -396,7 +396,7 @@ const AntFec = function() {
         transmitBuffer[3] = 0xFF; // Reserved.
         
         //wheelDiameterOffset
-        if (wheelDiameter != null) {
+        if (wheelDiameter != null && !isNaN(wheelDiameter)) {
             // Wheel diameter 0-2.54m
             if (wheelDiameter > 2.54) {
                 throw new RangeError('Wheel diameter must be less than 2.54m');
@@ -415,7 +415,7 @@ const AntFec = function() {
             transmitBuffer[6] = 0xFF;
         } 
         
-        if (bikeWeightKg != null) {
+        if (bikeWeightKg != null && !isNaN(bikeWeightKg)) {
             if (bikeWeightKg >= 51) {
                 throw new RangeError('Bike Weight is too high.');
             }
@@ -465,7 +465,7 @@ const AntFec = function() {
             servoOffset : buffer[6] | buffer[7] << 8,
             settings : buffer[8]
         */        
-        if (drag != null) {
+        if (drag != null && !isNaN(drag)) {
             transmitBuffer[1] =  (drag * 1000000) & 0xFF; // DragLSB
             transmitBuffer[2] =  (drag * 1000000) >> 8; //DragMSB
             hasChanges = true;
@@ -475,7 +475,7 @@ const AntFec = function() {
             transmitBuffer[2] = 0xFF;
         }
 
-        if (rr != null) {
+        if (rr != null && !isNaN(rr)) {
             transmitBuffer[3] =  (rr * 1000) & 0xFF; // RRLSB
             transmitBuffer[4] =  (rr * 1000) >> 8; //RRMSB
             hasChanges = true;
@@ -485,7 +485,7 @@ const AntFec = function() {
             transmitBuffer[4] = 0xFF;
         }            
 
-        if (servoOffset != null) {
+        if (servoOffset != null && !isNaN(servoOffset)) {
             transmitBuffer[5] = servoOffset & 0xFF; // ServoOffsetLSB  
             transmitBuffer[6] = servoOffset >> 8; // ServoOffsetMSB  
             hasChanges = true;
@@ -495,7 +495,7 @@ const AntFec = function() {
             transmitBuffer[6] = 0xFF;
         }            
 
-        if (settings != null) {
+        if (settings != null && !isNaN(settings)) {
             transmitBuffer[7] = settings & 0xFF; // Settings
             hasChanges = true;
         }
@@ -507,10 +507,10 @@ const AntFec = function() {
         // servoOfset only uses 15 least significant bits. MSBit is reserved for a flag 
         // to determine whether all settings changes should be persisted (1) or not (0).
         if (persist) { 
-            transmitBuffer[6] |= 0x80; // Set MSB to 1.
+            transmitBuffer[6] | 0x80; // Set MSB to 1.
         }
         else { 
-            transmitBuffer[6] &= 0x7F; // Set MSB to 0.
+            transmitBuffer[6] & 0x7F; // Set MSB to 0.
         }
 
         if (hasChanges) {

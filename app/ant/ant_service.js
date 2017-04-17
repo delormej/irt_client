@@ -40,6 +40,7 @@ const AntService = function() {
         scope.version = antlib.antVersion();
         scope.new_rr = 0;        
         scope.persistSettings = false; // Set default.
+        scope.powerAdjustEnabled = false;
         
         /* Once you've found the FEC device, try searching for a power meter 
         * (low prioirty) so that it doesn't conflict with the FE-C channel.  
@@ -66,7 +67,15 @@ const AntService = function() {
                 // Accumulate power events.
                 powerEvents.push(data);
                 // Get 10 second average.
-                scope.averageBikePower = getAveragePower(10);                
+                scope.averageBikePower = getAveragePower(3); 
+                scope.averageTrainerPower = getAverageTrainerPower(3);
+                
+                if (scope.powerAdjustEnabled == true) {
+                    scope.new_rr = powerAdjuster.adjust(
+                        getAverageSpeed(3), 
+                        scope.averageBikePower,
+                        scope.averageTrainerPower );                
+                }
             }
             else {
                 scope.bikePower = 0;
@@ -94,7 +103,6 @@ const AntService = function() {
                 scope.trainerPower = data.instantPower;
                 // Accumulate power events.
                 trainerPowerEvents.push(data);
-                scope.averageTrainerPower = getAverageTrainerPower(10);
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
@@ -164,19 +172,6 @@ const AntService = function() {
         fec.openChannel();
         
         scope.cadence = 'n/a';
-
-        setInterval(function () {
-            try {
-                scope.new_rr = powerAdjuster.adjust(
-                    getAverageSpeed(3), 
-                    getAveragePower(3),
-                    getAverageTrainerPower(3) );
-            }
-            catch (err) {
-                // just log to console for right now.
-                console.log('??', err);
-            }
-        }, 3000);  // Every 3 seconds
     }
 
     function close() {
@@ -200,10 +195,10 @@ const AntService = function() {
     // Reads values from scope and updates user config and IRT settings on the device.
     function setSettings() {
         try {
-            fec.setIrtSettings(self.scope.drag,
-                self.scope.rr,
-                self.scope.servoOffset,
-                self.scope.settings,
+            fec.setIrtSettings(parseFloat(self.scope.drag),
+                parseFloat(self.scope.rr),
+                parseInt(self.scope.servoOffset),
+                parseInt(self.scope.settings),
                 self.scope.persistSettings);
         }
         catch (err) {
@@ -215,9 +210,9 @@ const AntService = function() {
         setTimeout(function () {
             try {
                 fec.setUserConfiguration(
-                    self.scope.userWeightKg,  
-                    self.scope.bikeWeightKg,
-                    self.scope.wheelDiameter,
+                    parseFloat(self.scope.userWeightKg),  
+                    parseFloat(self.scope.bikeWeightKg),
+                    parseInt(self.scope.wheelDiameter),
                     null /*gearRatio */);
             }
             catch (err) {
