@@ -101,6 +101,9 @@ const AntService = function() {
             }
             else if (event === "specificTrainerData") {
                 scope.trainerPower = data.instantPower;
+                scope.trainerStatus = data.trainerStatus;
+                scope.target_power_status = formatTargetPowerStatus(data.flags);
+                scope.feState = formatFeState(data.feState);
                 // Accumulate power events.
                 trainerPowerEvents.push(data);
             }
@@ -237,6 +240,50 @@ const AntService = function() {
             zpad(hours,2), 
             zpad(minutes, 2),
             zpad(seconds,2));
+    }
+
+    // Formats flags value for trainer target power status into a user string.
+    function formatTargetPowerStatus(flags) {
+        var value = "";
+        switch (flags) {
+            case 0: /*TARGET_AT_POWER*/
+                value = "On Target";
+                break;
+            case 1: /*TARGET_SPEED_TOO_LOW*/
+                value = "Too Slow";
+                break;
+            case 2: /*TARGET_SPEED_TOO_HIGH*/
+                value = "Too Fast";
+                break;
+            default:
+                value = "Target not set.";
+                break;
+        }
+
+        return value;
+    }
+
+    // Formats the fitness equipment state field into a user string.
+    function formatFeState(fe_state) {
+        var value = "";
+        switch (fe_state) {
+            case 1: /*FE_ASLEEP_OFF*/
+                value = "Off";
+                break;
+            case 2: /*FE_READY*/
+                value = "Ready";
+                break;
+            case 3: /*FE_IN_USE*/
+                value = "In use"
+                break;
+            case 4: /*FE_FINISHED_PAUSED*/
+                value = "Finished or Paused.";
+                break;
+            default:
+                value = "Not set.";
+                break;
+        }
+        return value;
     }
 
     // Gets the average power for a specified period of seconds. 

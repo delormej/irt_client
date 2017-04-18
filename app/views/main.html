@@ -54,7 +54,15 @@
         <button ng-click="setResistance();">Set Resistance</button>
         <button ng-click="getSettings();">Get Settings</button>
         <button ng-click="setSettings();">Set Settings</button>
+        <button ng-click="enableDFU();">Enable DFU</button>
+        
+        <br/>Power Calibration Required:<input type="checkbox" ng-model="trainerStatus.powerCalibrationRequired"/>
+        <br/>Resistance Calibration Required:<input type="checkbox" ng-model="trainerStatus.resistanceCalibrationRequired"/>
+        <br/>User Configuration Required:<input type="checkbox" ng-model="trainerStatus.userConfigRequired"/>
+        <br/>Target Power Status:<span>{{target_power_status}}</span>
+        <br/>Trainer Status:<span>{{feState}}</span>
 
+        <p/>
         <br/>ServoPosition:<span>{{servoPosition}}</span>
         <br/>swRevision:<span>{{swRevision}}</span>
         <br/>Settings:<input type="text" ng-model="settings"/>
