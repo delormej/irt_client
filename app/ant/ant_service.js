@@ -171,6 +171,10 @@ const AntService = function() {
             }              
         });
         
+        powerAdjuster.on('message', (new_rr, rr, actual_power, trainer_power) => {
+            console.log('Updated RR: ', new_rr, rr, actual_power, trainer_power);
+        });
+
         // Configure the channel.
         fec.openChannel();
         

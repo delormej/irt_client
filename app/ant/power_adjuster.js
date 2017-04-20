@@ -108,7 +108,7 @@ const PowerAdjuster = function(ant_fec) {
 
         if (new_rr <= 0) {
             throw new Error("Invalid new_rr calculation: ", 
-                rr, new_rr, delta_force, m, actual_power, trainer_power);
+                rr, new_rr, delta_force, actual_power, trainer_power);
         }
 
         return new_rr;

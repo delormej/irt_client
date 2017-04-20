@@ -181,7 +181,6 @@ const AntFec = function() {
             feState : fecChannelEventBuffer[7] & 0xF0
         };
         
-        console.log('trainer', page.eventCount, page.accumulatedPower);
         return page;
     }
 

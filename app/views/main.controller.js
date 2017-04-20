@@ -55,4 +55,12 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             console.log('main.controller::setSettings');
             antService.setSettings();
         };
+
+        $scope.$watch('powerAdjustEnabled', function() {
+            $scope.noticeMessage = "Power Adjuster changed to: " + $scope.powerAdjustEnabled;
+            console.log('Power Adjust Enabled changed: ', $scope.powerAdjustEnabled);
+            setTimeout(function() {
+                $scope.noticeMessage = "";
+            }, 3000); // display for 3 seconds.
+        });
 }]);
