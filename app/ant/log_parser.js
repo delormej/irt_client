@@ -17,17 +17,50 @@
 //module.exports = ANTLogParser;
 
 const antlib = require('../ant/antlib.js');
-const fs = require('fs');
+//const fs = require('fs');
+const jetpack = require('fs-jetpack');
 
 function open(path) {
     console.log("open log file: ", path);
 
-    fs.readFile(path, (err, data) => {
-        if (err) throw err;
-        console.log(data);
-        //antlib.channelEventFromLog()
-    });
+    var data = jetpack.read(path);
+    var lines = data.split('\n');
+    
+    lines.forEach(function(element, index, array) {
+        var record = element.split('-'); // Splits into timestamp and hex bytes ascii chars.
+        if (record != null && record.length >= 2) {
 
+            var transmitType = record[0].slice(24, 25); // can be Rx or Tx
+            // Don't process transmits, only recieves. 
+            if (transmitType == 'R') {
+                var timestamp = parseTimeStamp(record[0]);
+                var hexBytes = parseHexBytes(record[1]);
+                console.log(timestamp, hexBytes);
+            }
+        }
+    });
+}
+
+// Parses 
+function parseHexBytes(data) {
+    //    135.031 { 673362484} Rx - [A4][09][4E][00][19][2A][FF][C0][00][39][00][31][E7]
+
+    // Strip down to just the elements.    
+    var record = data.slice(2, data.lastIndexOf(']'))
+
+    // Convert ascii hex into actual hex value.
+    var hex = record.split('\]\[');
+    var hexBytes = new Array(hex.length);
+    for (var i = 0; i < hex.length; i++) {
+        hexBytes[i] = parseInt(hex[i], 16);
+    }
+
+    return hexBytes;
+}
+
+function parseTimeStamp(data) {
+    // hard coded positions for right now. TOOD: fix this
+    return parseInt(data.slice(13,23));
 }
 
 exports.open = open;
