@@ -56,6 +56,12 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.setSettings();
         };
 
+        $scope.openLogFile = function() {
+            // hardcoded for the moment.
+            var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
+            antService.openLogFile(path);
+        }
+
         $scope.$watch('powerAdjustEnabled', function() {
             $scope.noticeMessage = "Power Adjuster changed to: " + $scope.powerAdjustEnabled;
             console.log('Power Adjust Enabled changed: ', $scope.powerAdjustEnabled);

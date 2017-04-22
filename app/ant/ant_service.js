@@ -12,6 +12,7 @@ const AntService = function() {
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
     const PowerAdjuster = require('../ant/power_adjuster.js');
+    const LogParser = require('../ant/log_parser.js');
     
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
@@ -185,9 +186,9 @@ const AntService = function() {
         antlib.close();
     }
     
-    function loadLogFile(path) {
+    function openLogFile(path) {
         antlib.setFileMode(true);
-        //log_parser
+        LogParser.open(path);
     }
 
     function setBasicResistance(level) {
@@ -333,6 +334,7 @@ const AntService = function() {
     AntService.prototype.setTargetPower = setTargetPower;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      
+    AntService.prototype.openLogFile = openLogFile;
 }
 
 module.exports = AntService;

@@ -164,12 +164,16 @@ function parseChannelId(channelId) {
     var deviceTypeId = responseBuffer[4];
 
     // Find the right channel configuration for the device type receieved.  
-    if (channelConfigs[channelId].deviceType != deviceTypeId) {
+    if (channelConfigs[channelId] != null && 
+            channelConfigs[channelId].deviceType != deviceTypeId) {
         // Make a copy of config later in the array.
         channelConfigs.push(channelConfigs[channelId]);
         // Replace existing channel index with the correct device type.
         channelConfigs[channelId] = getChannelConfigByDeviceType(deviceTypeId);
     }
+
+    if (channelConfigs[channelId] == null)
+        return;
 
     channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
     channelConfigs[channelId].deviceType = deviceTypeId;
@@ -180,7 +184,8 @@ function parseChannelId(channelId) {
 // Returns the channel config for a given device type.
 function getChannelConfigByDeviceType(deviceTypeId) {
     for (var i = 0; i < channelConfigs.length; i++) {
-        if (deviceTypeId == channelConfigs[i].deviceType) {
+        if (channelConfigs[i] != null &&
+                deviceTypeId == channelConfigs[i].deviceType) {
             return channelConfigs[i];
         }
     }
@@ -280,7 +285,8 @@ function deviceResponse(channelId, messageId) {
 function channelEvent(channelId, eventId) {
     if (channelConfigs[channelId] != null) {
         // If this is the first time we've seen data, get channel details.
-        if (channelConfigs[channelId].deviceId == 0) {
+        if (channelConfigs[channelId] == null ||
+                channelConfigs[channelId].deviceId == 0) {
             // Get the channel config if we're not tracking.
             requestMessage(channelId, MESG_CHANNEL_ID_ID);
         }                
@@ -316,7 +322,7 @@ function channelEventFromLog(channelId, eventId, timestamp) {
     // need to figure out which channel corresponds to which device type id.
     // Assumes that channelConfigs have been set.
     
-    channelConfigs[channelId].channelCallback(channelId, eventId, timestamp);
+    //channelConfigs[channelId].channelCallback(channelId, eventId, timestamp);
 }
 
 // Determins the right library path based on OS version.
