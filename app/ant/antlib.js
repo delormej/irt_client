@@ -22,6 +22,9 @@ const ANT_FREQ = 57;
 const ANT_CHANNEL_PERIOD = 8192;
 const ANT_CHANNEL_ID = 0;
 
+const ANT_MESSAGEID_POS = 2; // position in the buffer for the message id.
+const ANT_CHANNELID_POS = 3; // position in the buffer for the channel id.
+
 const RESPONSE_NO_ERROR = 0;
 const EVENT_RX_SEARCH_TIMEOUT = 0x01;
 const EVENT_RX_FAIL= 0x02;
@@ -43,6 +46,9 @@ const MESG_OPEN_CHANNEL_ID = 0x4B;
 const MESG_UNASSIGN_CHANNEL_ID = 0x41;
 const MESG_CLOSE_CHANNEL_ID = 0x4C;
 const MESG_REQUEST_ID = 0x4D;
+const MESG_BROADCAST_DATA = 0x4E;
+const MESG_ACKNOWLEDGED_DATA = 0x4F;
+const MESG_BURST_DATA = 0x50;
 
 const MESG_MAX_SIZE_VALUE = 41;
 const ANT_STANDARD_DATA_PAYLOAD_SIZE = 8;
@@ -91,6 +97,8 @@ const antlib = ffi.Library(libPath(), {
 
 // Global variable indicates if the module has been initialized.
 var initialized = false;
+// Flag to indicate true if we are invoking this from a log file.
+var fileMode = false;
 
 // Returns a string representing the ANT Library version.
 function antVersion() {
@@ -110,6 +118,33 @@ function setDebugLogDirectory(directory) {
     return status;
 }
 
+// Flags antlib's mode to work on a file log vs. interacting with the ANT device.
+function setFileMode(value) {
+    setFileMode = value;
+}
+
+// Parses a single line of bytes from an ANT log file and forwards it as appropriate.
+function parseLogLine(buffer, timestamp) {
+    if (!fileMode) 
+        return;
+
+    var channelId = buffer[ANT_CHANNELID_POS];
+    var eventId = buffer[ANT_MESSAGEID_POS];
+
+    if (eventId == MESG_CHANNEL_ID_ID) {
+        parseChannelId(channelId);
+    } 
+    else {
+        // copy bytes to the buffer, TODO: there is probably a better way.
+        // todo: also, clean out excess bytes in the buffer before.
+        for (var i = 0; i < buffer.length; i++) {
+            channelConfigs[channelId].buffer[i] = buffer[i];
+        }
+        
+        channelEvent(channelId, eventId);
+    }
+}
+
 // Called when a channed status message is received.
 function checkChannelStatus(channelId) {
     var status = responseBuffer[1] & 0x3;
@@ -126,12 +161,31 @@ function checkChannelStatus(channelId) {
 
 // Called when a channel Id message is received which contains the device it found.
 function parseChannelId(channelId) {
+    var deviceTypeId = responseBuffer[4];
+
+    // Find the right channel configuration for the device type receieved.  
+    if (channelConfigs[channelId].deviceType != deviceTypeId) {
+        // Make a copy of config later in the array.
+        channelConfigs.push(channelConfigs[channelId]);
+        // Replace existing channel index with the correct device type.
+        channelConfigs[channelId] = getChannelConfigByDeviceType(deviceTypeId);
+    }
+
     channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
-    channelConfigs[channelId].deviceType = responseBuffer[4];
+    channelConfigs[channelId].deviceType = deviceTypeId;
     channelConfigs[channelId].transmissionType = responseBuffer[5];
     console.log('Channel Id, Device Id: ', channelId, channelConfigs[channelId].deviceId);
-    // Request channel status.
-    requestMessage(channelId, MESG_CHANNEL_STATUS_ID);    
+}
+
+// Returns the channel config for a given device type.
+function getChannelConfigByDeviceType(deviceTypeId) {
+    for (var i = 0; i < channelConfigs.length; i++) {
+        if (deviceTypeId == channelConfigs[i].deviceType) {
+            return channelConfigs[i];
+        }
+    }
+    // didn't find a channel config.
+    return null;
 }
 
 // Callback for ANT device responses.
@@ -213,6 +267,8 @@ function deviceResponse(channelId, messageId) {
         case MESG_CHANNEL_ID_ID:
             // Arrives when you ask for channel ID.
             parseChannelId(channelId);
+            // Request channel status.
+            requestMessage(channelId, MESG_CHANNEL_STATUS_ID);      
             break;
         default:
             console.log('response:', messageId, responseBuffer);
@@ -229,6 +285,9 @@ function channelEvent(channelId, eventId) {
             requestMessage(channelId, MESG_CHANNEL_ID_ID);
         }                
         
+        // Grab the current timestamp for each message.
+        var timestamp = Date.now();
+
         switch(eventId) {
             case EVENT_RX_FAIL:
                 console.log('EVENT_RX_FAIL channel:', channelId);
@@ -244,13 +303,20 @@ function channelEvent(channelId, eventId) {
                 break;
             default:
                 // Invoke the channel's callback.
-                channelConfigs[channelId].channelCallback(channelId, eventId);
+                channelConfigs[channelId].channelCallback(channelId, eventId, timestamp);
                 break;
         }
     }
     else {
         console.log('no channel.');
     }
+}
+
+function channelEventFromLog(channelId, eventId, timestamp) {
+    // need to figure out which channel corresponds to which device type id.
+    // Assumes that channelConfigs have been set.
+    
+    channelConfigs[channelId].channelCallback(channelId, eventId, timestamp);
 }
 
 // Determins the right library path based on OS version.
@@ -299,13 +365,13 @@ const channelEventCallback = ffi.Callback('bool', [ 'uchar', 'uchar' ], channelE
 
 // Loads the native ANT library and Initializes the ANT+ network key. 
 function init() {    
-    // If init already called, exit.
-    if (initialized)
+    // If init already called or in filemode, exit.
+    if (initialized || fileMode)
         return; 
     
     var ver = antVersion();
     console.log(ver);
-    
+
     var success = antlib.ANT_Init(ANT_DEVICE_NUMBER, 
         BAUD_RATE, PORT_TYPE_USB, FRAMER_TYPE_BASIC);
     
@@ -333,7 +399,7 @@ function init() {
 }
 
 // Opens a chanel.
-function openChannel(config, buffer) {
+function openChannel(config) {
     // Get the first empty channel.
     var channelId = 0;
     for (; channelId < channelConfigs.length; channelId++) {
@@ -344,11 +410,18 @@ function openChannel(config, buffer) {
 
     // Assign channel configuration.
     channelConfigs[channelId] = config;
+
+    // Drop out if in file parse mode.
+    if (fileMode) 
+        return;
+
     if (!antlib.ANT_AssignChannel(channelId, config.channelType, ANT_NETWORK)) {
         throw new Error('Unable to assign channel.');
     }
 
-    antlib.ANT_AssignChannelEventFunction(channelId, channelEventCallback, buffer);
+    antlib.ANT_AssignChannelEventFunction(channelId, 
+        channelEventCallback, 
+        channelConfigs[channelId].buffer);
     
     return channelId;
 }
@@ -563,6 +636,8 @@ exports.requestChannelId = requestChannelId;
 exports.accumulateByte = accumulateByte;
 exports.accumulateDoubleByte = accumulateDoubleByte;
 exports.getAveragePower = getAveragePower;
+exports.setFileMode = setFileMode;
+exports.parseLogLine = parseLogLine;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;

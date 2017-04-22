@@ -185,6 +185,11 @@ const AntService = function() {
         antlib.close();
     }
     
+    function loadLogFile(path) {
+        antlib.setFileMode(true);
+        //log_parser
+    }
+
     function setBasicResistance(level) {
         console.log("setting basic resistance", level);
         fec.setBasicResistance(level);

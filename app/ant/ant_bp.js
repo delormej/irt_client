@@ -51,7 +51,7 @@ const AntBikePower = function() {
     }
 
     // Function called back by the ant library when a message arrives.
-    function bpChannelEvent(channelId, eventId) { 
+    function bpChannelEvent(channelId, eventId, timestamp) { 
         if (channelId != bpChannelId) {
             console.log('Wrong channel.');
             return;
@@ -60,15 +60,16 @@ const AntBikePower = function() {
         var messagedId = bpChannelEventBuffer[1];
         switch (messagedId) {
             case STANDARD_POWER_ONLY_PAGE:
-                self.emit('message', 'standardPowerOnly', parseStandardPowerOnly());
+                self.emit('message', 'standardPowerOnly', parseStandardPowerOnly(), 
+                    timestamp);
                 break;
             case antlib.PRODUCT_PAGE:
                 self.emit('message', 'productInfo', 
-                    antlib.parseProductInfo(bpChannelEventBuffer));
+                    antlib.parseProductInfo(bpChannelEventBuffer), timestamp);
                 break;
             case antlib.MANUFACTURER_PAGE:
                 self.emit('message', 'manufacturerInfo', 
-                    antlib.parseManufacturerInfo(bpChannelEventBuffer));
+                    antlib.parseManufacturerInfo(bpChannelEventBuffer), timestamp);
                 break;                
             default:
                 //console.log('Unrecognized message.', messagedId);
@@ -85,6 +86,7 @@ const AntBikePower = function() {
         frequency: 57, 
         channelPeriod: 8182, 
         channelCallback: bpChannelEvent,
+        buffer: bpChannelEventBuffer,
         status: 0
     };
     
@@ -99,7 +101,7 @@ const AntBikePower = function() {
             if (deviceId != null) {
                 BP_CHANNEL_CONFIG.deviceId = deviceId;
             }
-            bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG, bpChannelEventBuffer);
+            bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG);
         }
         else {
             console.log('bp channel already open.');

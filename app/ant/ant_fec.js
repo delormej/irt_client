@@ -231,7 +231,7 @@ const AntFec = function() {
     }
 
     // Function called back by the ant library when a message arrives.
-    function fecChannelEvent(channelId, eventId) { 
+    function fecChannelEvent(channelId, eventId, timestamp) { 
         //printBuffer(channelId, fecChannelEventBuffer);
         if (channelId != fecChannelId) {
             console.log('Wrong channel.');
@@ -243,38 +243,38 @@ const AntFec = function() {
                 var messagedId = fecChannelEventBuffer[1];
                 switch (messagedId) {
                     case GENERAL_FE_DATA_PAGE:
-                        self.emit('message', 'generalFEData', parseGeneralFEData());
+                        self.emit('message', 'generalFEData', parseGeneralFEData(), timestamp);
                         break;
                     case GENERAL_SETTINGS_PAGE:
-                        self.emit('message', 'generalSettings', parseGeneralSettings());
+                        self.emit('message', 'generalSettings', parseGeneralSettings(), timestamp);
                         break;
                     case SPECIFIC_TRAINER_DATA_PAGE:
-                        self.emit('message', 'specificTrainerData', parseSpecificTrainerData());
+                        self.emit('message', 'specificTrainerData', parseSpecificTrainerData(), timestamp);
                         break;
                     case COMMAND_STATUS_PAGE:
-                        self.emit('message', 'commandStatus', parseCommandStatus());
+                        self.emit('message', 'commandStatus', parseCommandStatus(), timestamp);
                         break;
                     case FE_CAPABILITIES_PAGE:
-                        self.emit('message', 'feCapabilities', parseFeCapabilites());
+                        self.emit('message', 'feCapabilities', parseFeCapabilites(), timestamp);
                         break;
                     case USER_CONFIGURATION_PAGE:
-                        self.emit('message', 'userConfig', parseUserConfig());
+                        self.emit('message', 'userConfig', parseUserConfig(), timestamp);
                         break;
                     case antlib.PRODUCT_PAGE:
                         self.emit('message', 'productInfo', 
-                            antlib.parseProductInfo(fecChannelEventBuffer));
+                            antlib.parseProductInfo(fecChannelEventBuffer), timestamp);
                         break;
                     case antlib.MANUFACTURER_PAGE:
                         self.emit('message', 'manufacturerInfo', 
-                            antlib.parseManufacturerInfo(fecChannelEventBuffer));
+                            antlib.parseManufacturerInfo(fecChannelEventBuffer), timestamp);
                         break;
                     case IRT_EXTRA_INFO_PAGE:
                         self.emit('message', 'irtExtraInfo', 
-                            antlib.parseIrtExtraInfo(fecChannelEventBuffer));            
+                            antlib.parseIrtExtraInfo(fecChannelEventBuffer), timestamp);            
                         break;
                     case IRT_SETTINGS_PAGE:
                         self.emit('message', 'irtSettings', 
-                            parseIrtSettings());            
+                            parseIrtSettings(), timestamp);            
                         break;
                     default:
                         console.log('Unrecognized message.', 
@@ -296,7 +296,7 @@ const AntFec = function() {
                 console.log('Channel status changed:', FEC_CHANNEL_CONFIG);
                 // Raise an event. 
                 self.emit('channel_status', FEC_CHANNEL_CONFIG.status,
-                    FEC_CHANNEL_CONFIG.deviceId);
+                    FEC_CHANNEL_CONFIG.deviceId, timestamp);
                 break;
             default: // eventId
                 console.log('Unrecognized event.', eventId);
@@ -313,6 +313,7 @@ const AntFec = function() {
         frequency: 57, 
         channelPeriod: 8192,         
         channelCallback: fecChannelEvent,
+        buffer: fecChannelEventBuffer,
         status: 0
     };
     
@@ -325,7 +326,7 @@ const AntFec = function() {
             FEC_CHANNEL_CONFIG.deviceId = deviceId;
         }
         
-        fecChannelId = antlib.openChannel(FEC_CHANNEL_CONFIG, fecChannelEventBuffer);     
+        fecChannelId = antlib.openChannel(FEC_CHANNEL_CONFIG);     
     }
 
     // Send a message requesting the last command, should be used to verify the last succeeded.
