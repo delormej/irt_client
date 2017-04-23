@@ -148,10 +148,12 @@ function parseLogLine(buffer, timestamp) {
             channelConfigs[channelId].buffer[i] = 
                 buffer[i+3];
         }
-        // Hard coding event ID -- TOOD: learn the difference between
-        // Message ID & Event ID.. why doesn't log stream have any of these
-        // flags?? Something just the module produces? 
-        channelEvent(channelId, EVENT_RX_BROADCAST);
+        
+        // Invoke the channel's callback.
+        // TODO: hardcoded to broadcast now so that module doesn't ignore invalid
+        // event id, but do we really care here if it's broadcast or acknowledged?
+        channelConfigs[channelId].channelCallback(channelId, EVENT_RX_BROADCAST,
+            timestamp);
     }
 }
 
