@@ -22,6 +22,7 @@ const ANT_FREQ = 57;
 const ANT_CHANNEL_PERIOD = 8192;
 const ANT_CHANNEL_ID = 0;
 
+const ANT_MESSAGELEN_POS = 1;
 const ANT_MESSAGEID_POS = 2; // position in the buffer for the message id.
 const ANT_CHANNELID_POS = 3; // position in the buffer for the channel id.
 
@@ -120,7 +121,7 @@ function setDebugLogDirectory(directory) {
 
 // Flags antlib's mode to work on a file log vs. interacting with the ANT device.
 function setFileMode(value) {
-    setFileMode = value;
+    fileMode = value;
 }
 
 // Parses a single line of bytes from an ANT log file and forwards it as appropriate.
@@ -129,19 +130,28 @@ function parseLogLine(buffer, timestamp) {
         return;
 
     var channelId = buffer[ANT_CHANNELID_POS];
+    var length = buffer[ANT_MESSAGELEN_POS];
     var eventId = buffer[ANT_MESSAGEID_POS];
 
+    // Offset copied buffer by 2 bytes (drop sync and length bytes).
     if (eventId == MESG_CHANNEL_ID_ID) {
+        for (var i = 0; i < length; i++) {
+            responseBuffer[i] = buffer[i+ANT_MESSAGEID_POS];
+        }
+        // Now read and set channel params.
         parseChannelId(channelId);
     } 
-    else {
+    else if (channelConfigs[channelId] != null) {
         // copy bytes to the buffer, TODO: there is probably a better way.
         // todo: also, clean out excess bytes in the buffer before.
-        for (var i = 0; i < buffer.length; i++) {
-            channelConfigs[channelId].buffer[i] = buffer[i];
+        for (var i = 0; i < length; i++) {
+            channelConfigs[channelId].buffer[i] = 
+                buffer[i+3];
         }
-        
-        channelEvent(channelId, eventId);
+        // Hard coding event ID -- TOOD: learn the difference between
+        // Message ID & Event ID.. why doesn't log stream have any of these
+        // flags?? Something just the module produces? 
+        channelEvent(channelId, EVENT_RX_BROADCAST);
     }
 }
 
@@ -162,6 +172,10 @@ function checkChannelStatus(channelId) {
 // Called when a channel Id message is received which contains the device it found.
 function parseChannelId(channelId) {
     var deviceTypeId = responseBuffer[4];
+
+    // Interrupt if the deviceType is not set.
+    if (deviceTypeId == 0)
+        return;
 
     // Find the right channel configuration for the device type receieved.  
     if (channelConfigs[channelId] != null && 
@@ -316,13 +330,6 @@ function channelEvent(channelId, eventId) {
     else {
         console.log('no channel.');
     }
-}
-
-function channelEventFromLog(channelId, eventId, timestamp) {
-    // need to figure out which channel corresponds to which device type id.
-    // Assumes that channelConfigs have been set.
-    
-    //channelConfigs[channelId].channelCallback(channelId, eventId, timestamp);
 }
 
 // Determins the right library path based on OS version.

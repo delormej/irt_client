@@ -35,7 +35,9 @@ function open(path) {
             if (transmitType == 'R') {
                 var timestamp = parseTimeStamp(record[0]);
                 var hexBytes = parseHexBytes(record[1]);
-                console.log(timestamp, hexBytes);
+                //console.log(timestamp, hexBytes);
+
+                antlib.parseLogLine(hexBytes, timestamp);
             }
         }
     });
