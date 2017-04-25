@@ -278,15 +278,15 @@ const AntFec = function() {
                         break;
                     default:
                         console.log('Unrecognized message.', 
-                            fecChannelEventBuffer[0],
-                            fecChannelEventBuffer[1],
-                            fecChannelEventBuffer[2],
-                            fecChannelEventBuffer[3],
-                            fecChannelEventBuffer[4],
-                            fecChannelEventBuffer[5],
-                            fecChannelEventBuffer[6],
-                            fecChannelEventBuffer[7],
-                            fecChannelEventBuffer[8]
+                            formatHex(fecChannelEventBuffer[0]),
+                            formatHex(fecChannelEventBuffer[1]),
+                            formatHex(fecChannelEventBuffer[2]),
+                            formatHex(fecChannelEventBuffer[3]),
+                            formatHex(fecChannelEventBuffer[4]),
+                            formatHex(fecChannelEventBuffer[5]),
+                            formatHex(fecChannelEventBuffer[6]),
+                            formatHex(fecChannelEventBuffer[7]),
+                            formatHex(fecChannelEventBuffer[8])
                         );
                         break;
                 }
@@ -304,6 +304,10 @@ const AntFec = function() {
         }
     }
     
+    function formatHex(value) {
+        return '[' + parseInt(value).toString(16) + ']';
+    }
+
     // Configure the channel.
     const FEC_CHANNEL_CONFIG = { 
         channelType: 0, 

@@ -133,27 +133,39 @@ function parseLogLine(buffer, timestamp) {
     var length = buffer[ANT_MESSAGELEN_POS];
     var eventId = buffer[ANT_MESSAGEID_POS];
 
-    // Offset copied buffer by 2 bytes (drop sync and length bytes).
-    if (eventId == MESG_CHANNEL_ID_ID) {
-        for (var i = 0; i < length; i++) {
-            responseBuffer[i] = buffer[i+ANT_MESSAGEID_POS];
-        }
-        // Now read and set channel params.
-        parseChannelId(channelId);
-    } 
-    else if (channelConfigs[channelId] != null) {
-        // copy bytes to the buffer, TODO: there is probably a better way.
-        // todo: also, clean out excess bytes in the buffer before.
-        for (var i = 0; i < length; i++) {
-            channelConfigs[channelId].buffer[i] = 
-                buffer[i+3];
-        }
+    switch (eventId) {
+        case MESG_CHANNEL_ID_ID:
+            // Configure the channel.
+            // Offset buffer by 2 bytes (drop sync and length bytes).
+            for (var i = 0; i <= length; i++) {
+                responseBuffer[i] = buffer[i+ANT_MESSAGEID_POS];
+            }
+            // Now read and set channel params.
+            parseChannelId(channelId);
+            break;
+
+        case MESG_BROADCAST_DATA:
+        case MESG_ACKNOWLEDGED_DATA:
+        case MESG_BURST_DATA:
+            if (channelConfigs[channelId] != null) {
+                // copy bytes to the buffer, TODO: there is probably a better way.
+                // todo: also, clean out excess bytes in the buffer before.
+                for (var i = 0; i <= length; i++) {
+                    channelConfigs[channelId].buffer[i] = 
+                        buffer[i+3];
+                }
+                
+                // Invoke the channel's callback.
+                // TODO: hardcoded to broadcast now so that module doesn't ignore invalid
+                // event id, but do we really care here if it's broadcast or acknowledged?
+                channelConfigs[channelId].channelCallback(channelId, EVENT_RX_BROADCAST,
+                    timestamp);
+            }
+            break;
         
-        // Invoke the channel's callback.
-        // TODO: hardcoded to broadcast now so that module doesn't ignore invalid
-        // event id, but do we really care here if it's broadcast or acknowledged?
-        channelConfigs[channelId].channelCallback(channelId, EVENT_RX_BROADCAST,
-            timestamp);
+        default:
+            // Ignore other messages.
+            break; 
     }
 }
 
