@@ -43,9 +43,10 @@ function open(path) {
     });
 }
 
-// Parses 
+// Parses serial transmission byte array from the log line.
 function parseHexBytes(data) {
-    //    135.031 { 673362484} Rx - [A4][09][4E][00][19][2A][FF][C0][00][39][00][31][E7]
+    // data =    135.031 { 673362484} Rx - [A4][09][4E][00][19][2A][FF][C0][00][39][00][31][E7]
+    // hexBytes = [A4][09][4E][00][19][2A][FF][C0][00][39][00][31][E7]
 
     // Strip down to just the elements.    
     var record = data.slice(2, data.lastIndexOf(']'))
@@ -60,9 +61,18 @@ function parseHexBytes(data) {
     return hexBytes;
 }
 
+// Parses time in fractional seconds from the log line.
 function parseTimeStamp(data) {
-    // hard coded positions for right now. TOOD: fix this
-    return parseInt(data.slice(13,23));
+    // data =   135.031 { 673362484} Rx - [A4][09][4E][00][19][2A][FF][C0][00][39][00][31][E7]
+    // time =   135.031
+    var stop = data.indexOf('{');
+    var time = 0.0;
+
+    if (stop > 1) {
+        time = parseFloat(data.slice(0, stop - 1));
+    }
+    
+    return time;
 }
 
 exports.open = open;

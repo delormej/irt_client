@@ -100,6 +100,8 @@ const antlib = ffi.Library(libPath(), {
 var initialized = false;
 // Flag to indicate true if we are invoking this from a log file.
 var fileMode = false;
+// Time in seconds since 1/1/1970, all timestamps will be relative to this.
+var startTime = Date.now() / 1000; 
 
 // Returns a string representing the ANT Library version.
 function antVersion() {
@@ -318,9 +320,6 @@ function channelEvent(channelId, eventId) {
             // Get the channel config if we're not tracking.
             requestMessage(channelId, MESG_CHANNEL_ID_ID);
         }                
-        
-        // Grab the current timestamp for each message.
-        var timestamp = Date.now();
 
         switch(eventId) {
             case EVENT_RX_FAIL:
@@ -396,6 +395,7 @@ function init() {
     if (initialized || fileMode)
         return; 
     
+    startTime = Date.now() / 1000; // Time in seconds since 1/1/1970.
     var ver = antVersion();
     console.log(ver);
 
