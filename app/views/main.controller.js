@@ -9,6 +9,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         
         const BASIC_RESISTANCE = '48';
         const TARGET_POWER_RESISTANCE = '49';
+        const SET_SERVO_POSITION = '50';
         
         try {
             $scope.version = process.versions['electron'];
@@ -22,7 +23,8 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         
         $scope.resistanceOptions = [
             { id: BASIC_RESISTANCE, name: 'Basic' },
-            { id: TARGET_POWER_RESISTANCE, name: 'Target' }
+            { id: TARGET_POWER_RESISTANCE, name: 'Target' },
+            { id: SET_SERVO_POSITION, name: 'Position' }
         ];
         $scope.resistanceSelect = BASIC_RESISTANCE;
         
@@ -44,11 +46,17 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
                 case TARGET_POWER_RESISTANCE:
                     antService.setTargetPower(level);                    
                     break;
+                case SET_SERVO_POSITION:
+                    antService.setServoPosition(level);
                 default:
                     break; 
             }
         }
         
+        $scope.enableDFU = function() {
+            antService.setDfuMode();
+        }
+
         $scope.getSettings = function() { antService.getSettings(); };
         
         $scope.setSettings = function() { 

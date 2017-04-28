@@ -30,6 +30,11 @@ const AntFec = function() {
     const IRT_EXTRA_INFO_PAGE =	0xF1;   // Manufacturer specific page sending servo position, etc...
     const IRT_SETTINGS_PAGE	= 0xF2;   // Manufacturer specific page sending device specific settings.
 
+    const IRT_SPECIFIC_PAGE = 0xF0;         // IRT (Manufacturers) specific page.
+    const IRT_SET_SERVO_COMMAND = 0x61;
+    const IRT_SET_DFU_COMMAND = 0x64;
+
+
     // Enum of device status.
     const FEStateEnum = {
         ASLEEP : 1,
@@ -341,6 +346,43 @@ const AntFec = function() {
             }, 1000);
     }
 
+    // Builds the buffer and sends the IRT manufacturer specific command page.
+    function sendIrtSpecificPage(command, value) {
+        if (value == null) {
+            value = 0xFFFF;
+        }
+
+        transmitBuffer[0] = IRT_SPECIFIC_PAGE;
+
+        // Pad reserved bytes.
+        for (var index = 1; index < 4; index++) {
+            transmitBuffer[index] = 0xFF;
+        }
+
+        // 4th byte is the command.        
+        transmitBuffer[4] = command;
+        transmitBuffer[4] = 0xFF;
+
+        // Send absolute servo position.
+        transmitBuffer[6] = value & 0xFF;
+        transmitBuffer[7] = value >> 8;
+        
+        var result = antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
+        console.log('sending IRT manufacturer specific command:', result);
+        // Verify it worked by async aking for last command.
+        requestLastCommand();
+    }
+
+    // Sends a command to put the device in device firmware update (DFU) mode. 
+    function setDfuMode() {
+        sendIrtSpecificPage(IRT_SET_DFU_COMMAND, null);
+    }
+
+    // Sets servo position. 
+    function setServoPosition(position) {
+        sendIrtSpecificPage(IRT_SET_SERVO_COMMAND, position);
+    }
+
     // Sets basic resistance.
     function setBasicResistance(totalResistance) {
         transmitBuffer[0] = BASIC_RESISTANCE_PAGE;
@@ -559,6 +601,8 @@ const AntFec = function() {
     }
     
     AntFec.prototype.openChannel = openChannel;
+    AntFec.prototype.setServoPosition = setServoPosition;
+    AntFec.prototype.setDfuMode = setDfuMode;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    

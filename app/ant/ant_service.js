@@ -54,7 +54,7 @@ const AntService = function() {
         powerAdjuster = new PowerAdjuster(fec);
         
         // Process bike power messages.
-        bp.on('message', (event, data) => {
+        bp.on('message', (event, data, timestamp) => {
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
                 
@@ -66,7 +66,7 @@ const AntService = function() {
                 }
 
                 // Accumulate power events.
-                powerEvents.push(data);
+                powerEvents.push({time: timestamp, message:data});
                 // Get 10 second average.
                 scope.averageBikePower = getAveragePower(3); 
                 scope.averageTrainerPower = getAverageTrainerPower(3);
@@ -85,7 +85,7 @@ const AntService = function() {
         });
         
         // Process FE-C messages.
-        fec.on('message', (event, data) => {
+        fec.on('message', (event, data, timestamp) => {
             scope.hello = event;
             if (event === "generalFEData") {
                 scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
@@ -93,7 +93,7 @@ const AntService = function() {
                 scope.distanceTravelled = formatDistance(data.distanceTravelled);
                 scope.elapsedTime = formatTime(data.elapsedTime); // Accumulated Seconds
                 // Also accumulate speed in a collection for average calc.
-                speedEvents.push(data);
+                speedEvents.push(timestamp, data);
             }
             else if (event === "generalSettings") {
                 scope.resistanceLevel = data.resistanceLevel;
@@ -106,7 +106,7 @@ const AntService = function() {
                 scope.target_power_status = formatTargetPowerStatus(data.flags);
                 scope.feState = formatFeState(data.feState);
                 // Accumulate power events.
-                trainerPowerEvents.push(data);
+                trainerPowerEvents.push(timestamp, data);
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
@@ -198,6 +198,14 @@ const AntService = function() {
     
     function setTargetPower(power) {
         fec.setTargetPower(power);
+    }
+
+    function setServoPosition(position) {
+        fec.setServoPosition(position);
+    }
+
+    function setDfuMode() {
+        fec.setDfuMode();
     }
 
     function getSettings() {
@@ -332,6 +340,8 @@ const AntService = function() {
     AntService.prototype.close = close;
     AntService.prototype.setBasicResistance = setBasicResistance;
     AntService.prototype.setTargetPower = setTargetPower;
+    AntService.prototype.setDfuMode = setDfuMode;
+    AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      
     AntService.prototype.openLogFile = openLogFile;
