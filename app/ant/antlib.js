@@ -321,6 +321,9 @@ function channelEvent(channelId, eventId) {
             requestMessage(channelId, MESG_CHANNEL_ID_ID);
         }                
 
+        // time in milliseconds since module started recording.
+        var timestamp = (Date.now() / 1000) - startTime;
+
         switch(eventId) {
             case EVENT_RX_FAIL:
                 console.log('EVENT_RX_FAIL channel:', channelId);
@@ -395,7 +398,6 @@ function init() {
     if (initialized || fileMode)
         return; 
     
-    startTime = Date.now() / 1000; // Time in seconds since 1/1/1970.
     var ver = antVersion();
     console.log(ver);
 

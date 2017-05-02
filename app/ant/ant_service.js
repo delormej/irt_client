@@ -189,6 +189,9 @@ const AntService = function() {
     function openLogFile(path) {
         antlib.setFileMode(true);
         LogParser.open(path);
+        console.log("Finished parsing log.");
+        // build chart
+        buildChartDatasets();
     }
 
     function setBasicResistance(level) {
@@ -335,6 +338,78 @@ const AntService = function() {
             return 0;
         }
     }    
+
+    function getChartTicks(events, func) {
+        var ticks = new Array(events.length);
+        for (var i = 0; i < events.length; i++) {
+            ticks[i] = { x: events[i].time, y: func(events[i]) };
+        }
+        return ticks;
+    }
+
+    function formatSpeed(data) {
+        return (data.speedMps * MPS_TO_MPH).toFixed(1);
+    }
+
+    // Builds backing chart datasets from log data.
+    function buildChartDatasets() {
+        // datasets: [
+        //             {
+        //                 type: 'bar',
+        //                 label: 'Bar Component',
+        //                 data: [10, 20, 30],
+        //             },
+        //             {
+        //                 type: 'line',
+        //                 label: 'Line Component',
+        //                 data: [30, 20, 10],
+        //             }
+        //         ]
+        var speed = getChartTicks(speedEvents, formatSpeed);
+        var cadence = [];
+        var power = [];
+        var estimatedPower = [];
+        var targetPower = [];
+        var servoPosition = [];        
+
+        var chartDatasets = [
+            {
+                type: 'line',
+                label: 'Speed (mph)',
+                data: speed,
+            },
+            {
+                type: 'line',
+                label: 'Cadence',
+                data: cadence,
+            },
+            {
+                type: 'line',
+                label: 'Power',
+                data: power,
+            },
+            {
+                type: 'line',
+                label: 'Estimated Power',
+                data: estimatedPower,
+            },
+            {
+                type: 'line',
+                label: 'Target Power',
+                data: targetPower,
+            },
+            {
+                type: 'line',
+                label: 'Servo Position',
+                data: servoPosition,
+            },
+        ];
+
+        var chartData = {
+            labels: getChartXAxisLabels(),
+            datasets: chartDatasets
+        };
+    }
 
     AntService.prototype.load = load;
     AntService.prototype.close = close;
