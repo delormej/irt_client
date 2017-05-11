@@ -347,6 +347,10 @@ const AntService = function() {
         return ticks;
     }
 
+    function getChartXAxisLabels() {
+        return [];
+    }
+
     function formatSpeed(data) {
         return (data.speedMps * MPS_TO_MPH).toFixed(1);
     }
