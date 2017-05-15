@@ -187,7 +187,10 @@ function checkChannelStatus(channelId) {
 
 // Called when a channel Id message is received which contains the device it found.
 function parseChannelId(channelId) {
-    var deviceTypeId = responseBuffer[3];
+    var deviceTypeId = responseBuffer[4];
+    console.log("parseChannelId::",
+        responseBuffer[0], responseBuffer[1], responseBuffer[2], 
+        responseBuffer[3],responseBuffer[4]);
 
     // Interrupt if the deviceType is not set.
     if (deviceTypeId == 0)

@@ -67,7 +67,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.openLogFile = function() {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
-            var path = "C:\\Users\\Jason\\OneDrive\\Rides\\Zwift_Ride_Device0.txt";
+            var path = "C:\\Users\\delor\\OneDrive\\Rides\\2017-05-05-long_intervals.txt";
             antService.openLogFile(path);
         }
 
