@@ -140,7 +140,7 @@ function parseLogLine(buffer, timestamp) {
             // Configure the channel.
             // Offset buffer by 2 bytes (drop sync and length bytes).
             for (var i = 0; i <= length; i++) {
-                responseBuffer[i] = buffer[i+ANT_MESSAGEID_POS];
+                responseBuffer[i] = buffer[i+3];
             }
             // Now read and set channel params.
             parseChannelId(channelId);
@@ -187,7 +187,7 @@ function checkChannelStatus(channelId) {
 
 // Called when a channel Id message is received which contains the device it found.
 function parseChannelId(channelId) {
-    var deviceTypeId = responseBuffer[4];
+    var deviceTypeId = responseBuffer[3];
     console.log("parseChannelId::",
         responseBuffer[0], responseBuffer[1], responseBuffer[2], 
         responseBuffer[3],responseBuffer[4]);
