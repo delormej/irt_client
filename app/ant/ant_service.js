@@ -41,7 +41,7 @@ const AntService = function() {
         scope.version = antlib.antVersion();
         scope.new_rr = 0;        
         scope.persistSettings = false; // Set default.
-        scope.powerAdjustEnabled = false;
+        scope.powerAdjustEnabled = true;
         
         /* Once you've found the FEC device, try searching for a power meter 
         * (low prioirty) so that it doesn't conflict with the FE-C channel.  
@@ -67,7 +67,7 @@ const AntService = function() {
 
                 // Accumulate power events.
                 powerEvents.push({time: timestamp, message:data});
-                // Get 10 second average.
+                // Get moving average for power.
                 scope.averageBikePower = getAveragePower(3); 
                 scope.averageTrainerPower = getAverageTrainerPower(3);
                 
@@ -119,6 +119,11 @@ const AntService = function() {
                     scope.servoChartData = [0, 1];                    
                 } 
                 
+                // If target changes, reset the averaging by clearing the array.
+                if (scope.target != data.target) {
+                    powerEvents.length = 0;
+                    trainerPowerEvents.length = 0;
+                }
                 scope.target = data.target;
                 scope.flywheelRevs = data.flywheelRevs;
             }
