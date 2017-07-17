@@ -13,6 +13,7 @@ const AntService = function() {
     const AntBikePower = require('../ant/ant_bp.js');
     const PowerAdjuster = require('../ant/power_adjuster.js');
     const LogParser = require('../ant/log_parser.js');
+    const fs = require('fs');
     
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
@@ -26,6 +27,7 @@ const AntService = function() {
     var speedEvents = [];
     var powerEvents = [];
     var trainerPowerEvents = [];
+
     var irtSettings = null; // hang on to the last settings we recieved.
 
     // Loads the ANT library.
@@ -42,6 +44,20 @@ const AntService = function() {
         scope.new_rr = 0;        
         scope.persistSettings = false; // Set default.
         scope.powerAdjustEnabled = false;
+
+        //    {
+        //        "x": 0,
+        //        "y": 0
+        //    },
+        //    {
+        //        "x": 5,
+        //        "y": 10
+        //    },
+        //    {
+        //        "x": 6,
+        //        "y": 250
+        //    },
+        //];
         
         /* Once you've found the FEC device, try searching for a power meter 
         * (low prioirty) so that it doesn't conflict with the FE-C channel.  
@@ -107,6 +123,8 @@ const AntService = function() {
                 scope.feState = formatFeState(data.feState);
                 // Accumulate power events.
                 trainerPowerEvents.push(timestamp, data);
+                //scope.trainerPowerChartEvents.push({x: timestamp, y: data.instantPower});
+                scope.trainerPowerChartEvents.push(data.instantPower);
             }
             else if (event === "irtExtraInfo") {
                 scope.servoPosition = data.servoPosition;
@@ -191,7 +209,10 @@ const AntService = function() {
         LogParser.open(path);
         console.log("Finished parsing log.");
         // build chart
-        buildChartDatasets();
+        // buildChartDatasets();
+        var json = JSON.stringify(trainerPowerChartEvents); 
+        fs.writeFile('output.json', json);
+
     }
 
     function setBasicResistance(level) {

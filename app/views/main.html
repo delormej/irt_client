@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" ng-app="trainerApp">
 <head>
   <meta charset="utf-8">
@@ -25,11 +25,16 @@
             <tr><td id="cadence">{{cadence}}&nbsp;<span id="cadenceUnit">rpm</span></td></tr>
             <tr><td id="distanceTravelled">{{distanceTravelled}}&nbsp;<span id="distanceUnit">miles</span></td></tr>
             <tr><td id="elapsedTime">{{elapsedTime}}</td></tr>
+            <tr><td><canvas id="doughnut" class="chart chart-doughnut" chart-data="servoChartData"
+              chart-labels="servoChartLabels" chart-legend="false"></canvas></td>
+            </tr>
           </table>
       </td>
       <td>
-        <canvas id="doughnut" class="chart chart-doughnut" chart-data="servoChartData"
-              chart-labels="servoChartLabels" chart-legend="false"></canvas>
+        <!-- Placeholder for timeseries data; power, speed, cadece, heartrate, events, etc... 
+        <canvas id="timeSeriesChart" />-->
+          <canvas class="chart chart-line" chart-data="data" chart-labels="labels"
+                  chart-series="series" chart-click="onClick"></canvas> 
       </td>
       <td width="25%">
         <table>

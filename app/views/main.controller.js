@@ -1,16 +1,30 @@
 
-trainerApp.controller('mainCtrl', ['$scope', 'antService', 
+trainerApp.controller('mainCtrl', ['$scope', 'antService',
     function ($scope, antService) {
-        
+
         //$scope.labels = ["Servo Off", "Servo Position", "Remaining Servo Spectrum"];
         //$scope.data = [10, 10, 80];
         $scope.servoChartLabels = ["On", "Off"];
         $scope.servoChartData = [0, 1];
-        
+        //$scope.trainerPowerChartEvents = [{ x: 0, y: 1 }, { x: 1, y: 2 }];
+
+
+        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+        $scope.series = ['Series A', 'Series B'];
+        $scope.data = [
+            [65, 59, 80, 81, 56, 55, 40],
+            [28, 48, 40, 19, 86, 27, 90]
+        ];
+        $scope.onClick = function(points, evt) {
+            $scope.data[0].push(100);
+            $scope.data[1].push(70);
+            console.log(points, evt);
+        };
+
         const BASIC_RESISTANCE = '48';
         const TARGET_POWER_RESISTANCE = '49';
         const SET_SERVO_POSITION = '50';
-        
+
         try {
             $scope.version = process.versions['electron'];
             antService.load($scope);
@@ -20,62 +34,90 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             $scope.version = e.message;
             //$window.close();
         }
-        
+
         $scope.resistanceOptions = [
             { id: BASIC_RESISTANCE, name: 'Basic' },
             { id: TARGET_POWER_RESISTANCE, name: 'Target' },
             { id: SET_SERVO_POSITION, name: 'Position' }
         ];
         $scope.resistanceSelect = BASIC_RESISTANCE;
-        
-        $scope.setResistance = function() {
+
+        //$scope.fooEvents = [{ x: 1, y: 4 }, { x: 2, y: 6 }, { x: 3, y: 4 }, { x: 4, y: 10 }];
+
+        // Configure time-series chart.
+        //var timeSeriesContext = document.getElementById("timeSeriesChart").getContext('2d');
+        //var timeSeriesChart = new Chart(timeSeriesContext, {
+        //    type: 'scatter',
+        //    data: {
+        //        datasets: [{
+        //            label: "Trainer Power",
+        //            data: $scope.trainerPowerChartEvents
+        //        }]
+        //    },
+        //    options: {
+        //        scales: {
+        //            xAxes: [{
+        //                type: 'linear',
+        //                position: 'bottom'
+        //            }]
+        //        }
+        //    }
+        //}); 
+
+        $scope.setResistance = function () {
+
             var mode = $scope.resistanceSelect;
             var level = parseInt($scope.txtResistanceLevel);
-            
+
             if (isNaN(level)) {
                 console.log("Error, must set a valid level.");
                 return;
             }
-            
+
             console.log('set', mode, level);
-            
+
             switch (mode) {
                 case BASIC_RESISTANCE:
                     antService.setBasicResistance(level);
                     break;
                 case TARGET_POWER_RESISTANCE:
-                    antService.setTargetPower(level);                    
+                    antService.setTargetPower(level);
                     break;
                 case SET_SERVO_POSITION:
                     antService.setServoPosition(level);
                 default:
-                    break; 
+                    break;
             }
         }
-        
-        $scope.enableDFU = function() {
+
+        $scope.enableDFU = function () {
+
+            timeSeriesChart.data.datasets[0].data.push({ x: 5, y: 100 });
+            //$scope.trainerPowerChartEvents.push({ x: 5, y: 100 });
+
+            return;
             antService.setDfuMode();
         }
 
-        $scope.getSettings = function() { antService.getSettings(); };
-        
-        $scope.setSettings = function() { 
+        $scope.getSettings = function () { antService.getSettings(); };
+
+        $scope.setSettings = function () {
             console.log('main.controller::setSettings');
             antService.setSettings();
         };
 
-        $scope.openLogFile = function() {
+        $scope.openLogFile = function () {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
             var path = "C:\\Users\\delor\\OneDrive\\Rides\\2017-05-05-long_intervals.txt";
             antService.openLogFile(path);
         }
 
-        $scope.$watch('powerAdjustEnabled', function() {
+        $scope.$watch('powerAdjustEnabled', function () {
             $scope.noticeMessage = "Power Adjuster changed to: " + $scope.powerAdjustEnabled;
             console.log('Power Adjust Enabled changed: ', $scope.powerAdjustEnabled);
-            setTimeout(function() {
+            setTimeout(function () {
                 $scope.noticeMessage = "";
             }, 3000); // display for 3 seconds.
         });
-}]);
+    }]);
