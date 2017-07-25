@@ -2,6 +2,9 @@
 trainerApp.controller('mainCtrl', ['$scope', 'antService',
     function ($scope, antService) {
 
+        // Required for file open dialog.
+        const {dialog} = require('electron').remote
+
         //$scope.labels = ["Servo Off", "Servo Position", "Remaining Servo Spectrum"];
         //$scope.data = [10, 10, 80];
         $scope.servoChartLabels = ["On", "Off"];
@@ -109,8 +112,10 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.openLogFile = function () {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
-            var path = "C:\\Users\\jason\\OneDrive\\Rides\\2017-07-21-device0.txt";
-            antService.openLogFile(path);
+            //"C:\\Users\\jason\\OneDrive\\Rides\\2017-07-21-device0.txt";
+                    
+            var path = dialog.showOpenDialog({properties: ["openFile"]});
+            antService.openLogFile(path[0]);
         }
 
         $scope.$watch('powerAdjustEnabled', function () {

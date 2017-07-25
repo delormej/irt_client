@@ -2,6 +2,12 @@
 <!-- Load c3.css -->
 <link href="./c3-0.4.15/c3.css" rel="stylesheet">
 
+<!-- 
+    Using json:
+    https://www.amcharts.com/kbase/using-data-loader-plugin/ 
+    
+-->
+
 <!-- Load d3.js and c3.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" charset="utf-8"></script>
 <script src="./c3-0.4.15/c3.min.js"></script>
@@ -12,6 +18,7 @@
             bindto: '#chart',
             data: {
                 url: 'https://irt8413.blob.core.windows.net/vhds/output.json',
+                // https://irt8413.blob.core.windows.net/vhds/output2.json
                 mimeType: 'json',
                 x: 'timestamp',
                 keys: {
@@ -34,3 +41,73 @@
 Hello, World.
 </body>
 </html>
+
+<!--
+{
+	"type": "serial",
+	"categoryField": "timestamp",
+	"autoMarginOffset": 40,
+	"marginRight": 60,
+	"marginTop": 60,
+	"fontSize": 13,
+	"theme": "patterns",
+	"dataLoader": {
+		"url": "https://irt8413.blob.core.windows.net/vhds/output2.json",
+		"format": "json"
+	},
+	"categoryAxis": {},
+	"trendLines": [],
+	"graphs": [
+		{
+			"balloonText": "",
+			"bullet": "round",
+			"bulletSize": 10,
+			"id": "AmGraph-1",
+			"lineAlpha": 1,
+			"title": "graph 1",
+			"type": "smoothedLine",
+			"valueField": "instantPower"
+		},
+		{
+			"balloonText": "",
+			"bullet": "round",
+			"bulletSize": 10,
+			"id": "AmGraph-2",
+			"lineAlpha": 1,
+			"title": "graph 1",
+			"type": "smoothedLine",
+			"valueField": "speedMps"
+		},
+		{
+			"balloonText": "",
+			"bullet": "round",
+			"bulletSize": 10,
+			"id": "AmGraph-3",
+			"lineAlpha": 1,
+			"title": "graph 1",
+			"type": "smoothedLine",
+			"valueField": "servoPosition"
+		},
+		{
+			"balloonText": "",
+			"bullet": "round",
+			"bulletSize": 10,
+			"id": "AmGraph-4",
+			"lineAlpha": 1,
+			"title": "graph 1",
+			"type": "smoothedLine",
+			"valueField": "target"
+		}
+	],
+	"guides": [],
+	"valueAxes": [
+		{
+			"id": "ValueAxis-1"
+		}
+	],
+	"allLabels": [],
+	"balloon": {},
+	"titles": [],
+	"dataProvider": []
+}
+-->    

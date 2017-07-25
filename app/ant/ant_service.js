@@ -104,7 +104,9 @@ const AntService = function() {
         
         // Process FE-C messages.
         fec.on('message', (event, data, timestamp) => {
-            var message = { event, timestamp, data };
+            //var message = { event, timestamp, data };
+            // "Flatten" json so it's more usable.
+            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
             messages.push(message);
 
             scope.hello = event;
