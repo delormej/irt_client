@@ -6,7 +6,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         //$scope.data = [10, 10, 80];
         $scope.servoChartLabels = ["On", "Off"];
         $scope.servoChartData = [0, 1];
-        //$scope.trainerPowerChartEvents = [{ x: 0, y: 1 }, { x: 1, y: 2 }];
+        $scope.trainerPowerChartEvents = [{ x: 0, y: 1 }, { x: 1, y: 2 }];
 
 
         $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -109,7 +109,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.openLogFile = function () {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
-            var path = "C:\\Users\\delor\\OneDrive\\Rides\\2017-05-05-long_intervals.txt";
+            var path = "C:\\Users\\jason\\OneDrive\\Rides\\2017-07-21-device0.txt";
             antService.openLogFile(path);
         }
 

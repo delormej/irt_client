@@ -28,6 +28,8 @@ const AntService = function() {
     var powerEvents = [];
     var trainerPowerEvents = [];
 
+    var messages = [];
+
     var irtSettings = null; // hang on to the last settings we recieved.
 
     // Loads the ANT library.
@@ -102,6 +104,9 @@ const AntService = function() {
         
         // Process FE-C messages.
         fec.on('message', (event, data, timestamp) => {
+            var message = { event, timestamp, data };
+            messages.push(message);
+
             scope.hello = event;
             if (event === "generalFEData") {
                 scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
@@ -210,7 +215,7 @@ const AntService = function() {
         console.log("Finished parsing log.");
         // build chart
         // buildChartDatasets();
-        var json = JSON.stringify(trainerPowerChartEvents); 
+        var json = JSON.stringify(messages); 
         fs.writeFile('output.json', json);
 
     }
