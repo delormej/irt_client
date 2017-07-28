@@ -64,6 +64,11 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.setSettings();
         };
 
+        $scope.setPowerMeter = function() {
+            console.log('main.controller::setPowerMeter');
+            antService.setAdjustPowerMeter();
+        }
+
         $scope.openLogFile = function() {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";

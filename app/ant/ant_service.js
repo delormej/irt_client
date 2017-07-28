@@ -249,6 +249,11 @@ const AntService = function() {
         }, 500);        
     }
 
+    // Sets power meter ID on the FE-C device.
+    function setAdjustPowerMeter() {
+        self.scope.setAdjustPowerMeter
+    }
+
     // Converts distance in meters to miles and formats to 2 decimal places.     
     function formatDistance(distance) {
         return (distance * METERS_TO_MILES).toFixed(2);        
