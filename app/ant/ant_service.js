@@ -133,6 +133,9 @@ const AntService = function() {
 
                 irtSettings = data;
             }
+            else if (event === "irtSettingsPowerAdjust") {
+                scope.powerMeterId = data.powerMeterId;
+            }            
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
                 scope.lastCommandTime = new Date().toTimeString();
