@@ -135,6 +135,8 @@ const AntService = function() {
             }
             else if (event === "irtSettingsPowerAdjust") {
                 scope.powerMeterId = data.powerMeterId;
+                scope.powerAdjustSeconds = data.powerAdjustSeconds;
+                scope.powerAverageSeconds = data.powerAverageSeconds;
             }            
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
@@ -251,7 +253,15 @@ const AntService = function() {
 
     // Sets power meter ID on the FE-C device.
     function setAdjustPowerMeter() {
-        self.scope.setAdjustPowerMeter
+        try {
+        fec.setIrtPowerAdjustSettings(
+            parseInt(self.scope.powerMeterId), 
+            parseInt(self.scope.powerAdjustSeconds),
+            parseInt(self.scope.powerAverageSeconds));
+        }
+        catch(err) {
+            console.log('setAdjustPowerMeter', err);
+        }
     }
 
     // Converts distance in meters to miles and formats to 2 decimal places.     

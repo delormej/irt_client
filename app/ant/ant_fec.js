@@ -241,7 +241,9 @@ const AntFec = function() {
     function parseIrtSettingsPowerAdjust() {
         var buffer = fecChannelEventBuffer;
         var page = {
-            powerMeterId : (buffer[0] | buffer[1] << 8)
+            powerMeterId : (buffer[2] | buffer[3] << 8),
+            powerAdjustSeconds : buffer[4],
+            powerAverageSeconds : buffer[5]
         };
         return page;
     }
@@ -584,12 +586,12 @@ const AntFec = function() {
     }
     
     // Sends the manufacturer specific page to set power meter adjust device settings.
-    function setIrtPowerAdjustSettings(powerMeterId) {
+    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds) {
         transmitBuffer[0] = IRT_SETTINGS_POWER_ADJUST_PAGE;
         transmitBuffer[1] = powerMeterId & 0xFF; // powerMeterIdLSB  
         transmitBuffer[2] = powerMeterId >> 8; // powerMeterIdMSB  
-        transmitBuffer[3] = 0xFF;
-        transmitBuffer[4] = 0xFF;
+        transmitBuffer[3] = adjustSeconds;
+        transmitBuffer[4] = averageSeconds;
         transmitBuffer[5] = 0xFF;
         transmitBuffer[6] = 0xFF;
         transmitBuffer[7] = 0xFF;
