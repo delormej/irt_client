@@ -29,6 +29,8 @@ const AntFec = function() {
     const COMMAND_STATUS_PAGE = 0x47;
     const IRT_EXTRA_INFO_PAGE =	0xF1;   // Manufacturer specific page sending servo position, etc...
     const IRT_SETTINGS_PAGE	= 0xF2;   // Manufacturer specific page sending device specific settings.
+    const IRT_SETTINGS_POWER_ADJUST_PAGE = 0xF3;   // Manufacturer specific page sending power adjust specific settings.
+    
 
     const IRT_SPECIFIC_PAGE = 0xF0;         // IRT (Manufacturers) specific page.
     const IRT_SET_SERVO_COMMAND = 0x61;
@@ -234,6 +236,17 @@ const AntFec = function() {
         };
         return page;
     }
+    
+    // Parse IRT manufacturer specific settings for power adjustment.
+    function parseIrtSettingsPowerAdjust() {
+        var buffer = fecChannelEventBuffer;
+        var page = {
+            powerMeterId : (buffer[2] | buffer[3] << 8),
+            powerAdjustSeconds : buffer[4],
+            powerAverageSeconds : buffer[5]
+        };
+        return page;
+    }
 
     // Function called back by the ant library when a message arrives.
     function fecChannelEvent(channelId, eventId, timestamp) { 
@@ -280,6 +293,10 @@ const AntFec = function() {
                     case IRT_SETTINGS_PAGE:
                         self.emit('message', 'irtSettings', 
                             parseIrtSettings(), timestamp);            
+                        break;
+                    case IRT_SETTINGS_POWER_ADJUST_PAGE:
+                        self.emit('message', 'irtSettingsPowerAdjust', 
+                            parseIrtSettingsPowerAdjust(), timestamp);
                         break;
                     default:
                         console.log('Unrecognized message.', 
@@ -568,6 +585,21 @@ const AntFec = function() {
         }
     }
     
+    // Sends the manufacturer specific page to set power meter adjust device settings.
+    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds) {
+        transmitBuffer[0] = IRT_SETTINGS_POWER_ADJUST_PAGE;
+        transmitBuffer[1] = powerMeterId & 0xFF; // powerMeterIdLSB  
+        transmitBuffer[2] = powerMeterId >> 8; // powerMeterIdMSB  
+        transmitBuffer[3] = adjustSeconds;
+        transmitBuffer[4] = averageSeconds;
+        transmitBuffer[5] = 0xFF;
+        transmitBuffer[6] = 0xFF;
+        transmitBuffer[7] = 0xFF;
+
+        console.log('Sending IRT Power Adjust Settings.');
+        antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);   
+    }
+
     function getIrtSettings() {
         console.log("ant_fec requesting IRT settings.");
         antlib.sendRequestDataPage(fecChannelId, IRT_SETTINGS_PAGE, transmitBuffer);
@@ -579,6 +611,12 @@ const AntFec = function() {
             transmitBuffer);
     }
 
+    function getIrtSettingsPowerAdjust() {
+        console.log("Requesting power adjust settings page.");
+        antlib.sendRequestDataPage(fecChannelId, IRT_SETTINGS_POWER_ADJUST_PAGE, 
+            transmitBuffer);        
+    }
+
     // Requests the IRT settings & user configuration pages (2 requests).
     function getSettings() {
         getIrtSettings();
@@ -586,6 +624,9 @@ const AntFec = function() {
         setTimeout(function () {
                 getUserConfiguration();
             }, 250);
+        setTimeout(function () {
+                getIrtSettingsPowerAdjust();
+            }, 500);            
     }
 
     // Accumulates power beyond the 16 bits.
@@ -610,6 +651,7 @@ const AntFec = function() {
     AntFec.prototype.getUserConfiguration = getUserConfiguration;
     AntFec.prototype.getIrtSettings = getIrtSettings;
     AntFec.prototype.setIrtSettings = setIrtSettings;
+    AntFec.prototype.setIrtPowerAdjustSettings = setIrtPowerAdjustSettings;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
 };
 

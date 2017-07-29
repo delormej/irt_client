@@ -60,6 +60,7 @@
         <button ng-click="setResistance();">Set Resistance</button>
         <button ng-click="getSettings();">Get Settings</button>
         <button ng-click="setSettings();">Set Settings</button>
+        <button ng-click="setPowerMeter();">Set Power Meter</button>
         <button ng-click="enableDFU();">Enable DFU</button>
         <button ng-click="openLogFile();">Open Log File</button>
         
@@ -67,6 +68,9 @@
         <br/>Resistance Calibration Required:<input type="checkbox" ng-model="trainerStatus.resistanceCalibrationRequired"/>
         <br/>User Configuration Required:<input type="checkbox" ng-model="trainerStatus.userConfigRequired"/>
         <br/>Target Power Status:<span>{{target_power_status}}</span>
+        <br/>Power Meter Id:<input type="textbox" ng-model="powerMeterId"/>
+        <br/>Power Meter Adjust Seconds:<input type="textbox" ng-model="powerAdjustSeconds"/>
+        <br/>Power Meter Averaging Seconds:<input type="textbox" ng-model="powerAverageSeconds"/>
         <br/>Trainer Status:<span>{{feState}}</span>
 
         <p/>

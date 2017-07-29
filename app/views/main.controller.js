@@ -109,7 +109,12 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.setSettings();
         };
 
-        $scope.openLogFile = function () {
+        $scope.setPowerMeter = function() {
+            console.log('main.controller::setPowerMeter');
+            antService.setAdjustPowerMeter();
+        }
+
+        $scope.openLogFile = function() {
             // hardcoded for the moment.
             //var path = "c:\\users\\jason\\OneDrive\\Rides\\Device0.txt";
             //"C:\\Users\\jason\\OneDrive\\Rides\\2017-07-21-device0.txt";
@@ -118,10 +123,10 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.openLogFile(path[0]);
         }
 
-        $scope.$watch('powerAdjustEnabled', function () {
+        $scope.$watch('powerAdjustEnabled', function() {
             $scope.noticeMessage = "Power Adjuster changed to: " + $scope.powerAdjustEnabled;
             console.log('Power Adjust Enabled changed: ', $scope.powerAdjustEnabled);
-            setTimeout(function () {
+            setTimeout(function() {
                 $scope.noticeMessage = "";
             }, 3000); // display for 3 seconds.
         });
