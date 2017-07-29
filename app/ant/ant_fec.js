@@ -371,18 +371,17 @@ const AntFec = function() {
 
         transmitBuffer[0] = IRT_SPECIFIC_PAGE;
 
-        // Pad reserved bytes.
-        for (var index = 1; index < 4; index++) {
-            transmitBuffer[index] = 0xFF;
-        }
-
         // 4th byte is the command.        
-        transmitBuffer[4] = command;
-        transmitBuffer[4] = 0xFF;
+        transmitBuffer[1] = command;
+        transmitBuffer[2] = 0xFF;   //reserved
 
         // Send absolute servo position.
-        transmitBuffer[6] = value & 0xFF;
-        transmitBuffer[7] = value >> 8;
+        transmitBuffer[3] = value & 0xFF;
+        transmitBuffer[4] = value >> 8;
+
+        transmitBuffer[5] = 0xFF; // Should be a sequence # (this is from the Wahoo spec.)
+        transmitBuffer[6] = 0xFF;
+        transmitBuffer[7] = 0xFF;
         
         var result = antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
         console.log('sending IRT manufacturer specific command:', result);

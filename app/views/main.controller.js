@@ -94,11 +94,6 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.enableDFU = function () {
-
-            timeSeriesChart.data.datasets[0].data.push({ x: 5, y: 100 });
-            //$scope.trainerPowerChartEvents.push({ x: 5, y: 100 });
-
-            return;
             antService.setDfuMode();
         }
 
