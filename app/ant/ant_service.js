@@ -441,6 +441,7 @@ const AntService = function() {
     AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      
+    AntService.prototype.setAdjustPowerMeter = setAdjustPowerMeter;
     AntService.prototype.openLogFile = openLogFile;
 }
 
