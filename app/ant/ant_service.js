@@ -172,6 +172,9 @@ const AntService = function() {
                 scope.userWeightKg = data.userWeightKg;
                 scope.bikeWeightKg = data.bikeWeightKg;
             }
+            else if (event == "batteryStatus") {
+                console.log("Battery Status", data);
+            }
             scope.safeApply();
         });
         

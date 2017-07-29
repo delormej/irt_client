@@ -224,7 +224,52 @@ const AntFec = function() {
             // TODO: Bicycle Wheel Diameter.  But this doesn't really matter. 
         };
         return page;
-    }        
+    }
+
+    // Parses voltage, accumulated time and status from battery message (0x52).
+    function parseBatteryStatus() {
+        
+        var courseVoltage = fecChannelEventBuffer[8] & 0x0F; // lowest 4 bits.
+        var fractionalVoltage = (fecChannelEventBuffer[7] / 256); // 1/265 of a volat.
+        var voltage = courseVoltage + fractionalVoltage;
+        
+        /*
+            Possible status levels:
+            0 (0x00) Reserved for future use
+            1 (0x01) Battery Status = New
+            2 (0x02) Battery Status = Good
+            3 (0x03) Battery Status = Ok
+            4 (0x04) Battery Status = Low
+            5 (0x05) Battery Status = Critical
+            6 (0x06) Reserved for future use
+            7 (0x07) Invalid
+        */        
+        var status = ((fecChannelEventBuffer[8] & 0x70) >> 4); // bits 4-6
+        var time = 
+            fecChannelEventBuffer[4] |      // bits 0-7 
+            fecChannelEventBuffer[5] << 8 | // bits 8-15
+            fecChannelEventBuffer[6] << 16; // bits 16-23
+
+        var resolution2second = (fecChannelEventBuffer[8] & 0x80) != 0;
+        var cumulativeOperatingHours = 0;
+
+        if (resolution2second)
+        {
+            cumulativeOperatingHours = (time * 2) / 3600; // in hours.
+        }
+        else
+        {
+            cumulativeOperatingHours = (time * 16) / 3600; // in hours.
+        }
+        
+        var page = {
+            operatingHours: cumulativeOperatingHours,
+            status: status,
+            voltage: voltage
+        };
+        return page;
+    }
+
     // Parse IRT manufacturer specific settings.
     function parseIrtSettings() {
         var buffer = fecChannelEventBuffer;
@@ -286,6 +331,10 @@ const AntFec = function() {
                         self.emit('message', 'manufacturerInfo', 
                             antlib.parseManufacturerInfo(fecChannelEventBuffer), timestamp);
                         break;
+                    case antlib.BATTERY_STATUS_PAGE:
+                        self.emit('message', 'batteryStatus', 
+                            parseBatteryStatus(fecChannelEventBuffer), timestamp);
+                        break;                    
                     case IRT_EXTRA_INFO_PAGE:
                         self.emit('message', 'irtExtraInfo', 
                             antlib.parseIrtExtraInfo(fecChannelEventBuffer), timestamp);            
