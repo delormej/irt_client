@@ -162,6 +162,7 @@ const AntService = function() {
                 scope.powerMeterId = data.powerMeterId;
                 scope.powerAdjustSeconds = data.powerAdjustSeconds;
                 scope.powerAverageSeconds = data.powerAverageSeconds;
+                scope.powerMeterState = (data.channelState == 1 ? true : false);
             }            
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;

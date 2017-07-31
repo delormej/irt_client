@@ -288,7 +288,8 @@ const AntFec = function() {
         var page = {
             powerMeterId : (buffer[2] | buffer[3] << 8),
             powerAdjustSeconds : buffer[4],
-            powerAverageSeconds : buffer[5]
+            powerAverageSeconds : buffer[5],
+            channelState : buffer[6]
         };
         return page;
     }
