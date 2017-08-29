@@ -74,6 +74,7 @@ const AntService = function() {
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
             if (event === "standardPowerOnly") {
+                
                 scope.bikePower = data.instantPower;
                 
                 if (data.instantCadence != 0xFF) {
@@ -83,8 +84,10 @@ const AntService = function() {
                     scope.cadence = 0;
                 }
 
+                // "Flatten" the mesage to include timestamp.
+                var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
                 // Accumulate power events.
-                powerEvents.push({time: timestamp, message:data});
+                powerEvents.push(message);
                 // Get 10 second average.
                 scope.averageBikePower = getAveragePower(3); 
                 scope.averageTrainerPower = getAverageTrainerPower(3);
@@ -129,7 +132,7 @@ const AntService = function() {
                 scope.target_power_status = formatTargetPowerStatus(data.flags);
                 scope.feState = formatFeState(data.feState);
                 // Accumulate power events.
-                trainerPowerEvents.push(timestamp, data);
+                trainerPowerEvents.push(message);
                 //scope.trainerPowerChartEvents.push({x: timestamp, y: data.instantPower});
                 scope.trainerPowerChartEvents.push(data.instantPower);
             }
