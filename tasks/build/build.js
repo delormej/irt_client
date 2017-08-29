@@ -43,10 +43,15 @@ gulp.task('clean', function () {
     return destDir.dirAsync('.', { empty: true });
 });
 
-
 var copyTask = function () {
         return projectDir.copyAsync('app', destDir.path(), {
-            overwrite: true,
+            // this isn't getting invoked???, trying to implement logic here so that
+            // we can ignore errors in copying DLLs in use.`
+            // directly copied from sample: https://github.com/szwacz/fs-jetpack#copyfrom-to-options
+            overwrite: true, /* function(srcInspectData, destInspectData) {
+                console.log('Error copy', srcInspectData);
+                return srcInspectData.modifyTime > destInspectData.modifyTime;
+            }, */
             matching: paths.copyFromAppDir
         });
 /*
