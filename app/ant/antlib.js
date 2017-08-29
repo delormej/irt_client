@@ -354,17 +354,17 @@ function channelEvent(channelId, eventId) {
 
 // Determins the right library path based on OS version.
 function libPath() {
+    var path = require('path');
     var isWindows = /^win/.test(process2.platform);
     var lib = '';
     if (isWindows) {
-        lib = 'ANT_DLL';
+        lib = path.join('ant_native', 'ANT_DLL');
     }
     else 
     {
         // MacOSX impementation:
         var remote = require('remote');
         var app = remote.require('app');
-        var path = require('path');
 
         var base = path.join(
             path.parse(app.getAppPath()).dir,

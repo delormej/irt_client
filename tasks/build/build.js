@@ -19,11 +19,13 @@ var destDir = projectDir.cwd('./build');
 
 var paths = {
     copyFromAppDir: [
+        './node_modules/**',
         './helpers/**',
         './**/*+(html|js|css)',
         './**/*.+(jpg|png|svg)',
         './ant/**',
-        './main/**'
+        './main/**',
+        './ant_native/**'
     ],
     copyFromModules: [
         './node_modules/**'
@@ -31,7 +33,7 @@ var paths = {
 };
 
 // Specify the path where ant native dlls / libraries live.
-var antNativePath = 'app/ant_native'; 
+//var antNativePath = 'app/ant_native'; 
 
 // -------------------------------------
 // Tasks
@@ -43,11 +45,11 @@ gulp.task('clean', function () {
 
 
 var copyTask = function () {
-        projectDir.copy('app', destDir.path(), {
+        return projectDir.copyAsync('app', destDir.path(), {
             overwrite: true,
             matching: paths.copyFromAppDir
         });
-
+/*
         //
         // Swallow any errors trying to copy native binaries since they will be 'in use' and
         // will prevent the 'watch' tasks from working that enable rapid development with the
@@ -68,6 +70,7 @@ var copyTask = function () {
         catch (err) {
             console.log('Unable to copy native libraries.', err);
         } 
+        */
 };
 gulp.task('copy', ['clean'], copyTask);
 gulp.task('copy-watch', copyTask);
@@ -133,7 +136,7 @@ gulp.task('finalize', ['clean'], function () {
 
 gulp.task('watch', function () {
     watch('app/**/*.js', batch(function (events, done) {
-        gulp.start('bundle-watch', done);
+        //gulp.start('bundle-watch', done);
     }));
     watch(paths.copyFromAppDir, { cwd: 'app' }, batch(function (events, done) {
         gulp.start('copy-watch', done);
