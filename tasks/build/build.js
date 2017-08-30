@@ -7,6 +7,7 @@ var less = require('gulp-less');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
 var plumber = require('gulp-plumber');
+var gutil = require('gulp-util');
 var jetpack = require('fs-jetpack');
 
 // var bundle = require('./bundle'); // Bundle causes pain, because angular actually needs global variables.
@@ -44,14 +45,13 @@ gulp.task('clean', function () {
 });
 
 var copyTask = function () {
-        return projectDir.copyAsync('app', destDir.path(), {
+        return projectDir.copy('app', destDir.path(), {
             // this isn't getting invoked???, trying to implement logic here so that
             // we can ignore errors in copying DLLs in use.`
             // directly copied from sample: https://github.com/szwacz/fs-jetpack#copyfrom-to-options
-            overwrite: true, /* function(srcInspectData, destInspectData) {
-                console.log('Error copy', srcInspectData);
+            overwrite: (srcInspectData, destInspectData) => {
                 return srcInspectData.modifyTime > destInspectData.modifyTime;
-            }, */
+            }, 
             matching: paths.copyFromAppDir
         });
 /*
