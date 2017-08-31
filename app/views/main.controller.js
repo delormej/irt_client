@@ -11,6 +11,9 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.servoChartData = [0, 1];
         $scope.trainerPowerChartEvents = [{ x: 0, y: 1 }, { x: 1, y: 2 }];
 
+        // Channel status buttons.
+        $scope.lblTrainerButton = "Search for Trainer";
+        $scope.lblPowerMeterButton = "Search for Power Meter";
 
         $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
         $scope.series = ['Series A', 'Series B'];

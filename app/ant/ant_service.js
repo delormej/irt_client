@@ -183,8 +183,13 @@ const AntService = function() {
         });
         
         fec.on('channel_status', (status, deviceId) => {
+            console.log("FEC channel_status: ", status);
             // Once we've connected to the FE-C, try connecting to other devices.
             if (status == antlib.STATUS_TRACKING_CHANNEL) {
+
+                scope.trainerDeviceId = deviceId;
+                scope.lblTrainerButton = "Close Trainer";
+
                 // Grab settings from the FEC if we haven't already.
                 if (irtSettings == null) { 
                     getSettings();

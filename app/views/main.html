@@ -52,6 +52,8 @@
       <td>
         Version:<span>{{version}}</span>
         <p/>
+        <input type="text" ng-model="trainerDeviceId" />&nbsp;<button id="btnTrainerChannel" ng-click="openTrainerChannel();">{{lblTrainerButton}}</button><br/> <!-- Search for Trainer -->
+        <input type="text" ng-model="powerMeterDeviceId" />&nbsp;<button id="btnPowerMeterChannel" ng-click="openPowerMeterChannel();">{{lblPowerMeterButton}}</button><br/> <!-- Search for Power Meter -->
         <input type="text" ng-model="txtResistanceLevel" />
         <select id="resistanceSelect" ng-model="resistanceSelect">
             <option ng-repeat="option in resistanceOptions" value="{{option.id}}">
