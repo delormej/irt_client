@@ -89,8 +89,7 @@ const AntService = function() {
                 // Accumulate power events.
                 powerEvents.push(message);
                 // Get 10 second average.
-                scope.averageBikePower = getAveragePower(3); 
-                scope.averageTrainerPower = getAverageTrainerPower(3);
+                scope.averageBikePower = getAveragePower(10); 
                 
                 if (scope.powerAdjustEnabled == true) {
                     scope.new_rr = powerAdjuster.adjust(
@@ -103,6 +102,23 @@ const AntService = function() {
                 scope.bikePower = 0;
             }
             scope.safeApply();
+        });
+
+        bp.on('channel_status', (status, deviceId) => {
+            console.log("BP channel_status: ", status);
+
+            if (status == antlib.STATUS_TRACKING_CHANNEL) {
+
+                scope.powerMeterDeviceId = deviceId;
+                scope.lblPowerMeterButton = "Close Power Meter";        
+            }
+            else if (status == antlib.STATUS_SEARCHING_CHANNEL ||
+                    status == antlib.STATUS_ASSIGNED_CHANNEL) {
+                scope.lblPowerMeterButton = "Stop Searching for Power Meter";        
+            }
+            else if (status == antlib.STATUS_UNASSIGNED_CHANNEL) {
+                scope.lblPowerMeterButton = "Search for Power Meter";        
+            }
         });
         
         // Process FE-C messages.
@@ -133,6 +149,7 @@ const AntService = function() {
                 scope.feState = formatFeState(data.feState);
                 // Accumulate power events.
                 trainerPowerEvents.push(message);
+                scope.averageTrainerPower = getAverageTrainerPower(10);
                 //scope.trainerPowerChartEvents.push({x: timestamp, y: data.instantPower});
                 scope.trainerPowerChartEvents.push(data.instantPower);
             }
@@ -237,6 +254,36 @@ const AntService = function() {
         var json = JSON.stringify(messages); 
         fs.writeFile('output.json', json);
 
+    }
+
+    /*
+     * Depending on the current state of the trainer channel, either starts searching,
+     * cancels a search or closes the channel.  If starting a search, it will use the
+     * trainerDeviceId value to look for a trainer.
+     * 
+     * channel: 0 = trainer, 1 = power meter
+     * 
+     * Closed <-> Searching <-> Tracking
+    */    
+    function setChannel(channel, deviceId) {
+        
+        if (deviceId == null) {
+            deviceId = 0;
+        }
+
+        var channelObj = null;
+        
+        if (channel == AntService.DeviceEnum.TRAINER)
+        {
+            channelObj = fec;
+        }
+        else if (channel == AntService.DeviceEnum.POWER_METER)
+        {
+            channelObj = bp;
+        }
+
+        var status = channelObj.getChannelStatus();
+        consoloe.log("current status: ", status);
     }
 
     function setBasicResistance(level) {
@@ -483,6 +530,12 @@ const AntService = function() {
     AntService.prototype.setSettings = setSettings;      
     AntService.prototype.setAdjustPowerMeter = setAdjustPowerMeter;
     AntService.prototype.openLogFile = openLogFile;
+    AntService.prototype.setChannel = setChannel;
+    AntService.prototype.DeviceEnum = {
+        TRAINER : 0,
+        POWER_METER : 1
+    };
+
 }
 
 module.exports = AntService;

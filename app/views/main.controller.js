@@ -121,6 +121,14 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.openLogFile(path[0]);
         }
 
+        $scope.setTrainerChannel = function() {
+            antService.setChannel(antService.DeviceEnum.TRAINER, $scope.trainerDeviceId);
+        }
+
+        $scope.setPowerMeterChannel = function() {
+            antService.setChannel(antService.DeviceEnum.POWER_METER, $scope.powerMeterDeviceId);
+        }
+
         $scope.$watch('powerAdjustEnabled', function() {
             $scope.noticeMessage = "Power Adjuster changed to: " + $scope.powerAdjustEnabled;
             console.log('Power Adjust Enabled changed: ', $scope.powerAdjustEnabled);

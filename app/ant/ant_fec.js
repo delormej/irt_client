@@ -63,6 +63,11 @@ const AntFec = function() {
     var accumulatedPower = 0;
     var eventCount = 0;
 
+    // Keep track of the channel's status.
+    function getChannelStatus() {
+        return FEC_CHANNEL_CONFIG.status;
+    }
+
     // Placeholder function.
     function printBuffer(channelId, buffer) {
         console.log(buffer);
@@ -369,6 +374,7 @@ const AntFec = function() {
                 // Raise an event. 
                 self.emit('channel_status', FEC_CHANNEL_CONFIG.status,
                     FEC_CHANNEL_CONFIG.deviceId, timestamp);
+                
                 break;
             default: // eventId
                 console.log('Unrecognized event.', eventId);
@@ -702,6 +708,7 @@ const AntFec = function() {
     AntFec.prototype.setIrtSettings = setIrtSettings;
     AntFec.prototype.setIrtPowerAdjustSettings = setIrtPowerAdjustSettings;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
+    AntFec.prototype.getChannelStatus = getChannelStatus;
 };
 
 util.inherits(AntFec, EventEmitter);
