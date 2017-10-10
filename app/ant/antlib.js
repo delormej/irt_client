@@ -352,13 +352,26 @@ function channelEvent(channelId, eventId) {
     }
 }
 
+// Determines if the app is being run from a deployed ASAR package.
+function isRunningInAsar() {
+	return process.mainModule.filename.indexOf('app.asar') !== -1;    
+}
+
 // Determins the right library path based on OS version.
 function libPath() {
     var path = require('path');
     var isWindows = /^win/.test(process2.platform);
     var lib = '';
+
     if (isWindows) {
-        lib = path.join('ant_native', 'ANT_DLL');
+        // When running in ASAR dependencies are deployed in app directory. 
+        if (isRunningInAsar()) {
+            lib = 'ANT_DLL';
+        }
+        else
+        {
+            lib = path.join('ant_native', 'ANT_DLL');        
+        }
     }
     else 
     {
