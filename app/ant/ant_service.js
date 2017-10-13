@@ -79,7 +79,7 @@ const AntService = function() {
         bp.on('message', (event, data, timestamp) => {
             // "Flatten" json so it's more usable.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
-            messages.BikePower.push(message);
+            messages.PowerMeter.push(message);
 
             if (event === "standardPowerOnly") {
                 
