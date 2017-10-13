@@ -28,7 +28,7 @@ const AntService = function() {
     var powerEvents = [];
     var trainerPowerEvents = [];
 
-    var messages = [];
+    var messages = { Trainer: [], PowerMeter: [] };
 
     var irtSettings = null; // hang on to the last settings we recieved.
 
@@ -73,6 +73,10 @@ const AntService = function() {
         
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
+            // "Flatten" json so it's more usable.
+            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
+            messages.BikePower.push(message);
+
             if (event === "standardPowerOnly") {
                 
                 scope.bikePower = data.instantPower;
@@ -126,7 +130,7 @@ const AntService = function() {
             //var message = { event, timestamp, data };
             // "Flatten" json so it's more usable.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
-            messages.push(message);
+            messages.Trainer.push(message);
 
             scope.hello = event;
             if (event === "generalFEData") {
