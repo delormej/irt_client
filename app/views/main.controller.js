@@ -122,11 +122,11 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.setTrainerChannel = function() {
-            antService.setChannel(antService.DeviceEnum.TRAINER, $scope.trainerDeviceId);
+            antService.setChannel(antService.DEVICE_ENUM.TRAINER, $scope.trainerDeviceId);
         }
 
         $scope.setPowerMeterChannel = function() {
-            antService.setChannel(antService.DeviceEnum.POWER_METER, $scope.powerMeterDeviceId);
+            antService.setChannel(antService.DEVICE_ENUM.POWER_METER, $scope.powerMeterDeviceId);
         }
 
         $scope.$watch('powerAdjustEnabled', function() {

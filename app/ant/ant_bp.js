@@ -35,6 +35,10 @@ const AntBikePower = function() {
         return eventCount;
     }
 
+    // Keep track of the channel's status.
+    function getChannelStatus() {
+        return BP_CHANNEL_CONFIG.status;
+    }
 
     // Parse ANT+ message for power.
     function parseStandardPowerOnly() {
@@ -109,6 +113,7 @@ const AntBikePower = function() {
     }
 
     AntBikePower.prototype.openChannel = openChannel;
+    AntBikePower.prototype.getChannelStatus = getChannelStatus;
 };
 
 util.inherits(AntBikePower, EventEmitter);

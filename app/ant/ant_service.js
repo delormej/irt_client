@@ -14,7 +14,11 @@ const AntService = function() {
     const PowerAdjuster = require('../ant/power_adjuster.js');
     const LogParser = require('../ant/log_parser.js');
     const fs = require('fs');
-    
+
+    const DEVICE_ENUM = {
+        TRAINER : 0,
+        POWER_METER : 1
+    };
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
     
@@ -277,17 +281,17 @@ const AntService = function() {
 
         var channelObj = null;
         
-        if (channel == AntService.DeviceEnum.TRAINER)
+        if (channel == DEVICE_ENUM.TRAINER)
         {
             channelObj = fec;
         }
-        else if (channel == AntService.DeviceEnum.POWER_METER)
+        else if (channel == DEVICE_ENUM.POWER_METER)
         {
             channelObj = bp;
         }
 
         var status = channelObj.getChannelStatus();
-        consoloe.log("current status: ", status);
+        console.log("current status: ", status);
     }
 
     function setBasicResistance(level) {
@@ -535,11 +539,7 @@ const AntService = function() {
     AntService.prototype.setAdjustPowerMeter = setAdjustPowerMeter;
     AntService.prototype.openLogFile = openLogFile;
     AntService.prototype.setChannel = setChannel;
-    AntService.prototype.DeviceEnum = {
-        TRAINER : 0,
-        POWER_METER : 1
-    };
-
+    AntService.prototype.DEVICE_ENUM = DEVICE_ENUM;
 }
 
 module.exports = AntService;
