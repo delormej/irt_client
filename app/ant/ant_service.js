@@ -80,7 +80,6 @@ const AntService = function() {
             powerEvents.push(message);
 
             if (event === "standardPowerOnly") {
-                
                 scope.bikePower = data.instantPower;
                 
                 if (data.instantCadence != 0xFF) {
@@ -89,26 +88,28 @@ const AntService = function() {
                 else {
                     scope.cadence = 0;
                 }
-
-                // Get 10 second average.
-                scope.averageBikePower = getAveragePower(10); 
-                
-                if (scope.powerAdjustEnabled == true) {
-                    scope.new_rr = powerAdjuster.adjust(
-                        getAverageSpeed(3), 
-                        scope.averageBikePower,
-                        scope.averageTrainerPower );                
-                }
             }
             else if (event === "ctfMainPage") {
-                if (data.watts >= 0) {
-                    scope.bikePower = data.watts;
-                    scope.cadence = data.cadence;
+                if (data.instantPower >= 0) {
+                    scope.bikePower = data.instantPower;
+                    scope.cadence = data.instantCadence;
                 }
             }
             else {
                 scope.bikePower = 0;
+                scope.cadence = 0;
             }
+
+            // Get 10 second average.
+            scope.averageBikePower = getAveragePower(10); 
+            
+            if (scope.powerAdjustEnabled == true) {
+                scope.new_rr = powerAdjuster.adjust(
+                    getAverageSpeed(3), 
+                    scope.averageBikePower,
+                    scope.averageTrainerPower );                
+            }
+
             scope.safeApply();
         });
 

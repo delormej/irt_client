@@ -79,17 +79,19 @@ const AntBikePower = function() {
                 var torque = torque_frequency / (ctfPage.slope/10);
             
                 // Finally, power is calculated from the cadence and torque.
-                watts = Math.round(torque * cadence * (Math.PI/30)); // watts            
-
-                console.log(cadence_period, cadence, torque_ticks, torque_frequency, torque, watts);
-
+                watts = torque * cadence * (Math.PI/30); // watts            
             }
         }
 
         // Store last message for next calculation.
         lastCtfMainPage = ctfPage;
 
-        return { watts : watts, cadence : cadence };
+        // Create a new object.
+        return { 
+            eventCount : ctfPage.eventCount, 
+            timestamp : ctfPage.timestamp,
+            instantPower : Math.round(watts), 
+            instantCadence : Math.round(cadence) };
     }
 
     // Accumulates event count beyond the 8 bits.
@@ -131,11 +133,13 @@ const AntBikePower = function() {
         var page = {
             calibration_id : bpChannelEventBuffer[2],
             ctf_defined_id : bpChannelEventBuffer[3],
-            offset : bpChannelEventBuffer[8] << 8 | bpChannelEventBuffer[7]
+            offset : bpChannelEventBuffer[7] << 8 | bpChannelEventBuffer[8]
         };
 
-        // Store offset.
-        ctfOffset = offset;
+        if (page.calibration_id == 0x10 && page.ctf_defined_id == 0x01) {
+            // Store offset.
+            ctfOffset = page.offset;
+        }
 
         return page;
     }
