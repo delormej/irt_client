@@ -144,6 +144,9 @@ const AntService = function() {
             }
             else if (status == antlib.STATUS_UNASSIGNED_CHANNEL) {
                 scope.lblPowerMeterButton = "Search for Power Meter";        
+                scope.bikePower = 0;
+                scope.cadence = 0;
+                scope.averageBikePower = 0;
             }
         });
         
