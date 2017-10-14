@@ -36,9 +36,10 @@ const AntBikePower = function() {
     }
 
     // Calculates and return watts from Crank Torque Frequency message.
-    // Returns watts or -1 if no events to report from.
-    function calclateCtfWatts(ctfPage) {
+    // Returns an object with cadence and watts.  Values are -1 if no events to report from.
+    function calclateCtf(ctfPage) {
         var watts = 0;
+        var cadence = 0;
         
         if (lastCtfMainPage != null) {
             var elapsedTime = antlib.getDeltaWithRollover16(
@@ -54,17 +55,19 @@ const AntBikePower = function() {
                 if (++cadenceTimeout >= CTF_CADENCE_TIMEOUT) {
                     // Cadence timed out.
                     watts = 0;
+                    cadence = 0;
                 }
                 else {
                     // Signal to ignore watts, we haven't accumulated a new event yet.
                     watts = -1;
+                    cadence = 0;
                 }
             }
             else {
                 cadenceTimeout = 0;
 
                 var cadence_period = (elapsedTime / events) * 0.0005; // Seconds
-                var cadence = 60/cadence_period; // RPMs
+                cadence = 60/cadence_period; // RPMs
                 var torque_ticks = antlib.getDeltaWithRollover16(
                     lastCtfMainPage.torque_ticks, 
                     ctfPage.torque_ticks);
@@ -86,7 +89,7 @@ const AntBikePower = function() {
         // Store last message for next calculation.
         lastCtfMainPage = ctfPage;
 
-        return watts;
+        return { watts : watts, cadence : cadence };
     }
 
     // Accumulates event count beyond the 8 bits.
@@ -120,7 +123,7 @@ const AntBikePower = function() {
         };
 
         // Return a new object that just has watts.
-        return { watts : calclateCtfWatts(page) };
+        return calclateCtf(page);
     }
 
     // Parses ANT+ Crank Torque Frequency calibration page.
@@ -130,6 +133,9 @@ const AntBikePower = function() {
             ctf_defined_id : bpChannelEventBuffer[3],
             offset : bpChannelEventBuffer[8] << 8 | bpChannelEventBuffer[7]
         };
+
+        // Store offset.
+        ctfOffset = offset;
 
         return page;
     }
