@@ -88,10 +88,9 @@ const AntBikePower = function() {
 
         // Create a new object.
         return { 
-            eventCount : ctfPage.eventCount, 
-            timestamp : ctfPage.timestamp,
             instantPower : Math.round(watts), 
-            instantCadence : Math.round(cadence) };
+            instantCadence : Math.round(cadence)
+        };
     }
 
     // Accumulates event count beyond the 8 bits.

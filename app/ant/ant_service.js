@@ -76,8 +76,6 @@ const AntService = function() {
 
             // "Flatten" the mesage to include timestamp.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
-            // Accumulate power events.
-            powerEvents.push(message);
 
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
@@ -88,21 +86,40 @@ const AntService = function() {
                 else {
                     scope.cadence = 0;
                 }
+
+                // Accumulate power events.
+                powerEvents.push(message);
             }
             else if (event === "ctfMainPage") {
                 if (data.instantPower >= 0) {
+                    var eventCount = 0;
+                    var accumulatedPower = 0;
+                    
+                    if (powerEvents.length > 1) {
+                        var index = powerEvents.length -2;
+                        eventCount = powerEvents[index].eventCount+1;
+                        accumulatedPower = powerEvents[index].accumulatedPower + data.instantPower;
+                    }
+
+                    // Modify object to add eventCount & accumultatedPower so that 
+                    // we can average like standard power only.
+                    message = Object.assign( {"eventCount": eventCount, "accumulatedPower": accumulatedPower}, message);
+
                     scope.bikePower = data.instantPower;
                     scope.cadence = data.instantCadence;
+
+                    // Accumulate power events.
+                    powerEvents.push(message);
                 }
             }
             else {
                 scope.bikePower = 0;
                 scope.cadence = 0;
             }
-
+                
             // Get 10 second average.
-            scope.averageBikePower = getAveragePower(10); 
-            
+            scope.averageBikePower = getAveragePower(10);            
+
             if (scope.powerAdjustEnabled == true) {
                 scope.new_rr = powerAdjuster.adjust(
                     getAverageSpeed(3), 
