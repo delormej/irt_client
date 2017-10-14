@@ -98,6 +98,11 @@ const AntService = function() {
                         scope.averageTrainerPower );                
                 }
             }
+            else if (event === "ctfMainPage") {
+                if (data.watts >= 0) {
+                    scope.bikePower = data.watts;
+                }
+            }
             else {
                 scope.bikePower = 0;
             }

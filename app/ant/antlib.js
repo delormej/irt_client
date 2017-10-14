@@ -638,6 +638,12 @@ function accumulateDoubleByte(accumulator, byte) {
     return accumulator;        
 }
 
+
+// Returns the difference between two values, while also accounting for a 16 bit rollover.
+function getDeltaWithRollover16(prior, current) {
+    return (prior > current ? (0xFFFF ^ prior) + current : current - prior);
+}
+
 // Gets the average power for a specified period of seconds. 
 function getAveragePower(seconds,  powerEvents) {
    
@@ -682,6 +688,7 @@ exports.setLowPrioirtySearch = setLowPrioirtySearch;
 exports.requestChannelId = requestChannelId;
 exports.accumulateByte = accumulateByte;
 exports.accumulateDoubleByte = accumulateDoubleByte;
+exports.getDeltaWithRollover16 = getDeltaWithRollover16;
 exports.getAveragePower = getAveragePower;
 exports.setFileMode = setFileMode;
 exports.parseLogLine = parseLogLine;
