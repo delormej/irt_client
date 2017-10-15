@@ -20,26 +20,49 @@ const antlib = require('../ant/antlib.js');
 //const fs = require('fs');
 const jetpack = require('fs-jetpack');
 
-function open(path) {
-    console.log("open log file: ", path);
-
-    var data = jetpack.read(path);
-    var lines = data.split('\n');
-    
-    lines.forEach(function(element, index, array) {
-        var record = element.split('-'); // Splits into timestamp and hex bytes ascii chars.
-        if (record != null && record.length >= 2) {
-
-            var transmitType = record[0].slice(24, 25); // can be Rx or Tx
-            // Don't process transmits, only recieves. 
-            if (transmitType == 'R') {
+/**
+ * Asyncronously parses ANT device log file.
+ * 
+ * @param {*} path          ANT device log file to parse.
+ * @param {*} offset        Offset index to start parsing at, if resuming.
+ * @param {*} onEndOfRide   CallBack function (path, length, lastIndexParsed)
+ */
+function parseAsync(path, offset, onEndOfRide) {
+    jetpack.readAsync(path).then((data) => {
+        var lines = data.split('\n');
+        // Jump ahead to the offset.
+        if (offset > 0) {
+            lines = lines.slice(offset);
+            console.log("Staring at line: ", offset);
+        }
+        var lastTimestamp = 0;
+        var index = offset;
+        var len = lines.length;
+        for (; index < len; index++) {
+            var record = lines[index].split('-'); // Splits into timestamp and hex bytes ascii chars.
+            if (record != null && record.length >= 2) {
+                var transmitType = record[0].slice(24, 25); // can be Rx or Tx
                 var timestamp = parseTimeStamp(record[0]);
-                var hexBytes = parseHexBytes(record[1]);
-                //console.log(timestamp, hexBytes);
 
-                antlib.parseLogLine(hexBytes, timestamp);
+                // We've hit the end of a ride.
+                if (timestamp < lastTimestamp) {
+                    // Callback function to indicate end of ride and exit the function.
+                    console.log("Reached the end of a ride.", lastTimestamp, timestamp, index, lines.length);
+                    break;
+                }
+
+                // Don't process transmits, only recieves. 
+                if (transmitType == 'R') {
+                    var hexBytes = parseHexBytes(record[1]);
+                    // record last timestamp for comparison.
+                    lastTimestamp = timestamp; 
+                    antlib.parseLogLine(hexBytes, timestamp);
+                }
             }
         }
+
+        // We're done parsing.
+        onEndOfRide(path, lines.length, index);
     });
 }
 
@@ -75,4 +98,4 @@ function parseTimeStamp(data) {
     return time;
 }
 
-exports.open = open;
+exports.parseAsync = parseAsync;

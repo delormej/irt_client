@@ -274,15 +274,32 @@ const AntService = function() {
         antlib.close();
     }
     
+    /**
+     * Invoked when log file parsing has reached the end of a ride.
+     * 
+     * @param {*} path 
+     * @param {*} length 
+     * @param {*} lastIndexParsed 
+     */
+    function onEndOfRideFile(path, length, lastIndexParsed) {
+        var json = JSON.stringify(messages); 
+        var filename = new Date().toISOString().replace(/:|\.|-/g,'') + '.json';
+        fs.writeFile(filename, json);
+        // Clear the array.
+        messages = [];
+
+        if (length > lastIndexParsed) {
+            console.log("More to parse:", length, lastIndexParsed);
+            LogParser.parseAsync(path, lastIndexParsed+1, onEndOfRideFile);
+        }
+    }
+
+    /*
+     * Opens a log file to begin parsing.
+     */
     function openLogFile(path) {
         antlib.setFileMode(true);
-        LogParser.open(path);
-        console.log("Finished parsing log.");
-        // build chart
-        // buildChartDatasets();
-        var json = JSON.stringify(messages); 
-        fs.writeFile('output.json', json);
-
+        LogParser.parseAsync(path, 0, onEndOfRideFile);
     }
 
     /*
