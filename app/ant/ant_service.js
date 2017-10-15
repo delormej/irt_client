@@ -77,8 +77,6 @@ const AntService = function() {
         
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
-
-
             // "Flatten" json so it's more usable.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
             messages.PowerMeter.push(message);
@@ -249,20 +247,20 @@ const AntService = function() {
 
                 // TODO: ensure that bike power isn't already opened.
                 // exclude ID of the FE-C device from power meter search.
-            
-                var exclude = [
-                    {
-                        deviceNumber : deviceId,
-                        deviceTypeId : 0,
-                        transmissionType : 0,
-                    }
-                ];
+                
                 // TODO: how do we know this is channel "1"... should this be hardcoded?
                 // Configure channel 1 to exclude the FE-C.
-                antlib.setDeviceExclusionList(1, exclude);
-                antlib.setLowPrioirtySearch(1);
-                
-                bp.openChannel(); // specify device Id         
+                // antlib.setDeviceExclusionList(1, exclude);
+                // antlib.setLowPrioirtySearch(1);
+                // bp.openChannel(); // specify device Id
+                            
+                // var exclude = [
+                //     {
+                //         deviceNumber : deviceId,
+                //         deviceTypeId : 0,
+                //         transmissionType : 0,
+                //     }
+                // ]; 
             }              
         });
         
@@ -271,7 +269,8 @@ const AntService = function() {
         });
 
         // Configure the channel.
-        fec.openChannel();
+        fec.openChannel();      
+        bp.openChannel();
         
         scope.cadence = 'n/a';
     }
@@ -292,7 +291,8 @@ const AntService = function() {
         var filename = new Date().toISOString().replace(/:|\.|-/g,'') + '.json';
         fs.writeFile(filename, json);
         // Clear the array.
-        messages = [];
+        messages.PowerMeter = [];
+        messages.Trainer = [];
 
         if (length > lastIndexParsed) {
             console.log("More to parse:", length, lastIndexParsed);

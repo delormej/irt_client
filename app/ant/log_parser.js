@@ -52,12 +52,12 @@ function parseAsync(path, offset, onEndOfRide) {
                 }
 
                 // Don't process transmits, only recieves. 
-                if (transmitType == 'R') {
+                //if (transmitType == 'R') {
                     var hexBytes = parseHexBytes(record[1]);
                     // record last timestamp for comparison.
                     lastTimestamp = timestamp; 
                     antlib.parseLogLine(hexBytes, timestamp);
-                }
+                //}
             }
         }
 
