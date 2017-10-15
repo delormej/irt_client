@@ -14,7 +14,11 @@ const AntService = function() {
     const PowerAdjuster = require('../ant/power_adjuster.js');
     const LogParser = require('../ant/log_parser.js');
     const fs = require('fs');
-    
+
+    const DEVICE_ENUM = {
+        TRAINER : 0,
+        POWER_METER : 1
+    };
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
     
@@ -28,7 +32,7 @@ const AntService = function() {
     var powerEvents = [];
     var trainerPowerEvents = [];
 
-    var messages = [];
+    var messages = { Trainer: [], PowerMeter: [] };
 
     var irtSettings = null; // hang on to the last settings we recieved.
 
@@ -74,8 +78,10 @@ const AntService = function() {
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
 
-            // "Flatten" the mesage to include timestamp.
-            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
+
+            // "Flatten" json so it's more usable.
+            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
+            messages.PowerMeter.push(message);
 
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
@@ -155,7 +161,7 @@ const AntService = function() {
             //var message = { event, timestamp, data };
             // "Flatten" json so it's more usable.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
-            messages.push(message);
+            messages.Trainer.push(message);
 
             scope.hello = event;
             if (event === "generalFEData") {
@@ -319,17 +325,17 @@ const AntService = function() {
 
         var channelObj = null;
         
-        if (channel == AntService.DeviceEnum.TRAINER)
+        if (channel == DEVICE_ENUM.TRAINER)
         {
             channelObj = fec;
         }
-        else if (channel == AntService.DeviceEnum.POWER_METER)
+        else if (channel == DEVICE_ENUM.POWER_METER)
         {
             channelObj = bp;
         }
 
         var status = channelObj.getChannelStatus();
-        consoloe.log("current status: ", status);
+        console.log("current status: ", status);
     }
 
     function setBasicResistance(level) {
@@ -577,11 +583,7 @@ const AntService = function() {
     AntService.prototype.setAdjustPowerMeter = setAdjustPowerMeter;
     AntService.prototype.openLogFile = openLogFile;
     AntService.prototype.setChannel = setChannel;
-    AntService.prototype.DeviceEnum = {
-        TRAINER : 0,
-        POWER_METER : 1
-    };
-
+    AntService.prototype.DEVICE_ENUM = DEVICE_ENUM;
 }
 
 module.exports = AntService;
