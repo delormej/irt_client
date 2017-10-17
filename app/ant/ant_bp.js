@@ -58,8 +58,7 @@ const AntBikePower = function() {
                 }
                 else {
                     // Signal to ignore watts, we haven't accumulated a new event yet.
-                    watts = -1;
-                    cadence = 0;
+                    return null;
                 }
             }
             else {
@@ -155,8 +154,11 @@ const AntBikePower = function() {
                     timestamp);
                 break;
             case CTF_MAIN_PAGE:
-                self.emit('message', 'ctfMainPage', parseCTFMain(), 
-                    timestamp);            
+                var page = parseCTFMain();
+                if (page != null) {
+                    self.emit('message', 'ctfMainPage', page, 
+                        timestamp);    
+                }        
                 break;
             case CTF_CALIBRATION_PAGE:
                 self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(), 
