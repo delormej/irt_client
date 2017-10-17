@@ -2,7 +2,7 @@
   "name": "irt-client",
   "productName": "IRT Test Client",
   "description": "Inside Ride Technologies test client for e-Motion rollers.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "IRT, LLC",
   "copyright": "© 2017, Inside Ride Technologies, LLC.",
   "main": "background.js",

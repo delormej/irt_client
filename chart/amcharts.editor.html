@@ -18,8 +18,11 @@
 					"categoryField": "timestamp",
 					"dataLoader": {
 						//"url": "https://irt8413.blob.core.windows.net/vhds/output2.json",
-						"url": "http://localhost:31338/20171015T153831080Z.json",
-						"format": "json"
+						"url": "http://localhost:31338/build/20171015T224447067Z.json",
+						"format": "json",
+						"postProcess": function(data, config, chart) {
+							return data.Trainer;
+						}
 					},
 					"categoryAxis": {},
 					"chartCursor": {
@@ -50,7 +53,7 @@
 							"title": "Target Power",
 							"valueAxis": "power-axis",
 							"valueField": "target"
-						},
+						}/*,
 						{
 							"alphaField": "alpha",
 							"balloonText": "[[servoPosition]] miles",
@@ -61,7 +64,7 @@
 							"type": "column",
 							"valueAxis": "servo-axis",
 							"valueField": "servoPosition"
-						}
+						}*/
 					],
 					"guides": [],
 					"valueAxes": [

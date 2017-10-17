@@ -79,7 +79,6 @@ const AntService = function() {
         bp.on('message', (event, data, timestamp) => {
             // "Flatten" json so it's more usable.
             var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
-            messages.PowerMeter.push(message);
 
             if (event === "standardPowerOnly") {
                 scope.bikePower = data.instantPower;
@@ -120,7 +119,10 @@ const AntService = function() {
                 scope.bikePower = 0;
                 scope.cadence = 0;
             }
-                
+            
+            // Accumulate power messages.
+            messages.PowerMeter.push(message);
+
             // Get 10 second average.
             scope.averageBikePower = getAveragePower(10);            
 
@@ -247,7 +249,7 @@ const AntService = function() {
 
                 // TODO: ensure that bike power isn't already opened.
                 // exclude ID of the FE-C device from power meter search.
-                
+
                 // TODO: how do we know this is channel "1"... should this be hardcoded?
                 // Configure channel 1 to exclude the FE-C.
                 // antlib.setDeviceExclusionList(1, exclude);
