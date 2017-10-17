@@ -13,7 +13,6 @@ const AntBikePower = function() {
     var self = this;
     const antlib = require('./antlib.js');
     
-    var bpChannelId = 0;
     const bpChannelEventBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
     //const transmitBuffer = new Buffer(antlib.ANT_STANDARD_DATA_PAYLOAD_SIZE);
 
@@ -149,11 +148,6 @@ const AntBikePower = function() {
 
     // Function called back by the ant library when a message arrives.
     function bpChannelEvent(channelId, eventId, timestamp) { 
-        if (channelId != bpChannelId) {
-            console.log('Wrong channel.');
-            return;
-        }
-        
         var messagedId = bpChannelEventBuffer[1];
         switch (messagedId) {
             case STANDARD_POWER_ONLY_PAGE:
@@ -206,7 +200,7 @@ const AntBikePower = function() {
             if (deviceId != null) {
                 BP_CHANNEL_CONFIG.deviceId = deviceId;
             }
-            bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG);
+            antlib.openChannel(BP_CHANNEL_CONFIG);
         }
         else {
             console.log('bp channel already open.');

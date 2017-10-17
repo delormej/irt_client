@@ -301,12 +301,6 @@ const AntFec = function() {
 
     // Function called back by the ant library when a message arrives.
     function fecChannelEvent(channelId, eventId, timestamp) { 
-        //printBuffer(channelId, fecChannelEventBuffer);
-        if (channelId != fecChannelId) {
-            console.log('Wrong channel.');
-            return;
-        }
-        
         switch(eventId) {
             case antlib.EVENT_RX_BROADCAST:
                 var messagedId = fecChannelEventBuffer[1];

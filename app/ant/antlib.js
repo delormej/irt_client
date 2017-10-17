@@ -197,34 +197,37 @@ function parseChannelId(channelId) {
     if (deviceTypeId == 0)
         return;
 
+    var index = getChannelConfigIndexByDeviceType(deviceTypeId);
+
     // Find the right channel configuration for the device type receieved.  
-    if (channelConfigs[channelId] != null && 
-            channelConfigs[channelId].deviceType != deviceTypeId) {
-        // Make a copy of config later in the array.
-        channelConfigs.push(channelConfigs[channelId]);
-        // Replace existing channel index with the correct device type.
-        channelConfigs[channelId] = getChannelConfigByDeviceType(deviceTypeId);
+    if (index != -1) {
+        if (index != channelId) {
+            // need to reassign channel config
+            channelConfigs[channelId] = channelConfigs[index];
+            // remove the extra copy
+            //channelConfigs[index] = null;
+        }
+
+        channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
+        channelConfigs[channelId].deviceType = deviceTypeId;
+        channelConfigs[channelId].transmissionType = responseBuffer[5];
+        console.log('Channel Id, Device Id: ', channelId, channelConfigs[channelId].deviceId);
     }
-
-    if (channelConfigs[channelId] == null)
-        return;
-
-    channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
-    channelConfigs[channelId].deviceType = deviceTypeId;
-    channelConfigs[channelId].transmissionType = responseBuffer[5];
-    console.log('Channel Id, Device Id: ', channelId, channelConfigs[channelId].deviceId);
+    else {
+        console.log("No channel configured for type: ", deviceTypeId);
+    }
 }
 
 // Returns the channel config for a given device type.
-function getChannelConfigByDeviceType(deviceTypeId) {
+function getChannelConfigIndexByDeviceType(deviceTypeId) {
     for (var i = 0; i < channelConfigs.length; i++) {
         if (channelConfigs[i] != null &&
                 deviceTypeId == channelConfigs[i].deviceType) {
-            return channelConfigs[i];
+            return i;
         }
     }
     // didn't find a channel config.
-    return null;
+    return -1;
 }
 
 // Callback for ANT device responses.
