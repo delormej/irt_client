@@ -22,7 +22,7 @@ var cli = commandLineArgs([
 //
 // If connection string not specified, it will look for environment variables.
 //  
-const connectionString = "DefaultEndpointsProtocol=https;AccountName=irt8413;AccountKey=0yDq7ZYiSWueD7bfVQVKk7qEr8NWIUb2tYNgJ7Q5l4PxAY8ZZ1ubof1hxOFZ23jtyQ3cYSBaS9H0zw5ecjyzpw==;EndpointSuffix=core.windows.net";
+const connectionString = "";
 
 function upload(container, destinationFileName, sourceFilename) {
   var blobService = azure.createBlobService(connectionString);
