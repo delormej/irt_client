@@ -13,6 +13,7 @@ const AntService = function() {
     const AntBikePower = require('../ant/ant_bp.js');
     const PowerAdjuster = require('../ant/power_adjuster.js');
     const LogParser = require('../ant/log_parser.js');
+    const azure = require('../azure-upload.js');
     const fs = require('fs');
 
     const DEVICE_ENUM = {
@@ -292,6 +293,9 @@ const AntService = function() {
         var json = JSON.stringify(messages); 
         var filename = new Date().toISOString().replace(/:|\.|-/g,'') + '.json';
         fs.writeFile(filename, json);
+        
+        // TODO: need to get the full path of the local file to upload.
+        //azure.azure_upload('vhds', filename, filename);
         // Clear the array.
         messages.PowerMeter = [];
         messages.Trainer = [];

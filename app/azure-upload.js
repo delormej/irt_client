@@ -7,15 +7,15 @@
  */
 
 require('process')
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const azure = require('azure-storage');
-const commandLineArgs = require('command-line-args');
+// const commandLineArgs = require('command-line-args');
 
-var cli = commandLineArgs([
-    { name: 'file', alias: 'f', description: 'Path of local file to upload.' },
-    { name: 'output', alias: 'o', type: String, defaultValue: '', description: 'Specify a different destination filename.' }
-]);
+// var cli = commandLineArgs([
+//     { name: 'file', alias: 'f', description: 'Path of local file to upload.' },
+//     { name: 'output', alias: 'o', type: String, defaultValue: '', description: 'Specify a different destination filename.' }
+// ]);
 
 //
 // More details on how to use nodejs Azure SDK here: // https://azure.github.io/azure-storage-node/
@@ -36,7 +36,7 @@ function upload(container, destinationFileName, sourceFilename) {
   });
 }
 
-
+/*
 function main() {
     console.log("Uploading...", cli);
 
@@ -56,5 +56,6 @@ function main() {
 
     upload(container, destinationFileName, sourceFilename);
 }
+*/
 
-main();
+exports.azure_upload = upload;
