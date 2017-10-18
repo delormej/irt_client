@@ -202,10 +202,12 @@ function parseChannelId(channelId) {
     // Find the right channel configuration for the device type receieved.  
     if (index != -1) {
         if (index != channelId) {
-            // need to reassign channel config
-            channelConfigs[channelId] = channelConfigs[index];
-            // remove the extra copy
-            //channelConfigs[index] = null;
+            // Create a copy of what is currently in channelId and index:
+            channelConfigs.push(channelConfigs[channelId]);
+            channelConfigs.push(channelConfigs[index]);
+            // Rassign channel config that matches the right deviceTypeId is associated 
+            // with the channelId expected.
+            channelConfigs[channelId] = channelConfigs[index];           
         }
 
         channelConfigs[channelId].deviceId = responseBuffer[1] | responseBuffer[2] << 8;
