@@ -8,6 +8,7 @@
 // Set this up as an event emitter.
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
+const AntCtfOffset = require('../ant/AntCtfOffset.js');
 
 const AntBikePower = function() { 
     var self = this;
@@ -15,6 +16,7 @@ const AntBikePower = function() {
     
     const bpChannelEventBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
     //const transmitBuffer = new Buffer(antlib.ANT_STANDARD_DATA_PAYLOAD_SIZE);
+    var ctfOffset = new AntCtfOffset();
 
     const STANDARD_POWER_ONLY_PAGE = 0x10;
     const CTF_MAIN_PAGE = 0x20;
@@ -25,7 +27,6 @@ const AntBikePower = function() {
     var eventCount = 0;
     var lastCtfMainPage = null;
     var cadenceTimeout = 0;
-    var ctfOffset = 0;
     const CTF_CADENCE_TIMEOUT = 12;
 
     // Accumulates power beyond the 16 bits.
@@ -71,7 +72,7 @@ const AntBikePower = function() {
                     ctfPage.torque_ticks);
 
                 // The average torque per revolution of the pedal is calculated using the calibrated Offset parameter.
-                var torque_frequency = (1.0 / ( (elapsedTime* 0.0005) /torque_ticks)) - ctfOffset; // hz
+                var torque_frequency = (1.0 / ( (elapsedTime* 0.0005) /torque_ticks)) - ctfOffset.getOffset(); // hz
             
                 // Torque in Nm is calculated from torque rate (Torque Frequency) using the calibrated sensitivity Slope
                 var torque = torque_frequency / (ctfPage.slope/10);
@@ -130,7 +131,7 @@ const AntBikePower = function() {
     }
 
     // Parses ANT+ Crank Torque Frequency calibration page.
-    function parseCTFCalibration() {
+    function parseCTFCalibration(timestamp) {
         var page = {
             calibration_id : bpChannelEventBuffer[2],
             ctf_defined_id : bpChannelEventBuffer[3],
@@ -138,8 +139,7 @@ const AntBikePower = function() {
         };
 
         if (page.calibration_id == 0x10 && page.ctf_defined_id == 0x01) {
-            // Store offset.
-            ctfOffset = page.offset;
+            ctfOffset.isValidSample(page.offset, timestamp);
         }
 
         return page;
@@ -161,7 +161,7 @@ const AntBikePower = function() {
                 }        
                 break;
             case CTF_CALIBRATION_PAGE:
-                self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(), 
+                self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(timestamp), 
                     timestamp);                
             break;
             case antlib.PRODUCT_PAGE:
