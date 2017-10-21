@@ -6,7 +6,8 @@ This boiler plate is copied from https://github.com/szwacz/electron-boilerplate 
 
 # Quick start
 Install git (https://git-scm.com/download)
-The only development dependency of this project is [Node.js](https://nodejs.org). So just make sure you have it installed.  This was tested against Node.js 4.x.
+The only development dependency of this project is the *32bit version* of [Node.js](https://nodejs.org). So just make sure you have it installed.  This was tested against Node.js 4.x.
+You sould also make sure you have [gyp](https://github.com/nodejs/node-gyp) installation configured for your platform.
 Then type few commands known to every Node developer...
 ```
 git clone https://github.com/delormej/irt_client.git
