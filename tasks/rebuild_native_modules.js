@@ -9,7 +9,8 @@ var electron = require('electron-prebuilt');
 var electronPackage = require('electron-prebuilt/package.json');
 var rebuild = require('electron-rebuild');
 
-var pathToElectronNativeModules = path.join(__dirname, '../app/node_modules');
+var buildPath = path.join(__dirname, '../app');
+var electronVersion = electronPackage.version;
 
 rebuild.shouldRebuildNativeModules(electron)
 .then(function (shouldBuild) {
@@ -17,11 +18,14 @@ rebuild.shouldRebuildNativeModules(electron)
         return true;
     }
 
-    console.log('Rebuilding native modules for Electron...');
-
-    return rebuild.installNodeHeaders(electronPackage.version)
+    console.log(`Rebuilding native modules for Electron version ${electronVersion}...`);
+    
+    return rebuild.installNodeHeaders(electronVersion)
     .then(function () {
-        return rebuild.rebuildNativeModules(electronPackage.version, pathToElectronNativeModules);
+        return rebuild.rebuild({
+            electronVersion,
+            buildPath
+        });
     });
 })
 .then(function () {
