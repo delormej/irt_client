@@ -294,7 +294,8 @@ const AntFec = function() {
             powerMeterId : (buffer[2] | buffer[3] << 8),
             powerAdjustSeconds : buffer[4],
             powerAverageSeconds : buffer[5],
-            channelState : buffer[6]
+			servoSmoothingSteps : buffer[6],
+            channelState : buffer[7]
         };
         return page;
     }
@@ -467,6 +468,17 @@ const AntFec = function() {
         requestLastCommand();
     }
 
+    // Sets target grade and coefficient of rolling resistance.
+    function setTrackResistance(grade, crr) {
+        transmitBuffer[0] = TRACK_RESISTANCE_PAGE;
+
+        var result = antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
+        console.log('setting track resistance:', result);
+        // Verify it worked by async aking for last command.
+        requestLastCommand();
+
+    }
+
     // Sets erg mode and target watts.
     function setTargetPower(watts) {
         
@@ -635,13 +647,13 @@ const AntFec = function() {
     }
     
     // Sends the manufacturer specific page to set power meter adjust device settings.
-    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds) {
+    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds, servoSmoothingSteps) {
         transmitBuffer[0] = IRT_SETTINGS_POWER_ADJUST_PAGE;
         transmitBuffer[1] = powerMeterId & 0xFF; // powerMeterIdLSB  
         transmitBuffer[2] = powerMeterId >> 8; // powerMeterIdMSB  
         transmitBuffer[3] = adjustSeconds;
         transmitBuffer[4] = averageSeconds;
-        transmitBuffer[5] = 0xFF;
+        transmitBuffer[5] = servoSmoothingSteps;
         transmitBuffer[6] = 0xFF;
         transmitBuffer[7] = 0xFF;
 

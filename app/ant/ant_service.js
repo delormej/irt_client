@@ -219,6 +219,7 @@ const AntService = function() {
                 scope.powerAdjustSeconds = data.powerAdjustSeconds;
                 scope.powerAverageSeconds = data.powerAverageSeconds;
                 scope.powerMeterState = (data.channelState == 1 ? true : false);
+				scope.servoSmoothingSteps = data.sevoSmoothingSteps;
             }            
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
@@ -402,7 +403,8 @@ const AntService = function() {
         fec.setIrtPowerAdjustSettings(
             parseInt(self.scope.powerMeterId), 
             parseInt(self.scope.powerAdjustSeconds),
-            parseInt(self.scope.powerAverageSeconds));
+            parseInt(self.scope.powerAverageSeconds),
+			parseInt(self.scope.servoSmoothingSteps));
         }
         catch(err) {
             console.log('setAdjustPowerMeter', err);
