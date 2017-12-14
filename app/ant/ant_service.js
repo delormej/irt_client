@@ -219,7 +219,7 @@ const AntService = function() {
                 scope.powerAdjustSeconds = data.powerAdjustSeconds;
                 scope.powerAverageSeconds = data.powerAverageSeconds;
                 scope.powerMeterState = (data.channelState == 1 ? true : false);
-				scope.servoSmoothingSteps = data.sevoSmoothingSteps;
+				scope.servoSmoothingSteps = data.servoSmoothingSteps;
             }            
             else if (event === "commandStatus") {
                 scope.lastCommand = data.lastCommand;
@@ -404,7 +404,8 @@ const AntService = function() {
             parseInt(self.scope.powerMeterId), 
             parseInt(self.scope.powerAdjustSeconds),
             parseInt(self.scope.powerAverageSeconds),
-			parseInt(self.scope.servoSmoothingSteps));
+            parseInt(self.scope.servoSmoothingSteps),
+            self.scope.persistSettings);
         }
         catch(err) {
             console.log('setAdjustPowerMeter', err);

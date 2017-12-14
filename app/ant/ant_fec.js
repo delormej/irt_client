@@ -647,7 +647,7 @@ const AntFec = function() {
     }
     
     // Sends the manufacturer specific page to set power meter adjust device settings.
-    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds, servoSmoothingSteps) {
+    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds, servoSmoothingSteps, persist) {
         transmitBuffer[0] = IRT_SETTINGS_POWER_ADJUST_PAGE;
         transmitBuffer[1] = powerMeterId & 0xFF; // powerMeterIdLSB  
         transmitBuffer[2] = powerMeterId >> 8; // powerMeterIdMSB  
@@ -655,7 +655,10 @@ const AntFec = function() {
         transmitBuffer[4] = averageSeconds;
         transmitBuffer[5] = servoSmoothingSteps;
         transmitBuffer[6] = 0xFF;
-        transmitBuffer[7] = 0xFF;
+        if (persist)
+            transmitBuffer[7] = 0xFF;
+        else
+            transmitBuffer[7] = 0x7F;
 
         console.log('Sending IRT Power Adjust Settings.');
         antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);   
