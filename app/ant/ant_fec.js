@@ -295,7 +295,7 @@ const AntFec = function() {
             powerAdjustSeconds : buffer[4],
             powerAverageSeconds : buffer[5],
 			servoSmoothingSteps : buffer[6],
-            channelState : buffer[7]
+            minAdjustSpeedMps : buffer[7]
         };
         return page;
     }
@@ -647,14 +647,14 @@ const AntFec = function() {
     }
     
     // Sends the manufacturer specific page to set power meter adjust device settings.
-    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds, servoSmoothingSteps, persist) {
+    function setIrtPowerAdjustSettings(powerMeterId, adjustSeconds, averageSeconds, servoSmoothingSteps, minAdjustSpeedMps, persist) {
         transmitBuffer[0] = IRT_SETTINGS_POWER_ADJUST_PAGE;
         transmitBuffer[1] = powerMeterId & 0xFF; // powerMeterIdLSB  
         transmitBuffer[2] = powerMeterId >> 8; // powerMeterIdMSB  
         transmitBuffer[3] = adjustSeconds;
         transmitBuffer[4] = averageSeconds;
         transmitBuffer[5] = servoSmoothingSteps;
-        transmitBuffer[6] = 0xFF;
+        transmitBuffer[6] = minAdjustSpeedMps;
         if (persist)
             transmitBuffer[7] = 0xFF;
         else
