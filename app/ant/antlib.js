@@ -79,6 +79,7 @@ const antlib = ffi.Library(libPath(), {
     'ANT_AssignResponseFunction': ['void', [ 'pointer', 'pointer' ] ],
     'ANT_AssignChannelEventFunction': ['void', [ 'uchar', 'pointer', 'pointer' ] ],
     'ANT_AssignChannel': ['bool', ['uchar', 'uchar', 'uchar'] ],
+    'ANT_AssignChannelExt': ['bool', ['uchar', 'uchar', 'uchar', 'uchar'] ],
     'ANT_SetChannelId': ['bool', ['uchar', 'ushort', 'uchar', 'uchar' ] ],
     'ANT_SetChannelRFFreq': ['bool', ['uchar', 'uchar'] ],
     'ANT_SendBroadcastData': ['bool', ['uchar', 'pointer'] ],
@@ -449,10 +450,32 @@ function init() {
     initialized = true;
 }
 
+function openBackgroundScanningChannel() {
+    const BG_SCANNING_CHANNEL_ID = 0;
+    const BG_SCANNING_CHANNEL_TYPE = 0x00;
+    const EXT_PARAM_ALWAYS_SEARCH = 0x01;
+    const WILDCARD_DEVICE_ID = 0x00;
+    const TRANSMISSION_TYPE = 0;
+    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) {
+        throw new Error('Unable to assign channel.');    
+
+    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) {
+        throw new Error('Unable to assign channel.');            
+
+    if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, BG_SCANNING_CHANNEL_TYPE,
+            TRANSMISSION_TYPE))
+        throw new Error('Unable to set channel id.');
+
+
+    antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, );
+    antlib.ANT_SetChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, );
+
+}
+
 // Opens a chanel.
 function openChannel(config) {
     // Get the first empty channel.
-    var channelId = 0;
+    var channelId = 1; // 0 is reserved for background scanning.
     for (; channelId < channelConfigs.length; channelId++) {
         if (channelConfigs[channelId] == null) {
             break;
