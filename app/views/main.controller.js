@@ -99,6 +99,10 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.enableDFU = function () {
             antService.setDfuMode();
         }
+        
+        $scope.searchForPowerMeters = function() {
+            antService.searchForPowerMeters();
+        }
 
         $scope.getSettings = function () { antService.getSettings(); };
 

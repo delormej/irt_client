@@ -35,6 +35,7 @@ const AntFec = function() {
     const IRT_SPECIFIC_PAGE = 0xF0;         // IRT (Manufacturers) specific page.
     const IRT_SET_SERVO_COMMAND = 0x61;
     const IRT_SET_DFU_COMMAND = 0x64;
+    const IRT_TOGGLE_BG_SCAN = 0x65;
 
 
     // Enum of device status.
@@ -445,6 +446,10 @@ const AntFec = function() {
         sendIrtSpecificPage(IRT_SET_DFU_COMMAND, null);
     }
 
+    function searchForPowerMeters() {
+        sendIrtSpecificPage(IRT_TOGGLE_BG_SCAN, null);
+    }
+
     // Sets servo position. 
     function setServoPosition(position) {
         sendIrtSpecificPage(IRT_SET_SERVO_COMMAND, position);
@@ -708,6 +713,7 @@ const AntFec = function() {
     AntFec.prototype.openChannel = openChannel;
     AntFec.prototype.setServoPosition = setServoPosition;
     AntFec.prototype.setDfuMode = setDfuMode;
+    AntFec.prototype.searchForPowerMeters = searchForPowerMeters;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    

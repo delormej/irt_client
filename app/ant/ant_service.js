@@ -362,6 +362,10 @@ const AntService = function() {
         fec.setDfuMode();
     }
 
+    function searchForPowerMeters() {
+        fec.searchForPowerMeters();
+    }
+
     function getSettings() {
         console.log('ant_service::getSettings() called.');
         fec.getSettings();
@@ -587,6 +591,7 @@ const AntService = function() {
     AntService.prototype.setBasicResistance = setBasicResistance;
     AntService.prototype.setTargetPower = setTargetPower;
     AntService.prototype.setDfuMode = setDfuMode;
+    AntService.prototype.searchForPowerMeters = searchForPowerMeters;
     AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      
