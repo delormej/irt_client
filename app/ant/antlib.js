@@ -66,6 +66,8 @@ const STATUS_ASSIGNED_CHANNEL = 0x01;
 const STATUS_SEARCHING_CHANNEL = 0x02;
 const STATUS_TRACKING_CHANNEL = 0x03;
 
+const BG_SCANNING_CHANNEL_ID = 0;
+
 // Internal memory structures used by ANT library for sending and recieving messages. 
 const responseBuffer = new Buffer(MESG_MAX_SIZE_VALUE);
 
@@ -84,6 +86,7 @@ const antlib = ffi.Library(libPath(), {
     'ANT_SetChannelRFFreq': ['bool', ['uchar', 'uchar'] ],
     'ANT_SendBroadcastData': ['bool', ['uchar', 'pointer'] ],
     'ANT_SendAcknowledgedData': ['bool', ['uchar', 'pointer'] ],
+    'ANT_RxExtMesgsEnable': ['bool', ['uchar']],
     'ANT_ResetSystem': ['bool', [] ],
     'ANT_OpenChannel': ['bool', ['uchar'] ],
     'ANT_CloseChannel': ['bool', ['uchar'] ],
@@ -323,6 +326,11 @@ function deviceResponse(channelId, messageId) {
 
 // Called when channel events occur.
 function channelEvent(channelId, eventId) {
+    if (channelId == BG_SCANNING_CHANNEL_ID) {
+        console.log('buffer:', channelConfigs[BG_SCANNING_CHANNEL_ID].buffer);
+        return;
+    }
+
     if (channelConfigs[channelId] != null) {
         // If this is the first time we've seen data, get channel details.
         if (channelConfigs[channelId] == null ||
@@ -451,25 +459,39 @@ function init() {
 }
 
 function openBackgroundScanningChannel() {
-    const BG_SCANNING_CHANNEL_ID = 0;
     const BG_SCANNING_CHANNEL_TYPE = 0x00;
     const EXT_PARAM_ALWAYS_SEARCH = 0x01;
     const WILDCARD_DEVICE_ID = 0x00;
     const TRANSMISSION_TYPE = 0;
-    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) {
+    const ENABLE_EXT_MSG = 0x01;
+    const SEARCH_TIMEOUT_INFINITE = 0xFF;
+    const TIMEOUT_DISABLED = 0;
+
+    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) 
         throw new Error('Unable to assign channel.');    
 
-    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) {
+    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH))
         throw new Error('Unable to assign channel.');            
 
     if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, BG_SCANNING_CHANNEL_TYPE,
             TRANSMISSION_TYPE))
         throw new Error('Unable to set channel id.');
 
+    if (!antlib.ANT_RxExtMesgsEnable(ENABLE_EXT_MSG))
+        throw new Error('Unable to enable extended messages.');
 
-    antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, );
-    antlib.ANT_SetChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, );
+    if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, SEARCH_TIMEOUT_INFINITE))
+        throw new Error("Unable to set low priority channel search timeout.");
 
+    if (!antlib.ANT_SetChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, TIMEOUT_DISABLED))
+        throw new Error("Unable to disable search timeout.");
+
+    antlib.ANT_AssignChannelEventFunction(BG_SCANNING_CHANNEL_ID, 
+        channelEventCallback, 
+        channelConfigs[BG_SCANNING_CHANNEL_ID].buffer);    
+
+    if (!antlib.ANT_OpenChannel(BG_SCANNING_CHANNEL_ID))
+        throw new Error("Unable to open channel.");
 }
 
 // Opens a chanel.
