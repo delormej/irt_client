@@ -52,7 +52,7 @@ const AntService = function() {
         scope.persistSettings = false; // Set default.
         scope.powerAdjustEnabled = false;
 
-        antlib.openBackgroundScanningChannel();
+        // antlib.openBackgroundScanningChannel();
 
         fec = new AntFec();
         bp = new AntBikePower();
@@ -345,8 +345,8 @@ const AntService = function() {
     }
 
     function searchForPowerMeters() {
-        // fec.searchForPowerMeters();
-        antlib.openBackgroundScanningChannel();
+        fec.searchForPowerMeters();
+        //antlib.openBackgroundScanningChannel();
     }
 
     function getSettings() {
