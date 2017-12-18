@@ -52,25 +52,7 @@ const AntService = function() {
         scope.persistSettings = false; // Set default.
         scope.powerAdjustEnabled = false;
 
-        //    {
-        //        "x": 0,
-        //        "y": 0
-        //    },
-        //    {
-        //        "x": 5,
-        //        "y": 10
-        //    },
-        //    {
-        //        "x": 6,
-        //        "y": 250
-        //    },
-        //];
-        
-        /* Once you've found the FEC device, try searching for a power meter 
-        * (low prioirty) so that it doesn't conflict with the FE-C channel.  
-        * Setup an exclusion list so that it doesn't attach the IRT roller device
-        * as both an FE-C and power meter since it uses both channels.
-        */
+        antlib.openBackgroundScanningChannel();
 
         fec = new AntFec();
         bp = new AntBikePower();
@@ -363,7 +345,8 @@ const AntService = function() {
     }
 
     function searchForPowerMeters() {
-        fec.searchForPowerMeters();
+        // fec.searchForPowerMeters();
+        antlib.openBackgroundScanningChannel();
     }
 
     function getSettings() {
