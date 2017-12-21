@@ -11,6 +11,9 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         $scope.servoChartData = [0, 1];
         $scope.trainerPowerChartEvents = [{ x: 0, y: 1 }, { x: 1, y: 2 }];
 
+        $scope.availablePowerMeters = [];
+        $scope.availableFeC = [];
+
         // Channel status buttons.
         $scope.lblTrainerButton = "Search for Trainer";
         $scope.lblPowerMeterButton = "Search for Power Meter";

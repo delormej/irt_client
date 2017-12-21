@@ -14,11 +14,12 @@ const AntBackgroundScanner = function() {
     const antlib = require('./antlib.js');
     var bgScanChannelEventBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
 
-    function parseDeviceInfo() {
+    function parseDeviceInfo(timestamp) {
         var deviceInfo = { 
             deviceId: bgScanChannelEventBuffer[10] | (bgScanChannelEventBuffer[11] << 8), 
             deviceType: bgScanChannelEventBuffer[12], 
             manufacturerId: 0,
+            timestamp: timestamp
         };
 
         var messagedId = bgScanChannelEventBuffer[1];
@@ -33,7 +34,7 @@ const AntBackgroundScanner = function() {
 
     function bgScanChannelEvent(channelId, eventId, timestamp) {
         // console.log("bg scan:", bgScanChannelEventBuffer);
-        self.emit('deviceInfo', parseDeviceInfo(), timestamp);        
+        self.emit('deviceInfo', parseDeviceInfo(timestamp));        
     }
 
     function openChannel() {

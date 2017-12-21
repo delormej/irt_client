@@ -53,6 +53,16 @@
       <td>
         Version:<span>{{version}}</span>
         <p/>
+        Available FE-C Devices:
+        <select ng-model="fecSelect" size="5">
+          <option ng-repeat="option in availableFeC" value="{{option.deviceId}}">
+              {{option.deviceId}}, {{option.manufacturerId}}</option>
+        </select>
+        Available Power Meters:
+        <select ng-model="powerMeterSelect" size="5">
+          <option ng-repeat="option in availablePowerMeters" value="{{option.deviceId}}">
+              {{option.deviceId}}, {{option.manufacturerId}}</option>
+        </select>
         <input type="text" ng-model="trainerDeviceId" />&nbsp;<button id="btnTrainerChannel" ng-click="setTrainerChannel();">{{lblTrainerButton}}</button><br/> <!-- Search for Trainer -->
         <input type="text" ng-model="powerMeterDeviceId" />&nbsp;<button id="btnPowerMeterChannel" ng-click="setPowerMeterChannel();">{{lblPowerMeterButton}}</button><br/> <!-- Search for Power Meter -->
         <input type="text" ng-model="txtResistanceLevel" />

@@ -53,14 +53,17 @@ const AntService = function() {
         scope.new_rr = 0;        
         scope.persistSettings = false; // Set default.
         scope.powerAdjustEnabled = false;
+        scope.availablePowerMeters = [];
+        scope.availableFeC = [];
 
         bg_scan = new AntBgScanner();
         fec = new AntFec();
         bp = new AntBikePower();
         powerAdjuster = new PowerAdjuster(fec);
         
-        bg_scan.on('deviceInfo', (deviceInfo, timestamp) => {
-            //console.log('deviceInfo', deviceInfo);
+        bg_scan.on('deviceInfo', (deviceInfo) => {
+            addOrUpdateAvailableDeviceTypes(deviceInfo);
+            scope.safeApply();
         });
 
         // Process bike power messages.
@@ -572,6 +575,32 @@ const AntService = function() {
             labels: getChartXAxisLabels(),
             datasets: chartDatasets
         };
+    }
+
+    function addOrUpdateAvailableDevice(availableDevices, deviceInfo) {
+        var element = availableDevices.find(function(value) {
+            return value.deviceId == deviceInfo.deviceId;
+        });
+        if (element != null) {
+            if (deviceInfo.manufacturerId != 0)
+                element.manufacturerId = deviceInfo.manufacturerId;
+            element.timestamp = deviceInfo.timestamp;
+        }
+        else {
+            availableDevices.push(deviceInfo);
+        }        
+        
+        // TODO: wipe any devices from the list that we haven't seen in a minute or so
+        // based on timestamp.
+    }
+
+    function addOrUpdateAvailableDeviceTypes(deviceInfo) {
+        const BIKE_POWER_DEVICE_TYPE = 0x0B;
+        const FEC_DEVICE_TYPE = 0x11;
+        if (deviceInfo.deviceType == BIKE_POWER_DEVICE_TYPE) 
+            addOrUpdateAvailableDevice(self.scope.availablePowerMeters, deviceInfo);
+        else if (deviceInfo.deviceType == FEC_DEVICE_TYPE) 
+            addOrUpdateAvailableDevice(self.scope.availableFeC, deviceInfo);
     }
 
     AntService.prototype.load = load;
