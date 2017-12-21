@@ -306,6 +306,7 @@ const AntFec = function() {
     function fecChannelEvent(channelId, eventId, timestamp) { 
         switch(eventId) {
             case antlib.EVENT_RX_BROADCAST:
+            case antlib.EVENT_RX_FLAG_BROADCAST:
                 var messagedId = fecChannelEventBuffer[1];
                 switch (messagedId) {
                     case GENERAL_FE_DATA_PAGE:
