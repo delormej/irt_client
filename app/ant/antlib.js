@@ -67,7 +67,6 @@ const STATUS_SEARCHING_CHANNEL = 0x02;
 const STATUS_TRACKING_CHANNEL = 0x03;
 
 const BG_SCANNING_CHANNEL_ID = 0;
-var bg_scan_buffer = new Buffer(MESG_MAX_SIZE_VALUE);
 
 // Internal memory structures used by ANT library for sending and recieving messages. 
 const responseBuffer = new Buffer(MESG_MAX_SIZE_VALUE);
@@ -332,14 +331,9 @@ function deviceResponse(channelId, messageId) {
 
 // Called when channel events occur.
 function channelEvent(channelId, eventId) {
-    if (channelId == BG_SCANNING_CHANNEL_ID) {
-        console.log('buffer:', bg_scan_buffer);
-        return;
-    }
-
     if (channelConfigs[channelId] != null) {
         // If this is the first time we've seen data, get channel details.
-        if (channelConfigs[channelId] == null ||
+        if (channelId != BG_SCANNING_CHANNEL_ID &&
                 channelConfigs[channelId].deviceId == 0) {
             // Get the channel config if we're not tracking.
             requestMessage(channelId, MESG_CHANNEL_ID_ID);
@@ -464,20 +458,23 @@ function init() {
     initialized = true;
 }
 
-function openBackgroundScanningChannel() {
+function openBackgroundScanningChannel(config) {
     const BG_SCANNING_CHANNEL_TYPE = 0x40;
     const EXT_PARAM_ALWAYS_SEARCH = 0x01;
-    const WILDCARD_DEVICE_ID = 0x00;
+    const WILDCARD_DEVICE_ID = 0;
+    const WILDCARD_DEVICE_TYPE = 0;
     const TRANSMISSION_TYPE = 0;
     const ENABLE_EXT_MSG = 0x01;
     const SEARCH_TIMEOUT_INFINITE = 0xFF;
     const TIMEOUT_DISABLED = 0;
     const CHANNEL_FREQUENCY = 57;
 
+    channelConfigs[BG_SCANNING_CHANNEL_ID] = config;
+
     if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) 
         throw new Error('Unable to assign channel.');         
 
-    if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, 0,
+    if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, WILDCARD_DEVICE_TYPE,
             TRANSMISSION_TYPE))
         throw new Error('Unable to set channel id.');
 
@@ -492,7 +489,7 @@ function openBackgroundScanningChannel() {
 
     antlib.ANT_AssignChannelEventFunction(BG_SCANNING_CHANNEL_ID, 
         channelEventCallback, 
-        bg_scan_buffer);    
+        config.buffer);    
 
     if (!antlib.ANT_SetChannelRFFreq(BG_SCANNING_CHANNEL_ID, CHANNEL_FREQUENCY)) 
         throw new Error("Unable to set channel frequency.");    
@@ -773,3 +770,4 @@ exports.STATUS_TRACKING_CHANNEL = STATUS_TRACKING_CHANNEL;
 exports.STATUS_UNASSIGNED_CHANNEL = STATUS_UNASSIGNED_CHANNEL;
 exports.STATUS_ASSIGNED_CHANNEL = STATUS_ASSIGNED_CHANNEL;
 exports.STATUS_SEARCHING_CHANNEL = STATUS_SEARCHING_CHANNEL;
+exports.BG_SCANNING_CHANNEL_ID = BG_SCANNING_CHANNEL_ID;

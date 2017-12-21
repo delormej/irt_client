@@ -9,6 +9,7 @@ const AntService = function() {
     const util = require('util');
     const zpad = require('zpad');
     const antlib = require('../ant/antlib.js');
+    const AntBgScanner = require('../ant/ant_bg_scanner.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
     const PowerAdjuster = require('../ant/power_adjuster.js');
@@ -23,6 +24,7 @@ const AntService = function() {
     const METERS_TO_MILES = 0.000621371;
     const MPS_TO_MPH = 2.23694;
     
+    var bg_scan = null;
     var fec = null; 
     var bp = null;
     var powerAdjuster = null;
@@ -52,12 +54,15 @@ const AntService = function() {
         scope.persistSettings = false; // Set default.
         scope.powerAdjustEnabled = false;
 
-        // antlib.openBackgroundScanningChannel();
-
+        bg_scan = new AntBgScanner();
         fec = new AntFec();
         bp = new AntBikePower();
         powerAdjuster = new PowerAdjuster(fec);
         
+        // bg_scan.on('deviceInfo', (deviceInfo, timestamp) => {
+        //     console.log('deviceInfo', deviceInfo);
+        // });
+
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
             // "Flatten" json so it's more usable.
@@ -255,9 +260,9 @@ const AntService = function() {
             console.log('Updated RR: ', new_rr, rr, actual_power, trainer_power);
         });
 
-        // Configure the channel.
-        fec.openChannel();      
-        bp.openChannel();
+        bg_scan.openChannel();
+        //fec.openChannel();      
+        //bp.openChannel();
         
         scope.cadence = 'n/a';
     }
@@ -347,7 +352,6 @@ const AntService = function() {
 
     function searchForPowerMeters() {
         fec.searchForPowerMeters();
-        //antlib.openBackgroundScanningChannel();
     }
 
     function getSettings() {
