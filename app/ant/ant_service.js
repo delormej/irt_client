@@ -264,7 +264,7 @@ const AntService = function() {
             console.log('Updated RR: ', new_rr, rr, actual_power, trainer_power);
         });
 
-        bg_scan.openChannel();
+        //bg_scan.openChannel();
         //fec.openChannel();      
         //bp.openChannel();
         
@@ -354,8 +354,23 @@ const AntService = function() {
         fec.setDfuMode();
     }
 
+    function blinkLed() {
+        fec.blinkLed();
+    }
+
     function searchForPowerMeters() {
         fec.searchForPowerMeters();
+    }
+
+    function searchForDevices() {
+        if (bg_scan.isChannelOpen())
+            bg_scan.closeChannel();
+        else
+            bg_scan.openChannel();
+    }
+
+    function searchForFECById(deviceId) {
+        fec.openChannel(deviceId);      
     }
 
     function getSettings() {
@@ -612,13 +627,16 @@ const AntService = function() {
     AntService.prototype.setBasicResistance = setBasicResistance;
     AntService.prototype.setTargetPower = setTargetPower;
     AntService.prototype.setDfuMode = setDfuMode;
+    AntService.prototype.blinkLed = blinkLed;
     AntService.prototype.searchForPowerMeters = searchForPowerMeters;
+    AntService.prototype.searchForDevices = searchForDevices;
     AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      
     AntService.prototype.setAdjustPowerMeter = setAdjustPowerMeter;
     AntService.prototype.openLogFile = openLogFile;
     AntService.prototype.setChannel = setChannel;
+    AntService.prototype.searchForFECById = searchForFECById;
     AntService.prototype.DEVICE_ENUM = DEVICE_ENUM;
 }
 

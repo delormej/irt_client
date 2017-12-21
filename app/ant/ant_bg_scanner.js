@@ -13,6 +13,7 @@ const AntBackgroundScanner = function() {
     var self = this;
     const antlib = require('./antlib.js');
     var bgScanChannelEventBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
+    var channelOpened = false;
 
     function parseDeviceInfo(timestamp) {
         var deviceInfo = { 
@@ -53,14 +54,23 @@ const AntBackgroundScanner = function() {
         };
 
         antlib.openBackgroundScanningChannel(BG_SCANNER_CHANNEL_CONFIG);
+        channelOpened = true;
     }
 
     function closeChannel() {
         antlib.closeChannel(antlib.BG_SCANNING_CHANNEL_ID);
+        channelOpened = false;
+        const DISABLE_EXT_MSG = 0;
+        antlib.enableExtendedMessages(DISABLE_EXT_MSG);
+    }
+
+    function isChannelOpen() {
+        return channelOpened;
     }
 
     AntBackgroundScanner.prototype.openChannel = openChannel;
     AntBackgroundScanner.prototype.closeChannel = closeChannel;
+    AntBackgroundScanner.prototype.isChannelOpen = isChannelOpen;
 };
 
 util.inherits(AntBackgroundScanner, EventEmitter);

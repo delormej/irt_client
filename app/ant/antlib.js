@@ -458,13 +458,19 @@ function init() {
     initialized = true;
 }
 
+function enableExtendedMessages(enable) {
+    const ENABLE_EXT_MSG = 0x01;
+    
+    if (!antlib.ANT_RxExtMesgsEnable(enable))
+        throw new Error('Unable to enable extended messages.');    
+}
+
 function openBackgroundScanningChannel(config) {
     const BG_SCANNING_CHANNEL_TYPE = 0x40;
     const EXT_PARAM_ALWAYS_SEARCH = 0x01;
     const WILDCARD_DEVICE_ID = 0;
     const WILDCARD_DEVICE_TYPE = 0;
     const TRANSMISSION_TYPE = 0;
-    const ENABLE_EXT_MSG = 0x01;
     const SEARCH_TIMEOUT_INFINITE = 0xFF;
     const TIMEOUT_DISABLED = 0;
     const CHANNEL_FREQUENCY = 57;
@@ -478,8 +484,7 @@ function openBackgroundScanningChannel(config) {
             TRANSMISSION_TYPE))
         throw new Error('Unable to set channel id.');
 
-    if (!antlib.ANT_RxExtMesgsEnable(ENABLE_EXT_MSG))
-        throw new Error('Unable to enable extended messages.');
+    enableExtendedMessages(true);
 
     if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, SEARCH_TIMEOUT_INFINITE))
         throw new Error("Unable to set low priority channel search timeout.");
@@ -747,6 +752,7 @@ exports.getDeltaWithRollover16 = getDeltaWithRollover16;
 exports.getAveragePower = getAveragePower;
 exports.setFileMode = setFileMode;
 exports.parseLogLine = parseLogLine;
+exports.enableExtendedMessages = enableExtendedMessages;
 
 exports.parseManufacturerInfo = parseManufacturerInfo;
 exports.parseProductInfo = parseProductInfo;

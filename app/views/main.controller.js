@@ -103,8 +103,16 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
             antService.setDfuMode();
         }
         
+        $scope.blinkLed = function() {
+            antService.blinkLed();
+        }
+
         $scope.searchForPowerMeters = function() {
             antService.searchForPowerMeters();
+        }
+
+        $scope.searchForDevices = function() {
+            antService.searchForDevices();
         }
 
         $scope.getSettings = function () { antService.getSettings(); };
@@ -129,7 +137,8 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.setTrainerChannel = function() {
-            antService.setChannel(antService.DEVICE_ENUM.TRAINER, $scope.trainerDeviceId);
+            //antService.setChannel(antService.DEVICE_ENUM.TRAINER, $scope.trainerDeviceId);
+            antService.searchForFECById($scope.trainerDeviceId);
         }
 
         $scope.setPowerMeterChannel = function() {
