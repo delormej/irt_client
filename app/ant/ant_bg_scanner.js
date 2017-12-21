@@ -19,6 +19,7 @@ const AntBackgroundScanner = function() {
             deviceId: bgScanChannelEventBuffer[10] | (bgScanChannelEventBuffer[11] << 8), 
             deviceType: bgScanChannelEventBuffer[12], 
             manufacturerId: 0,
+            manufacturerName: "",
             timestamp: timestamp
         };
 

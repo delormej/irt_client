@@ -9,6 +9,7 @@ const AntService = function() {
     const util = require('util');
     const zpad = require('zpad');
     const antlib = require('../ant/antlib.js');
+    const antManufacturer = require('../ant/ant_manufacturers.js');
     const AntBgScanner = require('../ant/ant_bg_scanner.js');
     const AntFec = require('../ant/ant_fec.js');
     const AntBikePower = require('../ant/ant_bp.js');
@@ -582,14 +583,17 @@ const AntService = function() {
             return value.deviceId == deviceInfo.deviceId;
         });
         if (element != null) {
-            if (deviceInfo.manufacturerId != 0)
+            if (deviceInfo.manufacturerId != 0) {
                 element.manufacturerId = deviceInfo.manufacturerId;
+                element.manufacturerName = 
+                    antManufacturer.getAntManufacturerNameById(deviceInfo.manufacturerId);
+            }
             element.timestamp = deviceInfo.timestamp;
         }
         else {
             availableDevices.push(deviceInfo);
         }        
-        
+
         // TODO: wipe any devices from the list that we haven't seen in a minute or so
         // based on timestamp.
     }
