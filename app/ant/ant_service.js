@@ -373,6 +373,10 @@ const AntService = function() {
         fec.openChannel(deviceId);      
     }
 
+    function searchForBikePowerById(deviceId) {
+        bp.openChannel(deviceId);
+    }
+
     function getSettings() {
         console.log('ant_service::getSettings() called.');
         fec.getSettings();
@@ -637,6 +641,7 @@ const AntService = function() {
     AntService.prototype.openLogFile = openLogFile;
     AntService.prototype.setChannel = setChannel;
     AntService.prototype.searchForFECById = searchForFECById;
+    AntService.prototype.searchForBikePowerById = searchForBikePowerById;
     AntService.prototype.DEVICE_ENUM = DEVICE_ENUM;
 }
 

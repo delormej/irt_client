@@ -142,7 +142,8 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.setPowerMeterChannel = function() {
-            antService.setChannel(antService.DEVICE_ENUM.POWER_METER, $scope.powerMeterDeviceId);
+            // antService.setChannel(antService.DEVICE_ENUM.POWER_METER, $scope.powerMeterDeviceId);
+            antService.searchForBikePowerById($scope.powerMeterDeviceId);
         }
 
         $scope.$watch('powerAdjustEnabled', function() {
