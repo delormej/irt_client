@@ -59,9 +59,9 @@ const AntService = function() {
         bp = new AntBikePower();
         powerAdjuster = new PowerAdjuster(fec);
         
-        // bg_scan.on('deviceInfo', (deviceInfo, timestamp) => {
-        //     console.log('deviceInfo', deviceInfo);
-        // });
+        bg_scan.on('deviceInfo', (deviceInfo, timestamp) => {
+            console.log('deviceInfo', deviceInfo);
+        });
 
         // Process bike power messages.
         bp.on('message', (event, data, timestamp) => {
