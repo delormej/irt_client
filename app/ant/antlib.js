@@ -647,7 +647,7 @@ function parseIrtExtraInfo(buffer) {
         target : decodeTarget(buffer[4], buffer[5]),
         flywheelRevs : buffer[6] | buffer[7] << 8,
         temperature : buffer[8] & 0x7F, // mask out msb
-        powerMeterConnected : buffer[8] & 0x80  // first bit is the connected flag
+        powerMeterConnected : (buffer[8] & 0x80) == 0x80  // first bit is the connected flag
     };
     return page;
 }
