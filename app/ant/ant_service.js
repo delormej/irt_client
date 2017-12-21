@@ -60,7 +60,7 @@ const AntService = function() {
         powerAdjuster = new PowerAdjuster(fec);
         
         bg_scan.on('deviceInfo', (deviceInfo, timestamp) => {
-            console.log('deviceInfo', deviceInfo);
+            //console.log('deviceInfo', deviceInfo);
         });
 
         // Process bike power messages.
