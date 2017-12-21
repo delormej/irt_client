@@ -184,6 +184,7 @@ const AntService = function() {
                 
                 scope.target = data.target;
                 scope.flywheelRevs = data.flywheelRevs;
+                scope.powerMeterState = data.powerMeterConnected;
             }
             else if (event == "productInfo") {
                 scope.swRevision = data.swRevision;
