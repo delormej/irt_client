@@ -370,7 +370,7 @@ const AntService = function() {
         fec.blinkLed();
     }
 
-    function searchForPowerMeters() {
+    function startSearchForPowerMetersOnFecDevice() {
         fec.searchForPowerMeters();
     }
 
@@ -656,7 +656,7 @@ const AntService = function() {
     AntService.prototype.setTargetPower = setTargetPower;
     AntService.prototype.setDfuMode = setDfuMode;
     AntService.prototype.blinkLed = blinkLed;
-    AntService.prototype.searchForPowerMeters = searchForPowerMeters;
+    AntService.prototype.startSearchForPowerMetersOnFecDevice = startSearchForPowerMetersOnFecDevice;
     AntService.prototype.searchForDevices = searchForDevices;
     AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;

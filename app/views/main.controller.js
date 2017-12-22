@@ -17,6 +17,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         // Channel status buttons.
         $scope.lblTrainerButton = "Search for Trainer";
         $scope.lblPowerMeterButton = "Search for Power Meter";
+        $scope.lblBackgroundScanningButton = "Search for Devices";
 
         $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
         $scope.series = ['Series A', 'Series B'];
@@ -108,10 +109,10 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.searchForPowerMeters = function() {
-            antService.searchForPowerMeters();
+            antService.startSearchForPowerMetersOnFecDevice();
         }
 
-        $scope.searchForDevices = function() {
+        $scope.toggleBackgroundScanning = function() {
             antService.searchForDevices();
         }
 
