@@ -28,6 +28,8 @@ const AntBikePower = function() {
     var lastCtfMainPage = null;
     var cadenceTimeout = 0;
     const CTF_CADENCE_TIMEOUT = 12;
+    
+    var bpChannelId = 0;
 
     // Accumulates power beyond the 16 bits.
     function getAccumulatedPower(power) {   
@@ -213,14 +215,21 @@ const AntBikePower = function() {
             if (deviceId != null) {
                 BP_CHANNEL_CONFIG.deviceId = deviceId;
             }
-            antlib.openChannel(BP_CHANNEL_CONFIG);
+            bpChannelId = antlib.openChannel(BP_CHANNEL_CONFIG);
         }
         else {
             console.log('bp channel already open.');
         }     
     }
 
+    function closeChannel() {
+        if (BP_CHANNEL_CONFIG.status == antlib.STATUS_TRACKING_CHANNEL) {
+            antlib.closeChannel(bpChannelId);
+        }
+    }
+
     AntBikePower.prototype.openChannel = openChannel;
+    AntBikePower.prototype.closeChannel = closeChannel;
     AntBikePower.prototype.getChannelStatus = getChannelStatus;
 };
 

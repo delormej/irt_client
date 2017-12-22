@@ -138,12 +138,10 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.setTrainerChannel = function() {
-            //antService.setChannel(antService.DEVICE_ENUM.TRAINER, $scope.trainerDeviceId);
             antService.searchForFECById($scope.trainerDeviceId);
         }
 
         $scope.setPowerMeterChannel = function() {
-            // antService.setChannel(antService.DEVICE_ENUM.POWER_METER, $scope.powerMeterDeviceId);
             antService.searchForBikePowerById($scope.powerMeterDeviceId);
         }
 

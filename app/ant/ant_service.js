@@ -386,11 +386,17 @@ const AntService = function() {
     }
 
     function searchForFECById(deviceId) {
-        fec.openChannel(deviceId);      
+        if (fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL) 
+            fec.closeChannel();
+        else
+            fec.openChannel(deviceId);      
     }
 
     function searchForBikePowerById(deviceId) {
-        bp.openChannel(deviceId);
+        if (bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL)
+            bp.closeChannel();
+        else
+            bp.openChannel(deviceId);
     }
 
     function getSettings() {

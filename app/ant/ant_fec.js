@@ -409,6 +409,12 @@ const AntFec = function() {
         fecChannelId = antlib.openChannel(FEC_CHANNEL_CONFIG);     
     }
 
+    function closeChannel() {
+        if (getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL) {
+            antlib.closeChannel(fecChannelId);
+        }
+    }
+
     // Send a message requesting the last command, should be used to verify the last succeeded.
     function requestLastCommand() {
         // Async request of page 71 (command status)
@@ -717,6 +723,7 @@ const AntFec = function() {
     }
     
     AntFec.prototype.openChannel = openChannel;
+    AntFec.prototype.closeChannel = closeChannel;
     AntFec.prototype.setServoPosition = setServoPosition;
     AntFec.prototype.setDfuMode = setDfuMode;
     AntFec.prototype.searchForPowerMeters = searchForPowerMeters;
