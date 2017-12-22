@@ -28,7 +28,7 @@ const AntBackgroundScanner = function() {
         if (messagedId == antlib.MANUFACTURER_PAGE) {
             var page = antlib.parseManufacturerInfo(bgScanChannelEventBuffer);
             deviceInfo.manufacturerId = page.manufacturerId;
-            console.log("MANUFACTURER_PAGE:", deviceInfo);
+            // console.log("MANUFACTURER_PAGE:", deviceInfo);
         }
 
         return deviceInfo;

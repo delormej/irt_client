@@ -257,7 +257,14 @@ const AntService = function() {
                 //         transmissionType : 0,
                 //     }
                 // ]; 
-            }              
+            }   
+            else if (status == antlib.STATUS_ASSIGNED_CHANNEL) {
+                irtSettings = null;
+                scope.trainerDeviceId = 0;
+                scope.lblTrainerButton = "Search for Trainer";
+            }
+
+            scope.safeApply();
         });
         
         powerAdjuster.on('message', (new_rr, rr, actual_power, trainer_power) => {
@@ -597,6 +604,17 @@ const AntService = function() {
         };
     }
 
+    // function scavangeAvailableDevices(availableDevices, timestamp) {
+    //     const EXPIRY_SECONDS = 30;
+    //     if (timestamp > EXPIRY_SECONDS) {
+    //         var expired = availableDevices.filter(deviceInfo => 
+    //             deviceInfo.timestamp < (timestamp - EXPIRY_SECONDS));
+    //     }
+
+    //     // Can't remove from an array, I either need to make the expired element "undefined"
+    //     // or create a new array, not sure the new array will work because it's bound to the model.
+    // }
+
     function addOrUpdateAvailableDevice(availableDevices, deviceInfo) {
         var element = availableDevices.find(function(value) {
             return value.deviceId == deviceInfo.deviceId;
@@ -615,6 +633,7 @@ const AntService = function() {
 
         // TODO: wipe any devices from the list that we haven't seen in a minute or so
         // based on timestamp.
+        // scavangeAvailableDevices(availableDevices, deviceInfo.timestamp);
     }
 
     function addOrUpdateAvailableDeviceTypes(deviceInfo) {
