@@ -374,11 +374,15 @@ const AntService = function() {
         fec.searchForPowerMeters();
     }
 
-    function searchForDevices() {
-        if (bg_scan.isChannelOpen())
+    function toggleBackgroundScanning() {
+        if (bg_scan.isChannelOpen()) {
             bg_scan.closeChannel();
-        else
+            self.scope.lblBackgroundScanningButton = "Search for Devices";
+        }
+        else {
             bg_scan.openChannel();
+            self.scope.lblBackgroundScanningButton = "Stop Searching for Devices";
+        }
     }
 
     function searchForFECById(deviceId) {
@@ -657,7 +661,7 @@ const AntService = function() {
     AntService.prototype.setDfuMode = setDfuMode;
     AntService.prototype.blinkLed = blinkLed;
     AntService.prototype.startSearchForPowerMetersOnFecDevice = startSearchForPowerMetersOnFecDevice;
-    AntService.prototype.searchForDevices = searchForDevices;
+    AntService.prototype.toggleBackgroundScanning = toggleBackgroundScanning;
     AntService.prototype.setServoPosition = setServoPosition;
     AntService.prototype.getSettings = getSettings;
     AntService.prototype.setSettings = setSettings;      

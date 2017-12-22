@@ -113,7 +113,7 @@ trainerApp.controller('mainCtrl', ['$scope', 'antService',
         }
 
         $scope.toggleBackgroundScanning = function() {
-            antService.searchForDevices();
+            antService.toggleBackgroundScanning();
         }
 
         $scope.getSettings = function () { antService.getSettings(); };
