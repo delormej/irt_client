@@ -147,33 +147,44 @@ const AntBikePower = function() {
 
     // Function called back by the ant library when a message arrives.
     function bpChannelEvent(channelId, eventId, timestamp) { 
-        var messagedId = bpChannelEventBuffer[1];
-        switch (messagedId) {
-            case STANDARD_POWER_ONLY_PAGE:
-                self.emit('message', 'standardPowerOnly', parseStandardPowerOnly(), 
-                    timestamp);
+        switch(eventId) {
+            case antlib.EVENT_RX_BROADCAST:
+            case antlib.EVENT_RX_FLAG_BROADCAST:
+                var messagedId = bpChannelEventBuffer[1];
+                switch (messagedId) {
+                    case STANDARD_POWER_ONLY_PAGE:
+                        self.emit('message', 'standardPowerOnly', parseStandardPowerOnly(), 
+                            timestamp);
+                        break;
+                    case CTF_MAIN_PAGE:
+                        var page = parseCTFMain();
+                        if (page != null) {
+                            self.emit('message', 'ctfMainPage', page, 
+                                timestamp);    
+                        }        
+                        break;
+                    case CTF_CALIBRATION_PAGE:
+                        self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(timestamp), 
+                            timestamp);                
+                    break;
+                    case antlib.PRODUCT_PAGE:
+                        self.emit('message', 'productInfo', 
+                            antlib.parseProductInfo(bpChannelEventBuffer), timestamp);
+                        break;
+                    case antlib.MANUFACTURER_PAGE:
+                        self.emit('message', 'manufacturerInfo', 
+                            antlib.parseManufacturerInfo(bpChannelEventBuffer), timestamp);
+                        break;                
+                    default:
+                        //console.log('Unrecognized message.', messagedId);
+                        break;
+                }
                 break;
-            case CTF_MAIN_PAGE:
-                var page = parseCTFMain();
-                if (page != null) {
-                    self.emit('message', 'ctfMainPage', page, 
-                        timestamp);    
-                }        
+            case antlib.MESG_CHANNEL_STATUS_ID:
+                self.emit('channel_status', BP_CHANNEL_CONFIG.status,
+                    BP_CHANNEL_CONFIG.deviceId, timestamp);            
                 break;
-            case CTF_CALIBRATION_PAGE:
-                self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(timestamp), 
-                    timestamp);                
-            break;
-            case antlib.PRODUCT_PAGE:
-                self.emit('message', 'productInfo', 
-                    antlib.parseProductInfo(bpChannelEventBuffer), timestamp);
-                break;
-            case antlib.MANUFACTURER_PAGE:
-                self.emit('message', 'manufacturerInfo', 
-                    antlib.parseManufacturerInfo(bpChannelEventBuffer), timestamp);
-                break;                
             default:
-                //console.log('Unrecognized message.', messagedId);
                 break;
         }
     }

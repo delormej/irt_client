@@ -130,22 +130,27 @@ const AntService = function() {
 
         bp.on('channel_status', (status, deviceId) => {
             console.log("BP channel_status: ", status);
+            switch (status) {
+                case antlib.STATUS_TRACKING_CHANNEL:
+                    scope.powerMeterDeviceId = deviceId;
+                    scope.lblPowerMeterButton = "Close Power Meter";        
+                    break;
+                case antlib.STATUS_SEARCHING_CHANNEL:
+                    scope.lblPowerMeterButton = "Stop Searching for Power Meter";        
+                    break;
+                case antlib.STATUS_ASSIGNED_CHANNEL:
+                case antlib.STATUS_UNASSIGNED_CHANNEL:
+                    scope.lblPowerMeterButton = "Search for Power Meter";
+                    scope.powerMeterDeviceId = 0;
+                    scope.bikePower = 0;
+                    scope.cadence = 0;
+                    scope.averageBikePower = 0;
+                    break;
+                default:
+                    return;
+            }
 
-            if (status == antlib.STATUS_TRACKING_CHANNEL) {
-
-                scope.powerMeterDeviceId = deviceId;
-                scope.lblPowerMeterButton = "Close Power Meter";        
-            }
-            else if (status == antlib.STATUS_SEARCHING_CHANNEL ||
-                    status == antlib.STATUS_ASSIGNED_CHANNEL) {
-                scope.lblPowerMeterButton = "Stop Searching for Power Meter";        
-            }
-            else if (status == antlib.STATUS_UNASSIGNED_CHANNEL) {
-                scope.lblPowerMeterButton = "Search for Power Meter";        
-                scope.bikePower = 0;
-                scope.cadence = 0;
-                scope.averageBikePower = 0;
-            }
+            scope.safeApply();
         });
         
         // Process FE-C messages.
