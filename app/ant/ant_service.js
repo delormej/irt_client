@@ -44,6 +44,12 @@ const AntService = function() {
         return Object.assign( {"timestamp":timestamp, "event":event}, data);            
     }
 
+    function pushTrainerMessage(event, data, timestamp) {
+        var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
+        messages.Trainer.push(message);
+        return message;
+    }
+
     function accumulateBikePowerAverage(message) {
         // Accumulate power events.
         powerEvents.push(message);
@@ -157,85 +163,112 @@ const AntService = function() {
         });
         
         // Process FE-C messages.
-        fec.on('message', (event, data, timestamp) => {
-            //var message = { event, timestamp, data };
-            // "Flatten" json so it's more usable.
-            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);
-            messages.Trainer.push(message);
+        fec.on('generalFEData', (data, timestamp) => {
+            pushTrainerMessage('generalFEData', data, timestamp);
 
-            scope.hello = event;
-            if (event === "generalFEData") {
-                scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
-                // Convert to miles from meters.
-                scope.distanceTravelled = formatDistance(data.distanceTravelled);
-                scope.elapsedTime = formatTime(data.elapsedTime); // Accumulated Seconds
-                // Also accumulate speed in a collection for average calc.
-                speedEvents.push(timestamp, data);
-            }
-            else if (event === "generalSettings") {
-                scope.resistanceLevel = data.resistanceLevel;
-                scope.wheelCircumference = data.wheelCircumference;
-                scope.state = data.state; 
-            }
-            else if (event === "specificTrainerData") {
-                scope.trainerPower = data.instantPower;
-                scope.trainerStatus = data.trainerStatus;
-                scope.target_power_status = formatTargetPowerStatus(data.flags);
-                scope.feState = formatFeState(data.feState);
-                // Accumulate power events.
-                trainerPowerEvents.push(message);
-                scope.averageTrainerPower = getAverageTrainerPower(10);
-                //scope.trainerPowerChartEvents.push({x: timestamp, y: data.instantPower});
-                scope.trainerPowerChartEvents.push(data.instantPower);
-            }
-            else if (event === "irtExtraInfo") {
-                scope.servoPosition = data.servoPosition;
-                
-                if (scope.servoPosition < 1600) {
-                    var pctOn = (1600 - scope.servoPosition) / 800;
-                    scope.servoChartData = [pctOn, 1 - pctOn];
-                } 
-                else {
-                    scope.servoChartData = [0, 1];                    
-                } 
-                
-                scope.target = data.target;
-                scope.flywheelRevs = data.flywheelRevs;
-                scope.powerMeterState = data.powerMeterConnected;
-            }
-            else if (event == "productInfo") {
-                scope.swRevision = data.swRevision;
-            }
-            else if (event === "irtSettings") {
-                scope.drag = data.drag;
-                scope.rr = data.rr;
-                scope.servoOffset = data.servoOffset;
-                scope.settings = data.settings;
-
-                irtSettings = data;
-            }
-            else if (event === "irtSettingsPowerAdjust") {
-                scope.powerMeterId = data.powerMeterId;
-                scope.powerAdjustSeconds = data.powerAdjustSeconds;
-                scope.powerAverageSeconds = data.powerAverageSeconds;
-                scope.servoSmoothingSteps = data.servoSmoothingSteps;
-                scope.minAdjustSpeedMps = data.minAdjustSpeedMps;
-            }            
-            else if (event === "commandStatus") {
-                scope.lastCommand = data.lastCommand;
-                scope.lastCommandTime = new Date().toTimeString();
-            }
-            else if (event === "userConfig") {
-                console.log("User config arrived.");
-                scope.userWeightKg = data.userWeightKg;
-                scope.bikeWeightKg = data.bikeWeightKg;
-            }
-            else if (event == "batteryStatus") {
-                console.log("Battery Status", data);
-            }
+            scope.speed = (data.speedMps * MPS_TO_MPH).toFixed(1);
+            // Convert to miles from meters.
+            scope.distanceTravelled = formatDistance(data.distanceTravelled);
+            scope.elapsedTime = formatTime(data.elapsedTime); // Accumulated Seconds
+            // Also accumulate speed in a collection for average calc.
+            speedEvents.push(timestamp, data);
             scope.safeApply();
         });
-        
+
+        fec.on('generalSettings', (data, timestamp) => {
+            pushTrainerMessage('generalSettings', data, timestamp);
+
+            scope.resistanceLevel = data.resistanceLevel;
+            scope.wheelCircumference = data.wheelCircumference;
+            scope.state = data.state; 
+            scope.safeApply();
+        });
+
+        fec.on('specificTrainerData', (data, timestamp) => {
+            var message = pushTrainerMessage('specificTrainerData', data, timestamp);
+                
+            scope.trainerPower = data.instantPower;
+            scope.trainerStatus = data.trainerStatus;
+            scope.target_power_status = formatTargetPowerStatus(data.flags);
+            scope.feState = formatFeState(data.feState);
+            // Accumulate power events.
+            trainerPowerEvents.push(message);
+            scope.averageTrainerPower = getAverageTrainerPower(10);
+            //scope.trainerPowerChartEvents.push({x: timestamp, y: data.instantPower});
+            scope.trainerPowerChartEvents.push(data.instantPower);
+            scope.safeApply();
+        });
+
+        fec.on('irtExtraInfo', (data, timestamp) => {
+            pushTrainerMessage('irtExtraInfo', data, timestamp);
+            scope.servoPosition = data.servoPosition;
+            
+            if (scope.servoPosition < 1600) {
+                var pctOn = (1600 - scope.servoPosition) / 800;
+                scope.servoChartData = [pctOn, 1 - pctOn];
+            } 
+            else {
+                scope.servoChartData = [0, 1];                    
+            } 
+            
+            scope.target = data.target;
+            scope.flywheelRevs = data.flywheelRevs;
+            scope.powerMeterState = data.powerMeterConnected;
+            scope.safeApply();
+        });
+
+        fec.on('productInfo', (data, timestamp) => {
+            pushTrainerMessage('productInfo', data, timestamp);
+            scope.swRevision = data.swRevision;
+            scope.safeApply();
+        });
+
+        fec.on('irtSettings', (data, timestamp) => {
+            pushTrainerMessage('productInfo', data, timestamp);
+            scope.drag = data.drag;
+            scope.rr = data.rr;
+            scope.servoOffset = data.servoOffset;
+            scope.settings = data.settings;
+
+            irtSettings = data;
+            scope.safeApply();
+        });
+
+        fec.on('irtSettingsPowerAdjust', (data, timestamp) => {
+            pushTrainerMessage('irtSettingsPowerAdjust', data, timestamp);
+
+            scope.powerMeterId = data.powerMeterId;
+            scope.powerAdjustSeconds = data.powerAdjustSeconds;
+            scope.powerAverageSeconds = data.powerAverageSeconds;
+            scope.servoSmoothingSteps = data.servoSmoothingSteps;
+            scope.minAdjustSpeedMps = data.minAdjustSpeedMps;
+            scope.safeApply();
+        });
+
+        fec.on('commandStatus', (data, timestamp) => {
+            pushTrainerMessage('commandStatus', data, timestamp);
+
+            scope.lastCommand = data.lastCommand;
+            scope.lastCommandTime = new Date().toTimeString();
+            scope.safeApply();
+        });
+
+        fec.on('userConfig', (data, timestamp) => {
+            pushTrainerMessage('userConfig', data, timestamp);
+
+            console.log("User config arrived.");
+            scope.userWeightKg = data.userWeightKg;
+            scope.bikeWeightKg = data.bikeWeightKg;
+            scope.safeApply();
+        });
+
+        fec.on('batteryStatus', (data, timestamp) => {
+            pushTrainerMessage('batteryStatus', data, timestamp);
+
+            console.log("Battery Status", data);
+            scope.safeApply();
+        });
+
         fec.on('channel_status', (status, deviceId) => {
             console.log("FEC channel_status: ", status);
             // Once we've connected to the FE-C, try connecting to other devices.

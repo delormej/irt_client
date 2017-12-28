@@ -310,45 +310,45 @@ const AntFec = function() {
                 var messagedId = fecChannelEventBuffer[1];
                 switch (messagedId) {
                     case GENERAL_FE_DATA_PAGE:
-                        self.emit('message', 'generalFEData', parseGeneralFEData(), timestamp);
+                        self.emit('generalFEData', parseGeneralFEData(), timestamp);
                         break;
                     case GENERAL_SETTINGS_PAGE:
-                        self.emit('message', 'generalSettings', parseGeneralSettings(), timestamp);
+                        self.emit('generalSettings', parseGeneralSettings(), timestamp);
                         break;
                     case SPECIFIC_TRAINER_DATA_PAGE:
-                        self.emit('message', 'specificTrainerData', parseSpecificTrainerData(), timestamp);
+                        self.emit('specificTrainerData', parseSpecificTrainerData(), timestamp);
                         break;
                     case COMMAND_STATUS_PAGE:
-                        self.emit('message', 'commandStatus', parseCommandStatus(), timestamp);
+                        self.emit('commandStatus', parseCommandStatus(), timestamp);
                         break;
                     case FE_CAPABILITIES_PAGE:
-                        self.emit('message', 'feCapabilities', parseFeCapabilites(), timestamp);
+                        self.emit('feCapabilities', parseFeCapabilites(), timestamp);
                         break;
                     case USER_CONFIGURATION_PAGE:
-                        self.emit('message', 'userConfig', parseUserConfig(), timestamp);
+                        self.emit('userConfig', parseUserConfig(), timestamp);
                         break;
                     case antlib.PRODUCT_PAGE:
-                        self.emit('message', 'productInfo', 
+                        self.emit('productInfo', 
                             antlib.parseProductInfo(fecChannelEventBuffer), timestamp);
                         break;
                     case antlib.MANUFACTURER_PAGE:
-                        self.emit('message', 'manufacturerInfo', 
+                        self.emit('manufacturerInfo', 
                             antlib.parseManufacturerInfo(fecChannelEventBuffer), timestamp);
                         break;
                     case antlib.BATTERY_STATUS_PAGE:
-                        self.emit('message', 'batteryStatus', 
+                        self.emit('batteryStatus', 
                             parseBatteryStatus(fecChannelEventBuffer), timestamp);
                         break;                    
                     case IRT_EXTRA_INFO_PAGE:
-                        self.emit('message', 'irtExtraInfo', 
+                        self.emit('irtExtraInfo', 
                             antlib.parseIrtExtraInfo(fecChannelEventBuffer), timestamp);            
                         break;
                     case IRT_SETTINGS_PAGE:
-                        self.emit('message', 'irtSettings', 
+                        self.emit('irtSettings', 
                             parseIrtSettings(), timestamp);            
                         break;
                     case IRT_SETTINGS_POWER_ADJUST_PAGE:
-                        self.emit('message', 'irtSettingsPowerAdjust', 
+                        self.emit('irtSettingsPowerAdjust', 
                             parseIrtSettingsPowerAdjust(), timestamp);
                         break;
                     default:
