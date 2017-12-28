@@ -155,26 +155,26 @@ const AntBikePower = function() {
                 var messagedId = bpChannelEventBuffer[1];
                 switch (messagedId) {
                     case STANDARD_POWER_ONLY_PAGE:
-                        self.emit('message', 'standardPowerOnly', parseStandardPowerOnly(), 
+                        self.emit('standardPowerOnly', parseStandardPowerOnly(), 
                             timestamp);
                         break;
                     case CTF_MAIN_PAGE:
                         var page = parseCTFMain();
                         if (page != null) {
-                            self.emit('message', 'ctfMainPage', page, 
+                            self.emit('ctfMainPage', page, 
                                 timestamp);    
                         }        
                         break;
                     case CTF_CALIBRATION_PAGE:
-                        self.emit('message', 'ctfCalibrationPage', parseCTFCalibration(timestamp), 
+                        self.emit('ctfCalibrationPage', parseCTFCalibration(timestamp), 
                             timestamp);                
                     break;
                     case antlib.PRODUCT_PAGE:
-                        self.emit('message', 'productInfo', 
+                        self.emit('productInfo', 
                             antlib.parseProductInfo(bpChannelEventBuffer), timestamp);
                         break;
                     case antlib.MANUFACTURER_PAGE:
-                        self.emit('message', 'manufacturerInfo', 
+                        self.emit('manufacturerInfo', 
                             antlib.parseManufacturerInfo(bpChannelEventBuffer), timestamp);
                         break;                
                     default:

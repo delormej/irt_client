@@ -40,6 +40,28 @@ const AntService = function() {
 
     var irtSettings = null; // hang on to the last settings we recieved.
 
+    function flattenEvent(event, data, timestamp) {
+        return Object.assign( {"timestamp":timestamp, "event":event}, data);            
+    }
+
+    function accumulateBikePowerAverage(message) {
+        // Accumulate power events.
+        powerEvents.push(message);
+        // Accumulate power messages.
+        messages.PowerMeter.push(message);
+        // Get 10 second average.
+        self.scope.averageBikePower = getAveragePower(10);              
+
+        if (self.scope.powerAdjustEnabled == true) {
+            self.scope.new_rr = powerAdjuster.adjust(
+                getAverageSpeed(3), 
+                self.scope.averageBikePower,
+                self.scope.averageTrainerPower );                
+        }
+
+        self.scope.safeApply();
+    }
+
     // Loads the ANT library.
     /* This is loaded in main.js otherwise it goes out of scope and gets GC'd.
     * however this creates a problem in that we need to use ipc to communicate 
@@ -68,64 +90,45 @@ const AntService = function() {
         });
 
         // Process bike power messages.
-        bp.on('message', (event, data, timestamp) => {
+        bp.on('standardPowerOnly', (data, timestamp) => {
             // "Flatten" json so it's more usable.
-            var message = Object.assign( {"timestamp":timestamp, "event":event}, data);            
+            var message = flattenEvent('standardPowerOnly', data, timestamp);
 
-            if (event === "standardPowerOnly") {
-                scope.bikePower = data.instantPower;
-                
-                if (data.instantCadence != 0xFF) {
-                    scope.cadence = data.instantCadence;
-                }
-                else {
-                    scope.cadence = 0;
-                }
-
-                // Accumulate power events.
-                powerEvents.push(message);
-            }
-            else if (event === "ctfMainPage") {
-                if (data.instantPower >= 0) {
-                    var eventCount = 0;
-                    var accumulatedPower = 0;
-                    
-                    if (powerEvents.length > 1) {
-                        var index = powerEvents.length -2;
-                        eventCount = powerEvents[index].eventCount+1;
-                        accumulatedPower = powerEvents[index].accumulatedPower + data.instantPower;
-                    }
-
-                    // Modify object to add eventCount & accumultatedPower so that 
-                    // we can average like standard power only.
-                    message = Object.assign( {"eventCount": eventCount, "accumulatedPower": accumulatedPower}, message);
-
-                    scope.bikePower = data.instantPower;
-                    scope.cadence = data.instantCadence;
-
-                    // Accumulate power events.
-                    powerEvents.push(message);
-                }
+            scope.bikePower = data.instantPower;
+            
+            if (data.instantCadence != 0xFF) {
+                scope.cadence = data.instantCadence;
             }
             else {
-                scope.bikePower = 0;
                 scope.cadence = 0;
             }
-            
-            // Accumulate power messages.
-            messages.PowerMeter.push(message);
 
-            // Get 10 second average.
-            scope.averageBikePower = getAveragePower(10);            
+            accumulateBikePowerAverage(message);
+        });
 
-            if (scope.powerAdjustEnabled == true) {
-                scope.new_rr = powerAdjuster.adjust(
-                    getAverageSpeed(3), 
-                    scope.averageBikePower,
-                    scope.averageTrainerPower );                
+        bp.on('ctfMainPage', (data, timestamp) => {
+            // "Flatten" json so it's more usable.
+            var message = flattenEvent('ctfMainPage', data, timestamp);
+
+            if (data.instantPower >= 0) {
+                var eventCount = 0;
+                var accumulatedPower = 0;
+                
+                if (powerEvents.length > 1) {
+                    var index = powerEvents.length -2;
+                    eventCount = powerEvents[index].eventCount+1;
+                    accumulatedPower = powerEvents[index].accumulatedPower + data.instantPower;
+                }
+
+                // Modify object to add eventCount & accumultatedPower so that 
+                // we can average like standard power only.
+                message = Object.assign( {"eventCount": eventCount, "accumulatedPower": accumulatedPower}, message);
+
+                scope.bikePower = data.instantPower;
+                scope.cadence = data.instantCadence;
+
+                accumulateBikePowerAverage(message);
             }
-
-            scope.safeApply();
         });
 
         bp.on('channel_status', (status, deviceId) => {
