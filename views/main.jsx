@@ -57,6 +57,11 @@ export default class Main extends React.Component {
   }
 
   render() {
+    // redirect to settings if an FEC isn't connected.
+    let fec = this.state.ant.fec;
+    if (fec.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) 
+      this.state.currentPage = "settings";
+      
     if (this.state.currentPage === "ride") {
       return (
         <div>

@@ -13,7 +13,7 @@ function DeviceSettings(props) {
     return (
         <div>
             <div>Settings</div>
-            <button onClick={() => props.onDisconnectDevice(props.deviceType)} >Disconnect</button>
+            <button onClick={() => props.onDisconnectDevice(props.deviceType)}>Disconnect</button>
         </div>
     );
 }
@@ -22,7 +22,7 @@ function CancelSearch(props) {
     return (
         <div>
             <div>Attempting to connect...</div>
-            <button onClick={() => props.onDisconnectDevice(props.deviceType)} >Cancel</button>
+            <button onClick={() => props.onDisconnectDevice(props.deviceType)}>Cancel</button>
         </div>
     );
 }
