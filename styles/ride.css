@@ -1,0 +1,67 @@
+
+.speed, cadence, heartRate, bikePower, bikePowerAverage, .trainerPower, targetPower {
+    font-size: 115px;
+    font-weight: 100;
+    font-stretch: 100%;
+    font-style: normal;
+    font-variant-caps: normal;
+    font-variant-east-asian: normal;
+    font-variant-ligatures: normal;
+    font-variant-numeric: normal;
+    text-align: right;
+}
+
+.speed {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+cadence {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+
+bikePower {
+    grid-row: 2 / 3;
+    grid-column: 7 / 8;
+}
+
+bikePowerAverage {
+    grid-row: 2 / 3;
+    grid-column: 8 / 8;    
+}
+
+trainerPower {
+    grid-row: 3 / 4;
+    grid-column: 7 / 8;
+}
+
+targetPower {
+    grid-row: 3 / 4;
+    grid-column: 8 / 8;
+}
+
+heartRate {
+    grid-row: 4 / 5;
+    grid-column: 1 / 2;   
+}
+
+distance, duration, averagePower {
+    font-size: 85px;
+    text-align: center;
+}
+
+distance {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;   
+}
+
+duration {
+    grid-row: 2 / 3;
+    grid-column: 4 / 5;   
+}
+
+averagePower {
+    grid-row: 2 / 3;
+    grid-column: 5 / 6;   
+}
