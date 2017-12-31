@@ -56,9 +56,9 @@ export default class TrainerSettings extends React.Component {
                 <div className="deviceTitle">Configure Trainer</div>
                 <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button>
                 <div>
-                    Device ID: xxxxx<br/>
+                    Device ID: {this.state.deviceId}<br/>
                     Firmware vx.x.x 
-                </div>
+                </div>                        
                 <button onClick={() => this.onIdentify()}>Identify</button><br/>
                 <button onClick={() => this.onShowAdvanced()}>Advanced</button><br/>
                 <div className="trainerAdvancedSettings">

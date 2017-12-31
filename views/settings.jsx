@@ -4,16 +4,8 @@ import React from 'react';
 import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 import AvailableDevices from '../views/AvailableDevices.jsx';
 import TrainerSettings from '../views/trainerSettings.jsx';
+import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
-
-function DeviceSettings(props) {
-    return (
-        <div>
-            <div>Settings</div>
-            <button onClick={() => props.onDisconnectDevice(props.deviceType)}>Disconnect</button>
-        </div>
-    );
-}
 
 function CancelSearch(props) {
     return (
@@ -80,10 +72,18 @@ export default class Settings extends MountAwareReactComponent {
 
     renderForChannelStatus(deviceType, channelStatus) {
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
-            return (
-                <TrainerSettings fec={this.fec} deviceType={deviceType} 
-                    onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
-            );
+            if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
+                return (
+                    <PowerMeterSettings
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
+                );
+            }
+            else if (deviceType == antlib.FEC_DEVICE_TYPE) {
+                return (
+                    <TrainerSettings fec={this.fec}
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
+                );
+            }
         }
         else if(channelStatus == antlib.STATUS_SEARCHING_CHANNEL) {
             return (
