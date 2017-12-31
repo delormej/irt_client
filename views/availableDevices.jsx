@@ -25,14 +25,18 @@ export default class AvailableDevices extends MountAwareReactComponent {
         this.onConnectDevice = props.onConnectDevice;
         this.deviceType = props.deviceType;
         this.bgScanner = props.bgScanner;
+
+        this.onDeviceInfo = this.onDeviceInfo.bind(this);
+    }
+
+    onDeviceInfo(deviceInfo) {
+        if (deviceInfo.deviceType == this.deviceType)
+            this.addOrUpdateAvailableDevice(deviceInfo);
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.bgScanner.on('deviceInfo', (deviceInfo) => {
-            if (deviceInfo.deviceType == this.deviceType)
-                this.addOrUpdateAvailableDevice(deviceInfo);
-        });
+        this.bgScanner.on('deviceInfo', this.onDeviceInfo);
     }
 
     componentWillUnmount() {
@@ -40,7 +44,7 @@ export default class AvailableDevices extends MountAwareReactComponent {
         // Must remove all listeners for this event, because it's not possible to specify
         // the instance. Using an anonymous method registered in ..DidMount() is required
         // to have context to 'this' as the callback is invoked in a seperate context. 
-        this.bgScanner.removeAllListeners('deviceInfo');
+        this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
     }
 
     addOrUpdateAvailableDevice(deviceInfo) {
