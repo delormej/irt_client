@@ -1,12 +1,12 @@
 'use babel';
 
 import React from 'react';
-import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 import SpeedMph from '../views/speedMph.jsx';
 
-export default class GeneralFEData extends MountAwareReactComponent {
+export default class GeneralFEData extends React.Component {
     constructor(props) {
         super(props);
+        this.fec = props.fec;
         this.state = {
             speedMps: 0,
             distanceTravelled: 0,
@@ -14,20 +14,26 @@ export default class GeneralFEData extends MountAwareReactComponent {
             distanceTravelledEnabled: false,
             fecState: 0
         }
-        let fec;
-        fec = props.fec;
-        fec.on('generalFEData', (data, timestamp) => {
-            if (this.mounted) {
-                this.setState({
-                    speedMps: data.speedMps,
-                    distanceTravelled: data.distanceTravelled,
-                    elapsedTime: data.elapsedTime,
-                    distanceTravelledEnabled: data.distanceTravelledEnabled,
-                    fecState: data.state
-                });
-            }
+        this.onGeneralFEData = this.onGeneralFEData.bind(this);
+    }
+    
+    onGeneralFEData(data, timestamp) {
+        this.setState({
+            speedMps: data.speedMps,
+            distanceTravelled: data.distanceTravelled,
+            elapsedTime: data.elapsedTime,
+            distanceTravelledEnabled: data.distanceTravelledEnabled,
+            fecState: data.state
         });
-    }   
+    }
+
+    componentDidMount() {
+        this.fec.on('generalFEData', this.onGeneralFEData);
+    }
+
+    componentWillUnmount() {
+        this.fec.removeListener('generalFEData', this.onGeneralFEData);
+    }
 
     render() {
         return (

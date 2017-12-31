@@ -3,7 +3,6 @@
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import antlib from '../lib/ant/antlib.js';
-import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -15,7 +14,7 @@ function AvailableDevice(props) {
     );
 }
 
-export default class AvailableDevices extends MountAwareReactComponent {
+export default class AvailableDevices extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,15 +34,10 @@ export default class AvailableDevices extends MountAwareReactComponent {
     }
 
     componentDidMount() {
-        super.componentDidMount();
         this.bgScanner.on('deviceInfo', this.onDeviceInfo);
     }
 
     componentWillUnmount() {
-        super.componentWillUnmount();
-        // Must remove all listeners for this event, because it's not possible to specify
-        // the instance. Using an anonymous method registered in ..DidMount() is required
-        // to have context to 'this' as the callback is invoked in a seperate context. 
         this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
     }
 
@@ -66,7 +60,7 @@ export default class AvailableDevices extends MountAwareReactComponent {
             availableDevices.push(deviceInfo);
             dirty = true;
         }  
-        if (dirty && this.mounted)
+        if (dirty)
             this.setState({ availableDevices: availableDevices });
     }
 

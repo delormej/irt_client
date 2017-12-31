@@ -1,7 +1,6 @@
 'use babel';
 
 import React from 'react';
-import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 
 function TrainerPower(props) {
     return (
@@ -9,7 +8,7 @@ function TrainerPower(props) {
     );
 }
 
-export default class SpecificTrainerData extends MountAwareReactComponent {
+export default class SpecificTrainerData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,19 +17,26 @@ export default class SpecificTrainerData extends MountAwareReactComponent {
             target_power_status: 0,
             feState: 0
         }
-        let fec;
-        fec = props.fec;
-        fec.on('specificTrainerData', (data, timestamp) => {
-            if (this.mounted) {
-                this.setState({
-                    instantPower: data.instantPower,
-                    trainerStatus: data.trainerStatus,
-                    target_power_status: data.target_power_status,
-                    feState: data.feState
-                });
-            }
-        });
+        this.fec = props.fec;
+        this.onSpecificTrainerData = this.onSpecificTrainerData.bind(this);
     }   
+
+    componentDidMount() {
+        this.fec.on('specificTrainerData', this.onSpecificTrainerData);
+    }
+
+    componentWillUnmount() {
+        this.fec.removeListener('specificTrainerData', this.onSpecificTrainerData);
+    }
+
+    onSpecificTrainerData(data, timestamp) {
+        this.setState({
+            instantPower: data.instantPower,
+            trainerStatus: data.trainerStatus,
+            target_power_status: data.target_power_status,
+            feState: data.feState
+        });
+    }
 
     render() {
         return (
