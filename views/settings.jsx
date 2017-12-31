@@ -117,8 +117,8 @@ export default class Settings extends MountAwareReactComponent {
     render() {
         return (
             <div>
-                {this.renderPowerMeter()}
                 {this.renderTrainer()}
+                {this.renderPowerMeter()}
                 {this.renderHeartRate()}
             </div>
         );

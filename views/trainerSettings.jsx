@@ -9,12 +9,30 @@ export default class TrainerSettings extends React.Component {
         this.fec = props.fec;
         this.onDisconnectDevice = props.onDisconnectDevice;
         this.state = {
-            foo: ""
+            rawState: 65535,
+            servoOffset: 481,
+            drag: 1.1,
+            rr: 13.4,
+            riderWeightKg: 80.1,
+            bikeWeightKg: 7.0,
+            saveToFlash: true
         };
     }
 
     onIdentify() {
         this.fec.blinkLed();
+    }
+
+    onEnableDFU() {
+        this.fec.setDfuMode();
+    }
+
+    onSave() {
+        console.log("Sending settings to FE-C...")
+    }
+
+    onRefresh() {
+        console.log("Refresh...")
     }
 
     render() {
@@ -27,6 +45,7 @@ export default class TrainerSettings extends React.Component {
                     Firmware vx.x.x 
                 </div>
                 <button onClick={() => this.onIdentify()}>Identify</button>
+                <button onClick={() => this.onEnableDFU()}>Firmware Update</button>
             </div>
         )
     }
