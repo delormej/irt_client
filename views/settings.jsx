@@ -3,11 +3,8 @@
 import React from 'react';
 import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 import AvailableDevices from '../views/AvailableDevices.jsx';
+import TrainerSettings from '../views/trainerSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
-
-const BIKE_POWER_DEVICE_TYPE = 0x0B;
-const FEC_DEVICE_TYPE = 0x11;
-const HEART_RATE_DEVICE_TYPE = 0x78;
 
 function DeviceSettings(props) {
     return (
@@ -50,32 +47,32 @@ export default class Settings extends MountAwareReactComponent {
         if (deviceId == null || deviceId == "")
             throw new Error("Invalid device ID, cannot connect.");
         
-        if (deviceType == BIKE_POWER_DEVICE_TYPE) {
+        if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
             if (this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL)
                 this.bp.openChannel(deviceId);
             else 
                 throw new Error("Bike Power channel already assigned.");
         }
-        else if (deviceType == FEC_DEVICE_TYPE) {
+        else if (deviceType == antlib.FEC_DEVICE_TYPE) {
             let channelStatus = this.fec.getChannelStatus();
             if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
                 this.fec.openChannel(deviceId);
             else 
                 throw new Error("Trainer (FE-C) channel already assigned.");            
         }
-        else if (deviceType == HEART_RATE_DEVICE_TYPE) {
+        else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
             // not implemented yet.
         }
     }
 
     onDisconnectDevice(deviceType) {
-        if (deviceType == BIKE_POWER_DEVICE_TYPE) {
+        if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
             this.bp.closeChannel();
         }
-        else if (deviceType == FEC_DEVICE_TYPE) {
+        else if (deviceType == antlib.FEC_DEVICE_TYPE) {
             this.fec.closeChannel();
         }
-        else if (deviceType == HEART_RATE_DEVICE_TYPE) {
+        else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
             // not implemented yet.
             // this.hrm.closeChannel();
         }
@@ -84,7 +81,7 @@ export default class Settings extends MountAwareReactComponent {
     renderForChannelStatus(deviceType, channelStatus) {
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
             return (
-                <DeviceSettings deviceType={deviceType} 
+                <TrainerSettings fec={this.fec} deviceType={deviceType} 
                     onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
             );
         }
@@ -104,17 +101,17 @@ export default class Settings extends MountAwareReactComponent {
 
     renderPowerMeter() {
         let channelStatus = this.bp.getChannelStatus();
-        return this.renderForChannelStatus(BIKE_POWER_DEVICE_TYPE, channelStatus);
+        return this.renderForChannelStatus(antlib.BIKE_POWER_DEVICE_TYPE, channelStatus);
     }
 
     renderTrainer() {
         let channelStatus = this.fec.getChannelStatus();
-        return this.renderForChannelStatus(FEC_DEVICE_TYPE, channelStatus);        
+        return this.renderForChannelStatus(antlib.FEC_DEVICE_TYPE, channelStatus);        
     }
 
     renderHeartRate() {
         let channelStatus = antlib.STATUS_UNASSIGNED_CHANNEL; /*this..getChannelStatus();*/
-        return this.renderForChannelStatus(HEART_RATE_DEVICE_TYPE, channelStatus);        
+        return this.renderForChannelStatus(antlib.HEART_RATE_DEVICE_TYPE, channelStatus);        
     }
 
     render() {

@@ -2,11 +2,8 @@
 
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
+import antlib from '../lib/ant/antlib.js';
 import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
-
-const BIKE_POWER_DEVICE_TYPE = 0x0B;
-const FEC_DEVICE_TYPE = 0x11;
-const HEART_RATE_DEVICE_TYPE = 0x78;
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -73,13 +70,13 @@ export default class AvailableDevices extends MountAwareReactComponent {
         let name = "";
         switch (deviceTypeId)
         {
-            case BIKE_POWER_DEVICE_TYPE:
+            case antlib.BIKE_POWER_DEVICE_TYPE:
                 name = "Power Meter";
                 break;
-            case FEC_DEVICE_TYPE:
+            case antlib.FEC_DEVICE_TYPE:
                 name = "Trainer (FE-C)";
                 break;
-            case HEART_RATE_DEVICE_TYPE:
+            case antlib.HEART_RATE_DEVICE_TYPE:
                 name = "Heart Rate Monitor";
                 break;
             default:
