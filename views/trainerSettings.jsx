@@ -16,6 +16,8 @@ export default class TrainerSettings extends React.Component {
         this.onIrtSettings = this.onIrtSettings.bind(this);        
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
+            swRevision: '',
+            serial: '',
             rawSettings: 0,
             servoOffset: 0,
             drag: 0,
@@ -57,7 +59,10 @@ export default class TrainerSettings extends React.Component {
     }
 
     onProductInfo(data, timestamp) {
-
+        this.setState( {
+            swRevision: data.swRevision,
+            serial: data.serial
+        });
     }
 
     onIrtExtraInfo(data, timestamp) {
@@ -114,7 +119,8 @@ export default class TrainerSettings extends React.Component {
                 <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button>
                 <div>
                     Device ID: {this.state.deviceId}<br/>
-                    Firmware vx.x.x 
+                    Firmware v{this.state.swRevision}<br/>
+                    Serial No: {this.state.serial}<br/>
                 </div>                        
                 <button onClick={() => this.onIdentify()}>Identify</button><br/>
                 <button onClick={() => this.onShowAdvanced()}>Advanced</button><br/>
