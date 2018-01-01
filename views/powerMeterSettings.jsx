@@ -11,6 +11,7 @@ export default class PowerMeterSettings extends DeviceSettings {
         super(props);
         this.onDisconnectDevice = props.onDisconnectDevice;
         this.fec = props.fec;
+        this.handlePairToPowerMeterChange = this.handlePairToPowerMeterChange.bind(this);
         this.state = {
             deviceId: 0,
             powerMeterId: 0,
