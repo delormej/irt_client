@@ -70,18 +70,20 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     convertToMps(mph) {
-        const mph_to_mps = 0.044704;
-        return mph * mph_to_mps;
+        const mph_to_mps = 4.4704;
+        let value = (mph * mph_to_mps).toFixed(0);
+        return value;
     }
 
     convertToMph(mps) {
         const mps_to_mph = 2.23694 / 10;
-        return mps * mps_to_mph;
+        let value = (mps * mps_to_mph).toFixed(1);
+        return value;
     }
 
     onSave() {
         console.log("Saving...");
-        fec.setIrtPowerAdjustSettings(
+        this.fec.setIrtPowerAdjustSettings(
             this.state.pairToPowerMeter ? this.state.powerMeterId : INVALID_POWER_METER, 
             this.state.resistanceAdjustSeconds, 
             this.state.powerMeterAverageSeconds, 

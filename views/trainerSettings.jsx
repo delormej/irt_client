@@ -33,6 +33,7 @@ export default class TrainerSettings extends React.Component {
         this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.on('batteryStatus', this.onBatteryStatus);
         this.fec.on('irtSettings', this.onIrtSettings);
+        this.fec.getSettings();
     }
 
     componentWillUnmount() {
@@ -44,28 +45,36 @@ export default class TrainerSettings extends React.Component {
         this.fec.removeListener('irtSettings', this.onIrtSettings);
     }    
 
-    onUserConfig() {
+    onUserConfig(data, timestamp) {
+        this.setState( {
+            riderWeightKg: data.userWeightKg.toFixed(1),
+            bikeWeightKg: data.bikeWeightKg.toFixed(1)
+        });
+    }
+
+    onManufacturerInfo(data, timestamp) {
 
     }
 
-    onManufacturerInfo() {
+    onProductInfo(data, timestamp) {
 
     }
 
-    onProductInfo() {
+    onIrtExtraInfo(data, timestamp) {
 
     }
 
-    onIrtExtraInfo() {
+    onBatteryStatus(data, timestamp) {
 
     }
 
-    onBatteryStatus() {
-
-    }
-
-    onIrtSettings() {
-
+    onIrtSettings(data, timestamp) {
+        this.setState( {
+            drag: data.drag,
+            rr: data.rr,
+            servoOffset: data.servoOffset,
+            rawSettings: data.settings
+        });
     }
 
     onIdentify() {
@@ -81,7 +90,7 @@ export default class TrainerSettings extends React.Component {
     }
 
     onRefresh() {
-        console.log("Refresh...");
+        this.fec.getSettings();
     }
 
     onShowAdvanced() {
@@ -130,7 +139,7 @@ export default class TrainerSettings extends React.Component {
                     <div className="label">Rider Weight (kg)</div>
                     <input name="riderWeightKg" type="textbox" 
                         value={this.state.riderWeightKg} 
-                        onChange={this.handleInputChange}/>
+                        onChange={this.handleInputChange}/>                    
                     <div className="label">Bike Weight (kg)</div>
                     <input name="bikeWeightKg" type="textbox" 
                         value={this.state.bikeWeightKg} 
