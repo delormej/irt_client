@@ -12,6 +12,8 @@ export default class PowerMeterSettings extends DeviceSettings {
         this.onDisconnectDevice = props.onDisconnectDevice;
         this.fec = props.fec;
         this.handlePairToPowerMeterChange = this.handlePairToPowerMeterChange.bind(this);
+        this.onIrtSettingsPowerAdjust = this.onIrtSettingsPowerAdjust.bind(this);
+        this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.state = {
             deviceId: 0,
             powerMeterId: 0,
@@ -22,6 +24,26 @@ export default class PowerMeterSettings extends DeviceSettings {
             servoSmoothingSteps: 0,
             saveToFlashEnabled: true
         }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
+        this.fec.on('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+        this.fec.removeListener('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
+    }    
+
+    onIrtExtraInfo() {
+
+    }
+
+    onIrtSettingsPowerAdjust() {
+        
     }
 
     handleInputChange(event) {
@@ -42,8 +64,21 @@ export default class PowerMeterSettings extends DeviceSettings {
         console.log("Show advanced...");
     }
 
+    convertToMps(mph) {
+        const mph_to_mps = 0.44704;
+        return mph * mph_to_mps;
+    }
+
     onSave() {
         console.log("Saving...");
+        fec.setIrtPowerAdjustSettings(
+            this.state.pairToPowerMeter ? this.state.powerMeterId : INVALID_POWER_METER, 
+            this.state.resistanceAdjustSeconds, 
+            this.state.powerMeterAverageSeconds, 
+            this.state.servoSmoothingSteps, 
+            this.convertToMps(this.state.minAdjustSpeedMph), 
+            this.state.saveToFlashEnabled
+        );
     }
 
     render() {

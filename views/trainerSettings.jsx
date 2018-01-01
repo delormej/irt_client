@@ -8,26 +8,64 @@ export default class TrainerSettings extends React.Component {
         super(props);
         this.fec = props.fec;
         this.onDisconnectDevice = props.onDisconnectDevice;
+        this.onUserConfig = this.onUserConfig.bind(this);
+        this.onManufacturerInfo = this.onUserConfig.bind(this);
+        this.onProductInfo = this.onProductInfo.bind(this);
+        this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
+        this.onBatteryStatus = this.onBatteryStatus.bind(this);
+        this.onIrtSettings = this.onIrtSettings.bind(this);        
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
-            rawSettings: 65535,
-            servoOffset: 481,
-            drag: 1.1,
-            rr: 13.4,
-            riderWeightKg: 80.1,
-            bikeWeightKg: 7.0,
+            rawSettings: 0,
+            servoOffset: 0,
+            drag: 0,
+            rr: 0,
+            riderWeightKg: 0,
+            bikeWeightKg: 0,
             saveToFlashEnabled: true
         };
-        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+    componentDidMount() {
+        this.fec.on('userConfig', this.onUserConfig);
+        this.fec.on('manufacturerInfo', this.onManufacturerInfo);
+        this.fec.on('productInfo', this.onProductInfo);
+        this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
+        this.fec.on('batteryStatus', this.onBatteryStatus);
+        this.fec.on('irtSettings', this.onIrtSettings);
+    }
 
-        this.setState({
-            [name]: value
-        });
+    componentWillUnmount() {
+        this.fec.removeListener('userConfig', this.onUserConfig);
+        this.fec.removeListener('manufacturerInfo', this.onManufacturerInfo);
+        this.fec.removeListener('productInfo', this.onProductInfo);
+        this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+        this.fec.removeListener('batteryStatus', this.onBatteryStatus);
+        this.fec.removeListener('irtSettings', this.onIrtSettings);
+    }    
+
+    onUserConfig() {
+
+    }
+
+    onManufacturerInfo() {
+
+    }
+
+    onProductInfo() {
+
+    }
+
+    onIrtExtraInfo() {
+
+    }
+
+    onBatteryStatus() {
+
+    }
+
+    onIrtSettings() {
+
     }
 
     onIdentify() {
@@ -48,6 +86,16 @@ export default class TrainerSettings extends React.Component {
 
     onShowAdvanced() {
         console.log("Show advanced...");
+    }
+
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
     }
 
     render() {
