@@ -9,7 +9,7 @@ export default class TrainerSettings extends React.Component {
         this.fec = props.fec;
         this.onDisconnectDevice = props.onDisconnectDevice;
         this.onUserConfig = this.onUserConfig.bind(this);
-        this.onManufacturerInfo = this.onUserConfig.bind(this);
+        this.onManufacturerInfo = this.onManufacturerInfo.bind(this);
         this.onProductInfo = this.onProductInfo.bind(this);
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
