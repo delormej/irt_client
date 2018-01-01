@@ -27,23 +27,28 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     componentDidMount() {
-        super.componentDidMount();
         this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.on('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
+        this.fec.getSettings();
     }
 
     componentWillUnmount() {
-        super.componentWillUnmount();
         this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.removeListener('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
     }    
 
-    onIrtExtraInfo() {
+    onIrtExtraInfo(data, timestamp) {
 
     }
 
-    onIrtSettingsPowerAdjust() {
-        
+    onIrtSettingsPowerAdjust(data, timestamp) {
+        this.setState( {
+            powerMeterId: data.powerMeterId,
+            powerMeterAverageSeconds: data.powerAverageSeconds,
+            resistanceAdjustSeconds: data.powerAdjustSeconds,
+            minAdjustSpeedMph: this.convertToMph(data.minAdjustSpeedMps),
+            servoSmoothingSteps: data.servoSmoothingSteps
+        });
     }
 
     handleInputChange(event) {
@@ -65,8 +70,13 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     convertToMps(mph) {
-        const mph_to_mps = 0.44704;
+        const mph_to_mps = 0.044704;
         return mph * mph_to_mps;
+    }
+
+    convertToMph(mps) {
+        const mps_to_mph = 2.23694 / 10;
+        return mps * mps_to_mph;
     }
 
     onSave() {
