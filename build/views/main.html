@@ -1,0 +1,114 @@
+﻿<!doctype html>
+<html lang="en" ng-app="trainerApp">
+<head>
+  <meta charset="utf-8">
+  <title>ANT+ Trainer</title>
+  <!--
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"> -->
+  <link rel="stylesheet" href="../stylesheets/main.css">
+    
+  <script src="../node_modules/angular/angular.js"></script>
+  <script src="../node_modules/chart.js/dist/Chart.js"></script>
+  <script src="../node_modules/angular-chart.js/dist/angular-chart.js"></script>
+  <!--<script src="../bower_components/angular-resource/angular-resource.js"></script>-->
+  <script src="../app.js"></script>
+  <script src="main.controller.js"></script>
+</head>
+<body ng-controller="mainCtrl">
+
+  <table width="90%">
+    <tr>
+      <td width="25%">
+          <h1 id="#noticeMessage">{{noticeMessage}}</h1>
+          <table>
+            <tr><td id="speed">{{speed}}&nbsp;<span id="speedUnit">mph</span></td></tr>
+            <tr><td id="cadence">{{cadence}}&nbsp;<span id="cadenceUnit">rpm</span></td></tr>
+            <tr><td id="distanceTravelled">{{distanceTravelled}}&nbsp;<span id="distanceUnit">miles</span></td></tr>
+            <tr><td id="elapsedTime">{{elapsedTime}}</td></tr>
+            <tr><td><canvas id="doughnut" class="chart chart-doughnut" chart-data="servoChartData"
+              chart-labels="servoChartLabels" chart-legend="false"></canvas></td>
+            </tr>
+          </table>
+      </td>
+      <td>
+        <!-- Placeholder for timeseries data; power, speed, cadece, heartrate, events, etc... 
+        <canvas id="timeSeriesChart" />  
+          <canvas class="chart chart-line" chart-data="data" chart-labels="labels"
+                  chart-series="series" chart-click="onClick"></canvas> 
+      </td>
+      -->
+      <td width="25%">
+        <table>
+          <tr><td id="trainerPower">{{trainerPower}}&nbsp;<span class="powerUnit">watts (trainer)</span></td></tr>
+          <tr><td id="averageTrainerPower">{{averageTrainerPower}}&nbsp;<span class="powerUnit">average watts (trainer)</span></td></tr>
+          <tr><td id="bikePower">{{bikePower}}&nbsp;<span class="powerUnit">watts (bike)</span></td></tr>
+          <tr><td id="averageBikePower">{{averageBikePower}}&nbsp;<span class="powerUnit">average watts (bike)</span></td></tr>
+          <tr><td id="targetPower">{{target}}&nbsp;<span class="powerUnit">watts (target)</span></td></tr>
+          <tr><td id="new_rr">{{new_rr}}&nbsp;<span class="powerUnit">new_rr</span></td></tr>
+        </table>
+      </td>
+    </tr> 
+    <tr>
+      <td></td>
+      <td>
+        Version:<span>{{version}}</span>
+        <p/>
+        Available FE-C Devices:
+        <select ng-model="fecSelect" size="5">
+          <option ng-repeat="option in availableFeC" value="{{option.deviceId}}">
+              {{option.deviceId}}, {{option.manufacturerName}}</option>
+        </select>
+        Available Power Meters:
+        <select ng-model="powerMeterSelect" size="5">
+          <option ng-repeat="option in availablePowerMeters" value="{{option.deviceId}}">
+              {{option.deviceId}}, {{option.manufacturerName}}</option>
+        </select>
+        <input type="text" ng-model="trainerDeviceId" />&nbsp;<button id="btnTrainerChannel" ng-click="setTrainerChannel();">{{lblTrainerButton}}</button><br/> <!-- Search for Trainer -->
+        <input type="text" ng-model="powerMeterDeviceId" />&nbsp;<button id="btnPowerMeterChannel" ng-click="setPowerMeterChannel();">{{lblPowerMeterButton}}</button><br/> <!-- Search for Power Meter -->
+        <input type="text" ng-model="txtResistanceLevel" />
+        <select id="resistanceSelect" ng-model="resistanceSelect">
+            <option ng-repeat="option in resistanceOptions" value="{{option.id}}">
+                {{option.name}}</option>
+        </select>
+        <button ng-click="setResistance();">Set Resistance</button>
+        <button ng-click="getSettings();">Get Settings</button>
+        <button ng-click="setSettings();">Set Settings</button>
+        <button ng-click="setPowerMeter();">Set Power Meter</button>
+        <button ng-click="enableDFU();">Enable DFU</button>
+        <button ng-click="toggleBackgroundScanning();">{{lblBackgroundScanningButton}}</button><!-- Search for Devices -->
+        <button ng-click="blinkLed();">Identify Rollers (Blink)</button>
+        <button ng-click="openLogFile();">Open Log File</button>
+        
+        <br/>Power Calibration Required:<input type="checkbox" ng-model="trainerStatus.powerCalibrationRequired"/>
+        <br/>Resistance Calibration Required:<input type="checkbox" ng-model="trainerStatus.resistanceCalibrationRequired"/>
+        <br/>User Configuration Required:<input type="checkbox" ng-model="trainerStatus.userConfigRequired"/>
+        <br/>Target Power Status:<span>{{target_power_status}}</span>
+        <br/>Power Meter Id:<input type="textbox" ng-model="powerMeterId"/><input type="checkbox" ng-model="powerMeterState"/>Connected
+        <br/>Power Meter Adjust Seconds:<input type="textbox" ng-model="powerAdjustSeconds"/>
+        <br/>Power Meter Averaging Seconds:<input type="textbox" ng-model="powerAverageSeconds"/>
+        <br/>Servo Smoothing Steps:<input type="textbox" ng-model="servoSmoothingSteps"/>
+        <br/>Min Resistance Adjust Speed (mps 1/10):<input type="textbox" ng-model="minAdjustSpeedMps"/>
+        <br/>Trainer Status:<span>{{feState}}</span>
+
+        <p/>
+        <br/>ServoPosition:<span>{{servoPosition}}</span>
+        <br/>swRevision:<span>{{swRevision}}</span>
+        <br/>Settings:<input type="text" ng-model="settings"/>
+        <br/>Drag:<input type="text" ng-model="drag"/>
+        <br/>RR:<input type="text" ng-model="rr"/>
+        <br/>Servo Offset:<input type="text" ng-model="servoOffset"/>
+        <br/>Persist Changes:<input type="checkbox" ng-model="persistSettings"/>
+        <br/>Auto Adjust Power:<input type="checkbox" ng-model="powerAdjustEnabled"/>
+        <br/>Last command:<span>{{lastCommand}}</span>
+        <br/>Last command time:<span>{{lastCommandTime}}</span>
+        <br/>Flywheel:<span>{{flywheelRevs}}</span>
+        
+        <br/>User weight kg:<input type="text" ng-model="userWeightKg"/>
+        <br/>Bike weight kg:<input type="text" ng-model="bikeWeightKg"/>
+        <br/>Resistance Level:<input type="text" ng-model="resistanceLevel"/>  
+      </td>
+      <td></td>
+    </tr>
+  </table>  
+</body>
+</html>
