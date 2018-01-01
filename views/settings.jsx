@@ -74,7 +74,7 @@ export default class Settings extends MountAwareReactComponent {
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
             if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
                 return (
-                    <PowerMeterSettings
+                    <PowerMeterSettings fec={this.fec}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
