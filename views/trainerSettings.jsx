@@ -96,9 +96,7 @@ export default class TrainerSettings extends React.Component {
 
     onRefresh() {
         this.fec.getIrtSettings();
-        setTimeout(function () {
-            this.fec.getUserConfiguration();
-            }, 300);
+        this.fec.getUserConfiguration();
     }
 
     onShowAdvanced() {

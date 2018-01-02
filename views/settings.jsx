@@ -22,25 +22,36 @@ export default class Settings extends MountAwareReactComponent {
         this.fec = props.ant.fec;
         this.bp = props.ant.bp;
         this.bgScanner = props.ant.bgScanner;
-        this.onChannelStatus = this.onChannelStatus.bind(this);
+        this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
+        this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.fec.on('channel_status', this.onChannelStatus);
+        this.fec.on('channel_status', this.onFecChannelStatus);
+        this.bp.on('channel_status', this.onBpChannelStatus);
         this.bgScanner.openChannel();
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.fec.removeListener('channel_status', this.onChannelStatus);
+        this.fec.removeListener('channel_status', this.onFecChannelStatus);
+        this.bp.removeListener('channel_status', this.onBpChannelStatus);
         this.bgScanner.closeChannel();
     }
 
-    onChannelStatus(status, deviceId, timestamp) {
+    onChannelStatus(deviceType, status, deviceId, timestamp) {
         // hack for the moment.
-        console.log('FEC channel status updated...', deviceId, status);
+        console.log(deviceType, ' channel status updated...', deviceId, status);
         this.forceUpdate();
+    }
+
+    onBpChannelStatus(status, deviceId, timestamp) {
+        this.onChannelStatus(antlib.BIKE_POWER_DEVICE_TYPE, status, deviceId, timestamp);
+    }
+
+    onFecChannelStatus(status, deviceId, timestamp) {
+        this.onChannelStatus(antlib.FEC_DEVICE_TYPE, status, deviceId, timestamp);
     }
 
     onConnectDevice(deviceType, deviceId) {
