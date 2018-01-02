@@ -95,8 +95,7 @@ export default class TrainerSettings extends React.Component {
     }
 
     onRefresh() {
-        this.fec.getIrtSettings();
-        this.fec.getUserConfiguration();
+        this.fec.getSettings();
     }
 
     onShowAdvanced() {
