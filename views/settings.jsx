@@ -22,16 +22,25 @@ export default class Settings extends MountAwareReactComponent {
         this.fec = props.ant.fec;
         this.bp = props.ant.bp;
         this.bgScanner = props.ant.bgScanner;
+        this.onChannelStatus = this.onChannelStatus.bind(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
+        this.fec.on('channel_status', this.onChannelStatus);
         this.bgScanner.openChannel();
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
+        this.fec.removeListener('channel_status', this.onChannelStatus);
         this.bgScanner.closeChannel();
+    }
+
+    onChannelStatus(status, deviceId, timestamp) {
+        // hack for the moment.
+        console.log('FEC channel status updated...', deviceId, status);
+        this.forceUpdate();
     }
 
     onConnectDevice(deviceType, deviceId) {
