@@ -2,6 +2,14 @@ import { app, BrowserWindow } from 'electron';
 
 let mainWindow = null;
 
+function preventShutdown() {
+  // Prevent windows from going to sleep while the app is running.
+  if (process.platform === 'win32') {
+    const win_utility = require('./lib/win_utility.js')
+    win_utility.preventShutdown();
+  }
+}
+
 app.on('window-all-closed', () => {
   if (process.platform != 'darwin') {
     app.quit();
@@ -15,6 +23,7 @@ app.on('ready', () => {
   mainWindow.maximize();
   // Disable the menubar (production only).
   // mainWindow.setMenu(null)  
+  preventShutdown();
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
