@@ -2,7 +2,10 @@
 
 import React from 'react';
 import GeneralFEData from '../views/generalFEData.jsx';
+import SpeedMph from '../views/speedMph.jsx';
+import DistanceTravelled from '../views/distanceTravelled.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
+import TrainerPower from '../views/trainerPower.jsx';
 import PowerMeter from '../views/powerMeter.jsx';
 import Cadence from '../views/cadence.jsx';
 
@@ -17,10 +20,13 @@ export default class Ride extends React.Component {
     render() {
         return (
             <div>
+              <SpeedMph fec={this.fec} />
+              <DistanceTravelled fec={this.fec} />
               <GeneralFEData fec={this.fec} />
-              <SpecificTrainerData fec={this.fec} />
+              <TrainerPower fec={this.fec} />
               <PowerMeter bp={this.bp} />
               <Cadence bp={this.bp} />
+              <SpecificTrainerData fec={this.fec} />              
             </div>
           );      
     }

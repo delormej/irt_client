@@ -33,10 +33,8 @@ export default class PowerMeter extends React.Component {
 
     render() {
         return (
-            <div>
-                <RideDataComponent class="bikePower" label="WATTS"
-                    value={this.state.instantPower} />
-            </div>
+            <RideDataComponent class="bikePower" label="WATTS"
+                value={this.state.instantPower} />
           );      
     }
 }  

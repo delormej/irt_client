@@ -49,8 +49,6 @@ export default class SpecificTrainerData extends React.Component {
     render() {
         return (
             <div>
-                <RideDataComponent class="trainerPower" label="WATTS"
-                    value={this.state.instantPower} />
                 <TrainerStatus value={this.state.trainerStatus} />
                 <TargetPowerStatus value={this.state.targetPowerStatus} />
                 <FeState value={this.state.feState} />

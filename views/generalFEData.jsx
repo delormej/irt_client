@@ -5,15 +5,6 @@ import RideDataComponent from '../views/rideDataComponent.jsx';
 import util from 'util';
 import zpad from 'zpad';
 
-function DistanceTravelled(props) {
-    const METERS_TO_MILES = 0.000621371;
-    let miles = (props.meters * METERS_TO_MILES).toFixed(2);   
-    return (
-        <RideDataComponent class="distance" label="MILES"
-            value={miles} />
-    );
-}
-
 function ElapsedTime(props) {
     // Returns a string in hh:mm:ss format from seconds.
     function formatTime(elapsedSeconds) {
@@ -28,17 +19,6 @@ function ElapsedTime(props) {
     return (
         <RideDataComponent class="duration" label="DURATION"
             value={formatTime(props.elapsedSeconds)} />
-    );
-}
-
-function SpeedMph(props) {
-    function calculateMph(mps) {
-        const MPS_TO_MPH = 2.23694;
-        return (mps * MPS_TO_MPH).toFixed(1);
-    }
-    return (
-        <RideDataComponent class="speed" label="MPH"
-            value={calculateMph(props.mps)} />
     );
 }
 
@@ -77,8 +57,6 @@ export default class GeneralFEData extends React.Component {
     render() {
         return (
             <div>
-                <SpeedMph mps={this.state.speedMps} />
-                <DistanceTravelled meters={this.state.distanceTravelled} />
                 <ElapsedTime elapsedSeconds={this.state.elapsedTime} />
             </div>
         );
