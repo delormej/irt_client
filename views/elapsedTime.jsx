@@ -25,7 +25,7 @@ export default class ElapsedTime extends GeneralFEData {
     render() {
         return (
             <RideDataComponent class="duration" label="DURATION"
-                value={this.formatTime(props.elapsedSeconds)} />
+                value={this.formatTime(this.state.elapsedTime)} />
         );
     }
 }    
