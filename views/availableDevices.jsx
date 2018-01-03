@@ -9,7 +9,8 @@ function AvailableDevice(props) {
     return (
         <div className="deviceInfo" 
             onClick={() => props.onClick(deviceInfo.deviceId)}>
-            {deviceInfo.manufacturerName}: {deviceInfo.deviceId}
+            {deviceInfo.manufacturerName}: {deviceInfo.deviceId}<br/>
+            <button>Connect</button>
         </div>
     );
 }
@@ -86,6 +87,7 @@ export default class AvailableDevices extends React.Component {
 
     onSelectDevice(deviceId) {
         this.selectedDeviceId = deviceId;
+        this.onConnectDevice(this.deviceType, this.selectedDeviceId);
     }
 
     render() {
@@ -96,11 +98,11 @@ export default class AvailableDevices extends React.Component {
         return (
             <div>
                 <div className="deviceTitle">Select {this.getDeviceTypeName(this.deviceType)}</div>
-                {listItems}
-                <button 
-                    onClick={() => this.onConnectDevice(this.deviceType, this.selectedDeviceId)}>
-                    Connect
-                </button> 
+                {listItems.length > 0 ? ( 
+                    <div>
+                        {listItems}
+                    </div>
+                ) : (<div>Searching...</div>)}
             </div>
         );      
     }
