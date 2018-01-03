@@ -9,6 +9,7 @@ import PowerMeter from '../views/powerMeter.jsx';
 import TargetPower from '../views/targetPower.jsx';
 import Cadence from '../views/cadence.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
+import PowerMeterConnected from '../views/powerMeterConnected.jsx';
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -28,7 +29,8 @@ export default class Ride extends React.Component {
               <PowerMeter bp={this.bp} />
               <TargetPower fec={this.fec} />
               <Cadence bp={this.bp} />
-              <SpecificTrainerData fec={this.fec} />              
+              <SpecificTrainerData fec={this.fec} />   
+              <PowerMeterConnected fec={this.fec} />           
             </div>
           );      
     }
