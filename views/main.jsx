@@ -7,7 +7,6 @@ import AntBikePower from '../lib/ant/ant_bp.js';
 import AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
-//import Hello from '../views/hello.jsx';
 
 function Menu(props) {
   let navigatePage;

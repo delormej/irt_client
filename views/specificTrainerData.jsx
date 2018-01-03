@@ -1,12 +1,7 @@
 'use babel';
 
 import React from 'react';
-
-function TrainerPower(props) {
-    return (
-        <div className="trainerPower">{props.watts}</div>
-    );
-}
+import RideDataComponent from '../views/rideDataComponent.jsx';
 
 export default class SpecificTrainerData extends React.Component {
     constructor(props) {
@@ -40,7 +35,8 @@ export default class SpecificTrainerData extends React.Component {
 
     render() {
         return (
-            <TrainerPower watts={this.state.instantPower} />
+            <RideDataComponent class="trainerPower" label="WATTS"
+                value={this.state.instantPower} />
         );
     }
 }

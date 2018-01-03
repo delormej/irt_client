@@ -2,6 +2,8 @@
 import React from 'react';
 const MPS_TO_MPH = 2.23694;
 
+import RideDataComponent from '../views/rideDataComponent.jsx';
+
 export default class SpeedMph extends React.Component {
     
     constructor(props) {
@@ -14,7 +16,8 @@ export default class SpeedMph extends React.Component {
 
     render() {
         return (
-            <div className="speed">{this.calculateMph(this.props.mps)}</div>
+            <RideDataComponent class="speed" label="MPH"
+                value={this.calculateMph(this.props.mps)} />
         );
     }
 }
