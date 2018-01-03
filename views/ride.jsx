@@ -36,7 +36,8 @@ export default class Ride extends React.Component {
               <Cadence bp={this.bp} />
               <SpecificTrainerData fec={this.fec} />   
               <PowerMeterConnected fec={this.fec} />
-              <AveragePower bp={this.bp} bpAverager={this.bpAverager} seconds={this.state.averageSeconds} />
+              <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
+                seconds={this.state.averageSeconds} />
             </div>
           );      
     }
