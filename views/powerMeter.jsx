@@ -36,8 +36,6 @@ export default class PowerMeter extends React.Component {
             <div>
                 <RideDataComponent class="bikePower" label="WATTS"
                     value={this.state.instantPower} />
-                <RideDataComponent class="cadence" label="RPM"
-                    value={this.state.instantCadence} />
             </div>
           );      
     }

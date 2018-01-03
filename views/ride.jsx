@@ -4,6 +4,7 @@ import React from 'react';
 import GeneralFEData from '../views/generalFEData.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
 import PowerMeter from '../views/powerMeter.jsx';
+import Cadence from '../views/cadence.jsx';
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ export default class Ride extends React.Component {
               <GeneralFEData fec={this.fec} />
               <SpecificTrainerData fec={this.fec} />
               <PowerMeter bp={this.bp} />
+              <Cadence bp={this.bp} />
             </div>
           );      
     }
