@@ -1,7 +1,6 @@
 'use babel';
 
 import React from 'react';
-import SpeedMph from '../views/speedMph.jsx';
 import RideDataComponent from '../views/rideDataComponent.jsx';
 import util from 'util';
 import zpad from 'zpad';
@@ -29,6 +28,17 @@ function ElapsedTime(props) {
     return (
         <RideDataComponent class="duration" label="DURATION"
             value={formatTime(props.elapsedSeconds)} />
+    );
+}
+
+function SpeedMph(props) {
+    function calculateMph(mps) {
+        const MPS_TO_MPH = 2.23694;
+        return (mps * MPS_TO_MPH).toFixed(1);
+    }
+    return (
+        <RideDataComponent class="speed" label="MPH"
+            value={calculateMph(props.mps)} />
     );
 }
 

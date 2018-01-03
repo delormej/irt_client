@@ -3,35 +3,7 @@
 import React from 'react';
 import RideDataComponent from '../views/rideDataComponent.jsx';
 import TargetPowerStatus from '../views/targetPowerStatus.jsx';
-
-function FeState(props) {
-    // Formats the fitness equipment state field into a user string.
-    function formatFeState(feState) {
-        var value = "";
-        switch (feState) {
-            case 1: /*FE_ASLEEP_OFF*/
-                value = "Off";
-                break;
-            case 2: /*FE_READY*/
-                value = "Ready";
-                break;
-            case 3: /*FE_IN_USE*/
-                value = "In use"
-                break;
-            case 4: /*FE_FINISHED_PAUSED*/
-                value = "Finished or Paused.";
-                break;
-            default:
-                value = "Not set.";
-                break;
-        }
-        return value;
-    }
-
-    return (
-        <div className="feState">{formatFeState(props.value)}</div>
-    );
-}
+import FeState from '../views/feState.jsx';
 
 function TrainerStatus(props) {
     // Does nothing right now...
