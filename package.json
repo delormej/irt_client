@@ -3,7 +3,7 @@
   "version": "2.0.4",
   "main": "main.js",
   "license": "MIT",
-  "repository": "b52/electron-es6-react",
+  "repository": "irt_client",
   "scripts": {
     "start": "electron -r babel-register .",
     "postinstall": "./node_modules/.bin/electron-rebuild"

@@ -6,6 +6,7 @@ import DistanceTravelled from '../views/distanceTravelled.jsx';
 import ElapsedTime from '../views/elapsedTime.jsx';
 import TrainerPower from '../views/trainerPower.jsx';
 import PowerMeter from '../views/powerMeter.jsx';
+import AveragePower from '../views/averagePower.jsx';
 import TargetPower from '../views/targetPower.jsx';
 import Cadence from '../views/cadence.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
@@ -16,6 +17,7 @@ export default class Ride extends React.Component {
       super(props);
       this.fec = this.props.ant.fec;
       this.bp = this.props.ant.bp;
+      this.bpAverager = this.props.ant.bpAverager;
       this.bgScanner = this.props.ant.bgScanner;
     }
 
@@ -30,7 +32,8 @@ export default class Ride extends React.Component {
               <TargetPower fec={this.fec} />
               <Cadence bp={this.bp} />
               <SpecificTrainerData fec={this.fec} />   
-              <PowerMeterConnected fec={this.fec} />           
+              <PowerMeterConnected fec={this.fec} />
+              <AveragePower bp={this.bp} bpAverager={this.bpAverager} seconds={3} />
             </div>
           );      
     }

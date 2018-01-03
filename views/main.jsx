@@ -4,6 +4,7 @@ import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AntFec from '../lib/ant/ant_fec.js';
 import AntBikePower from '../lib/ant/ant_bp.js';
+import PowerAverager from '../lib/ant/powerAverager.js';
 import AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
@@ -34,10 +35,13 @@ export default class Main extends React.Component {
 
   initAnt() {
     antlib.init();
+    let bp = new AntBikePower();
+    let bpAverager = new PowerAverager(bp);
     let ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
-      bp: new AntBikePower()
+      bp: bp,
+      bpAverager: bpAverager
     }
     return ant;
   }
