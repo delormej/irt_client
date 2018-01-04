@@ -26,8 +26,8 @@ export default class Settings extends MountAwareReactComponent {
         this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
         this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
         this.state = {
-            fecDeviceId: 0,
-            bpDeviceId: 0,
+            fecDeviceId: this.fec.getDeviceId(),
+            bpDeviceId: this.bp.getDeviceId(),
             fecChannelStatus: 0,
             bpChannelStatus: 0
         }
