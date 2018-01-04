@@ -6,6 +6,7 @@ import AvailableDevices from '../views/AvailableDevices.jsx';
 import TrainerSettings from '../views/trainerSettings.jsx';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
+import ElectronSettings from 'electron-settings';
 
 function CancelSearch(props) {
     return (
@@ -31,6 +32,7 @@ export default class Settings extends MountAwareReactComponent {
         this.fec.on('channel_status', this.onFecChannelStatus);
         this.bp.on('channel_status', this.onBpChannelStatus);
         this.bgScanner.openChannel();
+        this.tryLastConnections();
     }
 
     componentWillUnmount() {
@@ -38,6 +40,19 @@ export default class Settings extends MountAwareReactComponent {
         this.fec.removeListener('channel_status', this.onFecChannelStatus);
         this.bp.removeListener('channel_status', this.onBpChannelStatus);
         this.bgScanner.closeChannel();
+    }
+
+    tryLastConnections() {
+        if (this.fec.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+            let fecDeviceId = ElectronSettings.get('fecDeviceId')
+            if (fecDeviceId) 
+                this.onConnectDevice(antlib.FEC_DEVICE_TYPE, fecDeviceId);
+        }
+        if (this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+            let bpDeviceId = ElectronSettings.get('bpDeviceId');
+            if (bpDeviceId) 
+                this.onConnectDevice(antlib.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
+        }        
     }
 
     onChannelStatus(deviceType, status, deviceId, timestamp) {
@@ -48,10 +63,14 @@ export default class Settings extends MountAwareReactComponent {
 
     onBpChannelStatus(status, deviceId, timestamp) {
         this.onChannelStatus(antlib.BIKE_POWER_DEVICE_TYPE, status, deviceId, timestamp);
+        if (status == antlib.STATUS_TRACKING_CHANNEL) 
+            ElectronSettings.set('bpDeviceId', deviceId);
     }
 
     onFecChannelStatus(status, deviceId, timestamp) {
         this.onChannelStatus(antlib.FEC_DEVICE_TYPE, status, deviceId, timestamp);
+        if (status == antlib.STATUS_TRACKING_CHANNEL) 
+            ElectronSettings.set('fecDeviceId', deviceId);        
     }
 
     onConnectDevice(deviceType, deviceId) {
