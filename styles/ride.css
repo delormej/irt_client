@@ -18,56 +18,51 @@
 }
 
 .speed {
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
+    grid-row: 2;
+    grid-column: 1;
 }
 
-cadence {
-    grid-row: 3 / 4;
-    grid-column: 1 / 2;
+.cadence {
+    grid-row: 3;
+    grid-column: 1;
 }
 
-bikePower {
+.bikePower {
     grid-row: 2 / 3;
     grid-column: 7 / 8;
 }
 
-bikePowerAverage {
-    grid-row: 2 / 3;
-    grid-column: 8 / 8;    
+.bikePowerAverage {
+    grid-row: 2;
+    grid-column: 8;    
 }
 
-trainerPower {
-    grid-row: 3 / 4;
-    grid-column: 7 / 8;
+.trainerPower {
+    grid-row: 3;
+    grid-column: 7;
 }
 
-targetPower {
+.targetPower {
     grid-row: 3 / 4;
     grid-column: 8 / 8;
 }
 
-heartRate {
-    grid-row: 4 / 5;
-    grid-column: 1 / 2;   
+.heartRate {
+    grid-row: 4;
+    grid-column: 1;   
 }
 
-distance, duration, averagePower {
-    font-size: 85px;
-    text-align: center;
+.distance {
+    grid-row: 2;
+    grid-column: 3;    
 }
 
-distance {
+.duration {
+    grid-row: 2;
+    grid-column: 4;    
+}
+
+.distance {
     grid-row: 2 / 3;
     grid-column: 3 / 4;   
-}
-
-duration {
-    grid-row: 2 / 3;
-    grid-column: 4 / 5;   
-}
-
-averagePower {
-    grid-row: 2 / 3;
-    grid-column: 5 / 6;   
 }
