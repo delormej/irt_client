@@ -16,6 +16,7 @@ export default class TrainerSettings extends React.Component {
         this.onIrtSettings = this.onIrtSettings.bind(this);        
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
+            deviceId: props.deviceId,
             swRevision: '',
             serial: '',
             rawSettings: 0,

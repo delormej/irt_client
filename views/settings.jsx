@@ -25,6 +25,12 @@ export default class Settings extends MountAwareReactComponent {
         this.bgScanner = props.ant.bgScanner;
         this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
         this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
+        this.state = {
+            fecDeviceId: 0,
+            bpDeviceId: 0,
+            fecChannelStatus: 0,
+            bpChannelStatus: 0
+        }
     }
 
     componentDidMount() {
@@ -43,12 +49,14 @@ export default class Settings extends MountAwareReactComponent {
     }
 
     tryLastConnections() {
-        if (this.fec.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+        if (ElectronSettings.has('fecDeviceId') &&
+                this.fec.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
             let fecDeviceId = ElectronSettings.get('fecDeviceId')
             if (fecDeviceId) 
                 this.onConnectDevice(antlib.FEC_DEVICE_TYPE, fecDeviceId);
         }
-        if (this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+        if (ElectronSettings.has('bpDeviceId') &&
+                this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
             let bpDeviceId = ElectronSettings.get('bpDeviceId');
             if (bpDeviceId) 
                 this.onConnectDevice(antlib.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
@@ -56,21 +64,37 @@ export default class Settings extends MountAwareReactComponent {
     }
 
     onChannelStatus(deviceType, status, deviceId, timestamp) {
-        // hack for the moment.
         console.log(deviceType, ' channel status updated...', deviceId, status);
-        this.forceUpdate();
+        if (status == antlib.STATUS_TRACKING_CHANNEL) {
+            if (deviceType == antlib.FEC_DEVICE_TYPE)
+                this.setState( {
+                    fecDeviceId: deviceId
+                });
+            else if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE)
+                this.setState( {
+                    bpDeviceId: deviceId
+                });
+        }
     }
 
     onBpChannelStatus(status, deviceId, timestamp) {
         this.onChannelStatus(antlib.BIKE_POWER_DEVICE_TYPE, status, deviceId, timestamp);
         if (status == antlib.STATUS_TRACKING_CHANNEL) 
             ElectronSettings.set('bpDeviceId', deviceId);
+        this.setState( {
+            bpDeviceId: deviceId,
+            bpChannelStatus: status
+        });            
     }
 
     onFecChannelStatus(status, deviceId, timestamp) {
         this.onChannelStatus(antlib.FEC_DEVICE_TYPE, status, deviceId, timestamp);
         if (status == antlib.STATUS_TRACKING_CHANNEL) 
-            ElectronSettings.set('fecDeviceId', deviceId);        
+            ElectronSettings.set('fecDeviceId', deviceId); 
+        this.setState( {
+            fecDeviceId: deviceId,
+            fecChannelStatus: status
+        });                        
     }
 
     onConnectDevice(deviceType, deviceId) {
@@ -99,9 +123,15 @@ export default class Settings extends MountAwareReactComponent {
     onDisconnectDevice(deviceType) {
         if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
             this.bp.closeChannel();
+            this.setState( {
+                bpDeviceId: 0
+            });
         }
         else if (deviceType == antlib.FEC_DEVICE_TYPE) {
             this.fec.closeChannel();
+            this.setState( {
+                fecDeviceId: 0
+            });
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
             // not implemented yet.
@@ -113,20 +143,20 @@ export default class Settings extends MountAwareReactComponent {
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
             if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
                 return (
-                    <PowerMeterSettings fec={this.fec}
+                    <PowerMeterSettings fec={this.fec} deviceId={this.state.bpDeviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
             else if (deviceType == antlib.FEC_DEVICE_TYPE) {
                 return (
-                    <TrainerSettings fec={this.fec}
+                    <TrainerSettings fec={this.fec} deviceId={this.state.fecDeviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
         }
         else if(channelStatus == antlib.STATUS_SEARCHING_CHANNEL) {
             return (
-                <CancelSearch  deviceType={deviceType} 
+                <CancelSearch deviceType={deviceType} 
                     onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
             );
         }

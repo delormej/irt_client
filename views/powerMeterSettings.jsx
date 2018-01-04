@@ -15,7 +15,7 @@ export default class PowerMeterSettings extends DeviceSettings {
         this.onIrtSettingsPowerAdjust = this.onIrtSettingsPowerAdjust.bind(this);
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.state = {
-            deviceId: 0,
+            deviceId: props.deviceId,
             powerMeterId: 0,
             pairToPowerMeter: true,
             powerMeterAverageSeconds: 0,
@@ -99,7 +99,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                 <div className="deviceTitle">Configure Power Meter</div>
                 <button onClick={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)}>Disconnect</button>
                 <div>
-                    Device ID: {this.state.powerMeterId}<br/>
+                    Device ID: {this.state.deviceId}<br/>
                 </div>                        
                 <div id="powerMeterSettings">
                     Pair to rollers to adjust resistance based on power meter.<br/>
