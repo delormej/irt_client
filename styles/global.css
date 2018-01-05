@@ -1,29 +1,31 @@
-html, body #app {
-    width: 100vw;
-    min-height: 100vh;
+
+body {
     margin: 0;
     padding: 0;
     background-color: white;
     color: black;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', sans-serif;    
 }
 
-body {
+.header {
+    /* UGLY CSS HACK! Creates a seperate overlapping grid for the header because of the 
+        extra wrapping <div/> created by the <Header /> component.
+    */
     display: grid;
-    grid-template-rows: 135px 135px 135px 135px fit-content(800px);
-    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-template-rows: 150px;
+    grid-template-columns: repeat(8, 300px);  /* ensure this == .ride.grid-template-columms */
 }
 
 .logo {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 1;       
     height: 100px;
     margin: 15px;
 }
 
-#versionInfo {
+.versionInfo {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 1;   
     padding-left: 100px;
     padding-top: 15px;
     font-size: 10px;
@@ -33,21 +35,26 @@ body {
     font-size: 18px;
 }
 
-menu {
-    grid-row: 1 / 2;
-    grid-column: 8 / 9;
+.menu {
+    grid-row: 1;
+    grid-column: 8;
+    justify-self: end; 
+    margin: 15px;   
 }
 
 .menuLink {
-    grid-row: 1 / 2;
     font-size: 24px;
     font-weight: 100;
     text-decoration: none;
     color: black;
-    align-self: start;
-    justify-self: end;
     margin-right: 15px;
-    margin-top: 15px;
+}
+
+.status {
+    grid-row: 1 / 2;
+    grid-column: 3 / span 3;
+    text-align: center;
+    background-color: red;
 }
 
 Button {
@@ -59,11 +66,4 @@ Button {
     font-size: 20px;
     background-color: red;
     color: white;
-}
-
-status {
-    grid-row: 1 / 2;
-    grid-column: 3 / span 3;
-    text-align: center;
-    background-color: red;
 }

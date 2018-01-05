@@ -1,8 +1,4 @@
 
-#powerMeterAdvancedSettingsButton {
-    display: inline; /* none (to hide) */
-}
-
 .trainer {
     grid-row: 2;
     grid-column: 2;
@@ -49,7 +45,6 @@
 }
 
 #advancedPowerMeterSettings {
-    display: grid;
     grid-template-columns: 250px 15px;
     grid-template-rows: 20px;
 }
@@ -62,3 +57,8 @@
 #advancedPowerMeterSettings .label {
     grid-column: 1;
 }
+
+#powerMeterAdvancedSettingsButton {
+    display: inline; /* none (to hide) */
+}
+

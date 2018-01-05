@@ -6,23 +6,9 @@ import AntFec from '../lib/ant/ant_fec.js';
 import AntBikePower from '../lib/ant/ant_bp.js';
 import PowerAverager from '../lib/ant/powerAverager.js';
 import AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
+import Header from '../views/header.jsx';
 import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
-
-function Menu(props) {
-  let navigatePage;
-  if (props.page === "settings") {
-    navigatePage = "ride";
-  }
-  else {
-    navigatePage = "settings";
-  }
-  return (
-    <div>
-      <a href="#" onClick={() => props.onClick(navigatePage)}>Menu</a>
-    </div>
-    );
-}
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -41,7 +27,8 @@ export default class Main extends React.Component {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
       bp: bp,
-      bpAverager: bpAverager
+      bpAverager: bpAverager,
+      status: ''
     }
     return ant;
   }
@@ -57,6 +44,9 @@ export default class Main extends React.Component {
 
   componentDidCatch(error, info) {
     console.log("ERROR! ", error, info);
+    this.setState( {
+      status: error
+    });
   }
 
   render() {
@@ -68,7 +58,7 @@ export default class Main extends React.Component {
     if (this.state.currentPage === "ride") {
       return (
         <div>
-          <Menu page={this.state.currentPage} onClick={(page) => this.navigate(page)} />
+          <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)} />
           <Ride ant={this.state.ant} />
         </div>
       );  
@@ -76,7 +66,7 @@ export default class Main extends React.Component {
     else if (this.state.currentPage === "settings") {
       return (
         <div>
-          <Menu page={this.state.currentPage} onClick={(page) => this.navigate(page)} />
+          <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)} />
           <Settings ant={this.state.ant} />
         </div>
       )

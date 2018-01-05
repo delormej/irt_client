@@ -24,9 +24,14 @@ export default class Ride extends React.Component {
       };
     }
 
+    /*
+    <SpecificTrainerData fec={this.fec} />   
+    <PowerMeterConnected fec={this.fec} />
+    */
+
     render() {
         return (
-            <div>
+            <div className="ride">
               <SpeedMph fec={this.fec} />
               <DistanceTravelled fec={this.fec} />
               <ElapsedTime fec={this.fec} />
@@ -34,8 +39,6 @@ export default class Ride extends React.Component {
               <PowerMeter bp={this.bp} />
               <TargetPower fec={this.fec} />
               <Cadence bp={this.bp} />
-              <SpecificTrainerData fec={this.fec} />   
-              <PowerMeterConnected fec={this.fec} />
               <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
                 seconds={this.state.averageSeconds} />
             </div>

@@ -11,7 +11,7 @@ export default class PowerMeterConnected extends IrtExtraInfo {
 
     render() {
         return (
-            <div>
+            <div className="powerMeterConnectedStatus">
                 {this.state.powerMeterConnected ? 
                 (<div>Power Meter Connected</div>) :
                 (<div>Power Meter Not Connected</div>)}
