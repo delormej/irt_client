@@ -1,7 +1,6 @@
 'use babel';
 
 import React from 'react';
-import MountAwareReactComponent from '../scripts/mountAwareReactComponent.js';
 import AvailableDevices from '../views/AvailableDevices.jsx';
 import TrainerSettings from '../views/trainerSettings.jsx';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
@@ -17,7 +16,7 @@ function CancelSearch(props) {
     );
 }
 
-export default class Settings extends MountAwareReactComponent {
+export default class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.fec = props.ant.fec;
@@ -34,7 +33,6 @@ export default class Settings extends MountAwareReactComponent {
     }
 
     componentDidMount() {
-        super.componentDidMount();
         this.fec.on('channel_status', this.onFecChannelStatus);
         this.bp.on('channel_status', this.onBpChannelStatus);
         this.bgScanner.openChannel();
@@ -42,7 +40,6 @@ export default class Settings extends MountAwareReactComponent {
     }
 
     componentWillUnmount() {
-        super.componentWillUnmount();
         this.fec.removeListener('channel_status', this.onFecChannelStatus);
         this.bp.removeListener('channel_status', this.onBpChannelStatus);
         this.bgScanner.closeChannel();

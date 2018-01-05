@@ -5,13 +5,18 @@ import VersionInfo from '../views/versionInfo.jsx';
 
 function Menu(props) {
     let navigatePage;
-    if (props.page === "settings")
+    let linkLabel;
+    if (props.page === "settings") {
       navigatePage = "ride";
-    else 
+      linkLabel = "GO RIDE";
+    }
+    else {
       navigatePage = "settings";
+      linkLabel = "SETUP";
+    }
     return (
       <div className="menu">
-        <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>Menu</a>
+        <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
       </div>
     );
 }
