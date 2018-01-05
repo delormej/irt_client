@@ -3,7 +3,7 @@
     display: grid;
     grid-gap: 10px;
     grid-template-rows: 150px repeat(3, 235px) auto;
-    grid-template-columns: repeat(8, 300px);
+    grid-template-columns: repeat(8, 225px);
 }
 
 .dataValue {
