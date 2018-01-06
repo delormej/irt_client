@@ -22,81 +22,47 @@ export default class Settings extends React.Component {
         this.fec = props.ant.fec;
         this.bp = props.ant.bp;
         this.bgScanner = props.ant.bgScanner;
-        this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
-        this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
         this.state = {
-            fecDeviceId: this.fec.getDeviceId(),
-            bpDeviceId: this.bp.getDeviceId(),
-            fecChannelStatus: 0,
-            bpChannelStatus: 0
+            firstLoad: true
         }
     }
 
     componentDidMount() {
-        this.fec.on('channel_status', this.onFecChannelStatus);
-        this.bp.on('channel_status', this.onBpChannelStatus);
         this.bgScanner.openChannel();
-        this.tryLastConnections();
+        if (this.state.firstLoad) {
+            this.tryLastConnections();
+            this.state.firstLoad = false;
+        }
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('channel_status', this.onFecChannelStatus);
-        this.bp.removeListener('channel_status', this.onBpChannelStatus);
         this.bgScanner.closeChannel();
     }
 
     tryLastConnections() {
         if (ElectronSettings.has('fecDeviceId') &&
-                this.fec.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+                this.props.fecDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
             let fecDeviceId = ElectronSettings.get('fecDeviceId')
             if (fecDeviceId) 
                 this.onConnectDevice(antlib.FEC_DEVICE_TYPE, fecDeviceId);
         }
         if (ElectronSettings.has('bpDeviceId') &&
-                this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL) {
+                this.props.bpDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
             let bpDeviceId = ElectronSettings.get('bpDeviceId');
             if (bpDeviceId) 
                 this.onConnectDevice(antlib.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
         }        
-    }
-
-    onChannelStatus(deviceType, status, deviceId, timestamp) {
-        console.log(deviceType, ' channel status updated...', deviceId, status);
-        if (status == antlib.STATUS_TRACKING_CHANNEL) {
-            if (deviceType == antlib.FEC_DEVICE_TYPE)
-                this.setState( {
-                    fecDeviceId: deviceId
-                });
-            else if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE)
-                this.setState( {
-                    bpDeviceId: deviceId
-                });
-        }
-    }
-
-    onBpChannelStatus(status, deviceId, timestamp) {
-        this.onChannelStatus(antlib.BIKE_POWER_DEVICE_TYPE, status, deviceId, timestamp);
-        if (status == antlib.STATUS_TRACKING_CHANNEL) 
-            ElectronSettings.set('bpDeviceId', deviceId);
-        this.setState( {
-            bpDeviceId: deviceId,
-            bpChannelStatus: status
-        });            
-    }
-
-    onFecChannelStatus(status, deviceId, timestamp) {
-        this.onChannelStatus(antlib.FEC_DEVICE_TYPE, status, deviceId, timestamp);
-        if (status == antlib.STATUS_TRACKING_CHANNEL) 
-            ElectronSettings.set('fecDeviceId', deviceId); 
-        this.setState( {
-            fecDeviceId: deviceId,
-            fecChannelStatus: status
-        });                        
+        /*if (ElectronSettings.has('hrmDeviceId') &&
+                this.props.hrmDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
+            let hrmDeviceId = ElectronSettings.get('hrmDeviceId');
+            if (hrmDeviceId) 
+                this.onConnectDevice(antlib.HEART_RATE_DEVICE_TYPE, hrmDeviceId);
+        }*/               
     }
 
     onConnectDevice(deviceType, deviceId) {
         console.log("Attempting to connect to: ", deviceId);
-        if (deviceId == null || deviceId == "")
+        if (!deviceId)
             throw new Error("Invalid device ID, cannot connect.");
         
         if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
@@ -120,15 +86,9 @@ export default class Settings extends React.Component {
     onDisconnectDevice(deviceType) {
         if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
             this.bp.closeChannel();
-            this.setState( {
-                bpDeviceId: 0
-            });
         }
         else if (deviceType == antlib.FEC_DEVICE_TYPE) {
             this.fec.closeChannel();
-            this.setState( {
-                fecDeviceId: 0
-            });
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
             // not implemented yet.
@@ -140,13 +100,15 @@ export default class Settings extends React.Component {
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
             if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
                 return (
-                    <PowerMeterSettings fec={this.fec} deviceId={this.state.bpDeviceId}
+                    <PowerMeterSettings fec={this.fec} 
+                        deviceId={this.props.bpDevice.deviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
             else if (deviceType == antlib.FEC_DEVICE_TYPE) {
                 return (
-                    <TrainerSettings fec={this.fec} deviceId={this.state.fecDeviceId}
+                    <TrainerSettings fec={this.fec} 
+                        deviceId={this.props.fecDevice.deviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }

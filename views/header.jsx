@@ -17,6 +17,7 @@ function Menu(props) {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
+        {props.fecConnected ? <div>Connected</div> : <div>Not Connected</div> }
       </div>
     );
 }
@@ -32,7 +33,8 @@ export default class Header extends React.Component {
             <div className="header">
                 <img className="logo" src="./images/logo.png" />
                 <VersionInfo />
-                <Menu page={this.props.page} onClick={this.props.onClick} />
+                <Menu page={this.props.page} onClick={this.props.onClick} 
+                  fecConnected={this.props.fecConnected} />
             </div>
         );
     }
