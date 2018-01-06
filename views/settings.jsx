@@ -29,10 +29,10 @@ export default class Settings extends React.Component {
 
     componentDidMount() {
         this.bgScanner.openChannel();
-        if (this.state.firstLoad) {
-            this.tryLastConnections();
-            this.state.firstLoad = false;
-        }
+        // if (this.state.firstLoad) {
+        //     this.tryLastConnections();
+        //     this.state.firstLoad = false;
+        // }
     }
 
     componentWillUnmount() {
