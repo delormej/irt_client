@@ -22,10 +22,15 @@ function Menu(props) {
     );
 }
 
+function Status(props) {
+  return (
+    <div className="status">{props.message}</div>
+  );
+}
+
 export default class Header extends React.Component {
     constructor(props) {
       super(props);
-
     }    
     
     render() {
@@ -33,6 +38,7 @@ export default class Header extends React.Component {
             <div className="header">
                 <img className="logo" src="./images/logo.png" />
                 <VersionInfo />
+                <Status message={this.props.status.message} />
                 <Menu page={this.props.page} onClick={this.props.onClick} 
                   fecConnected={this.props.fecConnected} />
             </div>

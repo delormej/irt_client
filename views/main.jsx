@@ -17,6 +17,7 @@ export default class Main extends React.Component {
     let ant = this.initAnt();
     let page = this.getCurrentPage(ant.fec);
     this.state = {
+      status: { "type": "info", "message": "" },
       currentPage: page,
       ant: ant,
       bpDevice: { deviceId: 0, status: 0 },
@@ -35,8 +36,7 @@ export default class Main extends React.Component {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
       bp: bp,
-      bpAverager: bpAverager,
-      status: ''
+      bpAverager: bpAverager
     }
     return ant;
   }
@@ -107,18 +107,12 @@ export default class Main extends React.Component {
     });
   }
 
-  componentDidCatch(error, info) {
-    console.log("ERROR! ", error, info);
-    this.setState( {
-      status: error
-    });
-  }
-
   render() {
     return (
       <div>
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
-            fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL} />
+            fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
+            status={this.state.status} />
         { (this.state.currentPage === "ride") ? 
             <Ride ant={this.state.ant} /> :
             <Settings ant={this.state.ant} 
