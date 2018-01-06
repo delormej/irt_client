@@ -37,14 +37,17 @@ export default class Header extends React.Component {
     }    
     
     render() {
-        return (
-            <div className="header">
-                <img className="logo" src="./images/logo.png" />
-                <VersionInfo />
-                <Status type={this.props.status.type} message={this.props.status.message} />
-                <Menu page={this.props.page} onClick={this.props.onClick} 
-                  fecConnected={this.props.fecConnected} />
-            </div>
-        );
-    }
+      let menu = null;
+      if (this.props.page)
+        menu = <Menu page={this.props.page} onClick={this.props.onClick} 
+                  fecConnected={this.props.fecConnected} />;
+      return (
+          <div className="header">
+              <img className="logo" src="./images/logo.png" />
+              <VersionInfo />
+              <Status type={this.props.status.type} message={this.props.status.message} />
+              {menu}
+          </div>
+      );
+  }
 }
