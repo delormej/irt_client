@@ -29,7 +29,8 @@ export default class PowerMeterSettings extends DeviceSettings {
     componentDidMount() {
         this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.on('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
-        this.fec.getSettings();
+        if (this.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL)
+            this.fec.getSettings();
     }
 
     componentWillUnmount() {
