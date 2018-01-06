@@ -23,8 +23,11 @@ function Menu(props) {
 }
 
 function Status(props) {
+  let className = "status";
+  if (props.type === "error")
+    className += " error";
   return (
-    <div className="status">{props.message}</div>
+    <div className={className}>{props.message}</div>
   );
 }
 
@@ -38,7 +41,7 @@ export default class Header extends React.Component {
             <div className="header">
                 <img className="logo" src="./images/logo.png" />
                 <VersionInfo />
-                <Status message={this.props.status.message} />
+                <Status type={this.props.status.type} message={this.props.status.message} />
                 <Menu page={this.props.page} onClick={this.props.onClick} 
                   fecConnected={this.props.fecConnected} />
             </div>

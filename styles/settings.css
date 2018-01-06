@@ -27,10 +27,6 @@
     margin: 5px;
 }
 
-.deviceInfo button {
-    align-self: center;
-}
-
 .deviceSelect {
     border: none;
     display: inline-block;
