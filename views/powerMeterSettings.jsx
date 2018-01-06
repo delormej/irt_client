@@ -2,6 +2,7 @@
 
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
+import deviceType from '../scripts/deviceType.js';
 import DeviceSettings from '../views/deviceSettings.jsx'
 
 const INVALID_POWER_METER = 65535;
@@ -95,8 +96,10 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     render() {
+        let className = "powerMeterSettings " + 
+            deviceType.getDeviceClassName(antlib.BIKE_POWER_DEVICE_TYPE);
         return (
-            <div>
+            <div className={className}>
                 <div className="deviceTitle">Configure Power Meter</div>
                 <button onClick={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)}>Disconnect</button>
                 <div>

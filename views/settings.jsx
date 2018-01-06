@@ -5,11 +5,14 @@ import AvailableDevices from '../views/AvailableDevices.jsx';
 import TrainerSettings from '../views/trainerSettings.jsx';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
+import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
 
 function CancelSearch(props) {
+    let className = "cancel " +
+        deviceType.getDeviceClassName(props.deviceType);
     return (
-        <div>
+        <div className={className}>
             <div>Attempting to connect...</div>
             <button onClick={() => props.onDisconnectDevice(props.deviceType)}>Cancel</button>
         </div>

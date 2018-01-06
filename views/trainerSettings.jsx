@@ -2,6 +2,7 @@
 
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
+import deviceType from '../scripts/deviceType.js';
 
 export default class TrainerSettings extends React.Component {
     constructor(props) {
@@ -114,8 +115,10 @@ export default class TrainerSettings extends React.Component {
     }
 
     render() {
+        let className = "trainerSettings " + 
+            deviceType.getDeviceClassName(antlib.FEC_DEVICE_TYPE);
         return (
-            <div>
+            <div className={className}>
                 <div className="deviceTitle">Configure Trainer</div>
                 <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button>
                 <div>

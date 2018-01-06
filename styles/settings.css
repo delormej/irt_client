@@ -44,9 +44,13 @@
     font-size: 25px;
 }
 
-#powerMeterSettings, #advancedPowerMeterSettings {
-    margin: 30px;
+/*
+.powerMeterSettings {
 }
+
+.trainerSettings {
+}
+*/
 
 #advancedPowerMeterSettings {
     grid-template-columns: 250px 15px;
