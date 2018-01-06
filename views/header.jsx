@@ -8,7 +8,7 @@ function Menu(props) {
     let linkLabel;
     if (props.page === "settings") {
       navigatePage = "ride";
-      linkLabel = "GO RIDE";
+      linkLabel = "RIDE";
     }
     else {
       navigatePage = "settings";
