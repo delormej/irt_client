@@ -3,6 +3,7 @@
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import antlib from '../lib/ant/antlib.js';
+import deviceType from '../scripts/deviceType.js';
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -65,26 +66,6 @@ export default class AvailableDevices extends React.Component {
             this.setState({ availableDevices: availableDevices });
     }
 
-    getDeviceTypeName(deviceTypeId) {
-        let name = "";
-        switch (deviceTypeId)
-        {
-            case antlib.BIKE_POWER_DEVICE_TYPE:
-                name = "Power Meter";
-                break;
-            case antlib.FEC_DEVICE_TYPE:
-                name = "Trainer (FE-C)";
-                break;
-            case antlib.HEART_RATE_DEVICE_TYPE:
-                name = "Heart Rate Monitor";
-                break;
-            default:
-                name = "Unrecognized";
-                break;
-        }
-        return name;        
-    }
-
     onSelectDevice(deviceId) {
         this.selectedDeviceId = deviceId;
         this.onConnectDevice(this.deviceType, this.selectedDeviceId);
@@ -94,10 +75,10 @@ export default class AvailableDevices extends React.Component {
         const listItems = this.state.availableDevices.map((deviceInfo) =>
             <AvailableDevice key={deviceInfo.deviceId} deviceInfo={deviceInfo} 
                 onClick={(deviceId) => this.onSelectDevice(deviceId)}/>);
-
+        let className = deviceType.getDeviceClassName(this.deviceType);
         return (
-            <div>
-                <div className="deviceTitle">Select {this.getDeviceTypeName(this.deviceType)}</div>
+            <div className={className}>
+                <div className="deviceTitle">Select {deviceType.getDeviceTypeName(this.deviceType)}</div>
                 {listItems.length > 0 ? ( 
                     <div>
                         {listItems}

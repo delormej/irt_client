@@ -144,7 +144,7 @@ export default class Settings extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="settings">
                 {this.renderTrainer()}
                 {this.renderPowerMeter()}
                 {this.renderHeartRate()}
