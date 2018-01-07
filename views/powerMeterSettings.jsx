@@ -67,10 +67,6 @@ export default class PowerMeterSettings extends DeviceSettings {
         });
     }
 
-    onShowAdvanced() {
-        console.log("Show advanced...");
-    }
-
     convertToMps(mph) {
         const mph_to_mps = 4.4704;
         let value = (mph * mph_to_mps).toFixed(0);
@@ -125,8 +121,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                         Do not pair with power meter
                     </label>
                 </div>
-                <button onClick={() => this.onShowAdvanced()}>Advanced</button><br/>
-                <div id="advancedPowerMeterSettings">
+                <div className="advancedPowerMeterSettings">
                     <div className="label">Power Meter Average Seconds</div>
                     <input type="textbox" name="powerMeterAverageSeconds" 
                         value={this.state.powerMeterAverageSeconds}
@@ -143,10 +138,10 @@ export default class PowerMeterSettings extends DeviceSettings {
                     <input type="textbox" name="servoSmoothingSteps" 
                         value={this.state.servoSmoothingSteps}
                         onChange={this.handleInputChange} />
+                    <div className="label">Save to Flash</div>       
                     <input name="saveToFlashEnabled" type="checkbox" 
                         checked={this.state.saveToFlashEnabled} 
                         onChange={this.handleInputChange}/>
-                    <div className="label">Save to Flash</div>                        
                 </div>
                 <button onClick={() => this.onSave()}>Save</button>
             </div>

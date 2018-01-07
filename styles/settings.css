@@ -44,18 +44,30 @@
     font-size: 25px;
 }
 
-/*
-.powerMeterSettings {
-}
-*/
+.trainerSettings {}
 
-.trainerSettings {
-    
-}
-
-.advancedTrainerSettings {
+.advancedTrainerSettings, .advancedPowerMeterSettings {
     display: grid;
-    grid-template-columns: 150px 25px;
+    grid-template-columns: 150px 45px;
+}
+
+.advancedPowerMeterSettings {
+    display: grid;
+    grid-template-columns: 250px 45px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.advancedPowerMeterSettings input {
+    grid-column: 2;
+}
+
+.advancedPowerMeterSettings input[type="checkbox"] {
+    grid-column: 2;
+}
+
+.advancedPowerMeterSettings .label {
+    grid-column: 1;
 }
 
 .advancedTrainerSettings button {
@@ -70,7 +82,7 @@
     grid-column: 2;
 }
 
-.advancedTrainerSettings label {
+.advancedTrainerSettings .label {
     grid-column: 1;
 }
 
