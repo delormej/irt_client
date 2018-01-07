@@ -38,7 +38,7 @@ function getDeviceClassName(deviceTypeId) {
             name = "";
             break;
     }
-    return "availableDevices " + name;                
+    return name;                
 }
 
 exports.getDeviceClassName = getDeviceClassName;

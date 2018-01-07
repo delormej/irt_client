@@ -84,7 +84,7 @@ export default class AdvancedTrainerSettings extends React.Component {
 
     render() {
         return (
-            <div className="trainerAdvancedSettings">
+            <div className="advancedTrainerSettings">
                 <button onClick={() => this.onEnableDFU()}>Firmware Update</button>                    
                 <div className="label">Settings</div>
                 <input name="rawSettings" type="textbox" 
@@ -110,12 +110,11 @@ export default class AdvancedTrainerSettings extends React.Component {
                 <input name="bikeWeightKg" type="textbox" 
                     value={this.state.bikeWeightKg} 
                     onChange={this.handleInputChange}/>     
+                <div className="label">Save to Flash</div>
                 <input name="saveToFlashEnabled" type="checkbox" 
                     checked={this.state.saveToFlashEnabled} 
                     onChange={this.handleInputChange}/>
-                <div className="label">Save to Flash</div>
-                <br/>
-                <button onClick={() => this.onSave()}>Save</button><br/>
+                <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
             </div>
         );

@@ -75,7 +75,7 @@ export default class AvailableDevices extends React.Component {
         const listItems = this.state.availableDevices.map((deviceInfo) =>
             <AvailableDevice key={deviceInfo.deviceId} deviceInfo={deviceInfo} 
                 onClick={(deviceId) => this.onSelectDevice(deviceId)}/>);
-        let className = deviceType.getDeviceClassName(this.deviceType);
+        let className = "availableDevices " + deviceType.getDeviceClassName(this.deviceType);
         return (
             <div className={className}>
                 <div className="deviceTitle">Select {deviceType.getDeviceTypeName(this.deviceType)}</div>
