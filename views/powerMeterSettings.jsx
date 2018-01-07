@@ -99,10 +99,10 @@ export default class PowerMeterSettings extends DeviceSettings {
                 <div className="deviceTitle">Configure Power Meter</div>
                 <button onClick={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)}>Disconnect</button>
                 <div>
-                    Device ID: {this.state.deviceId}<br/>
+                    Device ID: {this.state.deviceId}
                 </div>                        
-                <div id="powerMeterSettings">
-                    Pair to rollers to adjust resistance based on power meter.<br/>
+                <div className="advancedPowerMeterSettings">
+                    <div className="description">Pair to rollers to adjust resistance based on power meter.</div>
                     <label>
                         <input type="radio" name="pairToPowerMeter" 
                             checked={this.state.pairToPowerMeter === true}
@@ -112,7 +112,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                     </label>
                     <input type="textbox" name="powerMeterId" 
                         value={this.state.powerMeterId}
-                        onChange={this.handleInputChange} /><br/>
+                        onChange={this.handleInputChange} />
                     <label>
                         <input type="radio" name="pairToPowerMeter" 
                             checked={this.state.pairToPowerMeter === false}
@@ -120,8 +120,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                             onChange={this.handlePairToPowerMeterChange} />
                         Do not pair with power meter
                     </label>
-                </div>
-                <div className="advancedPowerMeterSettings">
+                    <div class="label">...</div>
                     <div className="label">Power Meter Average Seconds</div>
                     <input type="textbox" name="powerMeterAverageSeconds" 
                         value={this.state.powerMeterAverageSeconds}
