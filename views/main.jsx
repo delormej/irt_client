@@ -4,6 +4,7 @@ import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AntFec from '../lib/ant/ant_fec.js';
 import AntBikePower from '../lib/ant/ant_bp.js';
+import HeartRateMonitor from '../lib/ant/antDeviceProfile.js';
 import PowerAverager from '../lib/ant/powerAverager.js';
 import AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Header from '../views/header.jsx';
@@ -32,6 +33,8 @@ export default class Main extends React.Component {
     antlib.init();
     let bp = new AntBikePower();
     let bpAverager = new PowerAverager(bp);
+    let hrm = new HeartRateMonitor();
+    hrm.openChannel();
     let ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
