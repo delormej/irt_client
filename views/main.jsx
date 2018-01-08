@@ -34,7 +34,7 @@ export default class Main extends React.Component {
     let bp = new AntBikePower();
     let bpAverager = new PowerAverager(bp);
     let hrm = new HeartRateMonitor();
-    //hrm.openChannel();
+    hrm.openChannel();
     let ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
