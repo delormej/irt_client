@@ -1,8 +1,8 @@
-# electron-es6-react
+# irt_client
 
-A simple boilerplate app to demonstrate how to use [ES6] and [React] with
-[Electron]. It uses [Babel] to automatically transpile ES6 and JSX code,
-without depending on any package manager besides `npm`.
+Uses [ES6] and [React] with [Electron]. It uses [Babel] to automatically transpile ES6 and JSX code,
+without depending on any package manager besides `npm`.  Some work started in [TypeScript], goal is to 
+convert all JS to TypeScript.
 
 ## How?
 
@@ -15,21 +15,26 @@ The renderer entry point `index.html` does basically the same, but loads the
 
 ## Installation
 
-```bash
-git clone https://github.com/b52/electron-es6-react.git
-cd electron-es6-react
-npm install
-npm start
-```
+1. git clone repo
+2. install node globally
+3. install windows-build-tools (not sure how this works on mac yet)
+    npm install --global --add-python-to-path --production windows-build-tools
+4. install install type script globally
+    npm install -g typescript
+5. npm install
+6. npm start
+
+## Top Level Library Dependencies
 
 [ES6]: http://exploringjs.com/
 [React]: https://facebook.github.io/react/
 [Electron]: http://electron.atom.io/
 [Babel]: http://babeljs.io
+[TypeScript]: http://www.typescriptlang.org
 
 ## Note
 ```bash
-You cannot use the bash shell on Windows for npm install.  I do not know why.
+You cannot use the bash shell on Windows for npm install, likely because it compiles native libraries.
 
 ## Using Native Libraries
 #ffi is used to talk to the native ANT libraries.
@@ -39,13 +44,7 @@ You cannot use the bash shell on Windows for npm install.  I do not know why.
         This will then run the postinstall script which rebuilds native libraries: 
             .\node_modules\.bin\electron-rebuild.cmd
 
-## Progressions
-
-1. Add ffi and native ant libraries
-//2. Use typescript (which requires webpack)
+# Add "build pipline" using webpack?
     tried using this, but got an err:
         Not allowed to load local resource
         http://blog.scottlogic.com/2017/06/06/typescript-electron-webpack.html
-3. Port html/css from irt_client2 over as-is
-4. Covert html/css to react
-5. Import all ant services

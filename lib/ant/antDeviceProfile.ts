@@ -70,7 +70,10 @@ const antlib = require('./antlib.js');
         
         private internalCreateChannelConfig() : void {
             this.config = this.createChannelConfig();
-            this.config.channelCallback = this.onChannelEvent;
+            /* NOTE the syntax for assigning channelCallback which is required to handle 'this':
+                https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript */
+            this.config.channelCallback = (channelId, eventId, timestamp) => 
+                { this.onChannelEvent(channelId, eventId, timestamp) };
             this.config.buffer = this.responseBuffer;
         }
     }
