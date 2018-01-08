@@ -35,14 +35,13 @@ namespace Ant {
             super();
             this.receiveBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
             this.sendBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
-            this.createChannelConfig();
+            this.internalCreateChannelConfig();
         }
 
         openChannel(deviceId?: number) : number {
             antlib.init();
-            if (!deviceId) 
+            if (deviceId) 
                 this.config.deviceId = deviceId;
-            
             this.channelId = antlib.openChannel(this.config);     
             return this.channelId;
         }
@@ -52,6 +51,32 @@ namespace Ant {
         }
 
         protected abstract createChannelConfig() : ChannelConfig;
+        protected abstract onMessage(messageId: number, timestamp: number);
+
+        private onChannelEvent(channelId: number, eventId: number, timestamp: number) {
+            switch(eventId) {
+                case antlib.EVENT_RX_BROADCAST:
+                case antlib.EVENT_RX_FLAG_BROADCAST:
+                    let messagedId = this.receiveBuffer[1];
+                    this.onMessage(messagedId, timestamp);
+                    break;
+                case antlib.MESG_CHANNEL_STATUS_ID:
+                    console.log('Channel status changed:', this.config);
+                    this.emit('channel_status', FEC_CHANNEL_CONFIG.status,
+                        FEC_CHANNEL_CONFIG.deviceId, timestamp);
+                    
+                    break;
+                default: // eventId
+                    console.log('Unrecognized event.', eventId);
+                    break;                                    
+
+            }
+                    
+        }
         
+        private internalCreateChannelConfig() : void {
+            this.config = this.createChannelConfig();
+            this.config.channelCallback = this.onChannelEvent;   
+        }
     }
 }
