@@ -11,6 +11,7 @@ import TargetPower from '../views/targetPower.jsx';
 import Cadence from '../views/cadence.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
 import PowerMeterConnected from '../views/powerMeterConnected.jsx';
+import ResistanceLevel from '../views/resistanceLevel.jsx';
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -41,6 +42,7 @@ export default class Ride extends React.Component {
               <Cadence bp={this.bp} />
               <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
                 seconds={this.state.averageSeconds} />
+              <ResistanceLevel fec={this.fec} />
             </div>
           );      
     }
