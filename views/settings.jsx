@@ -24,6 +24,7 @@ export default class Settings extends React.Component {
         super(props);
         this.fec = props.ant.fec;
         this.bp = props.ant.bp;
+        this.hrm = props.ant.hrm;
         this.bgScanner = props.ant.bgScanner;
         this.state = {
             firstLoad: true
@@ -82,7 +83,11 @@ export default class Settings extends React.Component {
                 throw new Error("Trainer (FE-C) channel already assigned.");            
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
-            // not implemented yet.
+            // let channelStatus = this.hrm.getChannelStatus();
+            // if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
+                this.hrm.openChannel(deviceId);
+            // else 
+            //     throw new Error("Trainer (FE-C) channel already assigned.");            
         }
     }
 

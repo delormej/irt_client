@@ -120,7 +120,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                             onChange={this.handlePairToPowerMeterChange} />
                         Do not pair with power meter
                     </label>
-                    <div class="label">...</div>
+                    <div className="label">...</div>
                     <div className="label">Power Meter Average Seconds</div>
                     <input type="textbox" name="powerMeterAverageSeconds" 
                         value={this.state.powerMeterAverageSeconds}

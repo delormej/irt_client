@@ -12,6 +12,11 @@ import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
 import ElectronSettings from 'electron-settings';
 
+const ANT_BG_CHANNEL_ID = 0;
+const ANT_FEC_CHANNEL_ID = 1;
+const ANT_BP_CHANNEL_ID = 2;
+const ANT_HRM_CHANNEL_ID = 3;
+
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -32,14 +37,16 @@ export default class Main extends React.Component {
   initAnt() {
     antlib.init();
     let bp = new AntBikePower();
+    let fec = new AntFec();
     let bpAverager = new PowerAverager(bp);
     let hrm = new HeartRateMonitor();
-    hrm.openChannel();
+    hrm.openChannel(ANT_HRM_CHANNEL_ID);
     let ant = {
       bgScanner: new AntBackgroundScanner(),
-      fec: new AntFec(),
+      fec: fec,
       bp: bp,
-      bpAverager: bpAverager
+      bpAverager: bpAverager,
+      hrm: hrm
     }
     return ant;
   }

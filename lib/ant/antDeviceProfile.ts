@@ -9,7 +9,7 @@ const antlib = require('./antlib.js');
     }
     
     interface ChannelEventFunc {
-        (channelId: number, eventId: number, timestamp: number)
+        (channelId: number, eventId: number, timestamp?: number)
     }
     
     interface ChannelConfig {
@@ -35,11 +35,11 @@ const antlib = require('./antlib.js');
             this.internalCreateChannelConfig();
         }
 
-        openChannel(deviceId?: number) : number {
+        openChannel(channelId: number, deviceId?: number) : number {
             antlib.init();
             if (deviceId) 
                 this.config.deviceId = deviceId;
-            this.channelId = antlib.openChannel(this.config);     
+            antlib.openChannel2(channelId, this.config);
             return this.channelId;
         }
 
@@ -58,7 +58,8 @@ const antlib = require('./antlib.js');
                     this.onMessage(messagedId, timestamp);
                     break;
                 case antlib.MESG_CHANNEL_STATUS_ID:
-                    // this.config.status = this.responseBuffer[1] & 0x3;
+                    console.log("channel_status: ", channelId, this.config.status);
+                    this.config.status = this.responseBuffer[1] & 0x3;
                     this.emit('channel_status', this.config.status, this.config.deviceId, 
                         timestamp);
                     break;
