@@ -124,6 +124,11 @@ export default class Settings extends React.Component {
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
+            else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
+                return (
+                    <div>hrm</div>
+                );
+            }
         }
         else if(channelStatus == antlib.STATUS_SEARCHING_CHANNEL) {
             return (
@@ -150,7 +155,7 @@ export default class Settings extends React.Component {
     }
 
     renderHeartRate() {
-        let channelStatus = antlib.STATUS_UNASSIGNED_CHANNEL; /*this..getChannelStatus();*/
+        let channelStatus = this.hrm.getChannelStatus();
         return this.renderForChannelStatus(antlib.HEART_RATE_DEVICE_TYPE, channelStatus);        
     }
 

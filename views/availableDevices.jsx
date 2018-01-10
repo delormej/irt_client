@@ -83,7 +83,7 @@ export default class AvailableDevices extends React.Component {
                     <div>
                         {listItems}
                     </div>
-                ) : (<div>Searching...</div>)}
+                ) : (<div>Searching for devices...</div>)}
             </div>
         );      
     }
