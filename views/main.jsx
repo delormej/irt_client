@@ -4,7 +4,7 @@ import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AntFec from '../lib/ant/ant_fec.js';
 import AntBikePower from '../lib/ant/ant_bp.js';
-import HeartRateMonitor from '../lib/ant/antDeviceProfile.js';
+import { HeartRateMonitor } from '../lib/ant/antDeviceProfile.js';
 import PowerAverager from '../lib/ant/powerAverager.js';
 import AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Header from '../views/header.jsx';

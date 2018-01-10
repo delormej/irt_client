@@ -146,7 +146,7 @@ const antlib = require('./antlib.js');
         }
     }
 
-    export default class HeartRateMonitor extends DeviceProfile {
+    export class HeartRateMonitor extends DeviceProfile {
         constructor() {
             super();
         }
