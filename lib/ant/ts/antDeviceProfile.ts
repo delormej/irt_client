@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-const antlib = require('./antlib.js');
+const antlib = require('../antlib.js');
 
 export enum ChannelStatus {
     STATUS_UNASSIGNED_CHANNEL = 0x00,
