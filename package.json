@@ -6,7 +6,8 @@
   "repository": "irt_client",
   "scripts": {
     "start": "electron -r babel-register .",
-    "postinstall": "./node_modules/.bin/electron-rebuild"
+    "postinstall": "./node_modules/.bin/electron-rebuild",
+    "build": "tsc --project ./lib/ant/ts/tsconfig.json"
   },
   "dependencies": {
     "asar": "^0.14.0",
