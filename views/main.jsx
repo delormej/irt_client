@@ -12,11 +12,6 @@ import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
 import ElectronSettings from 'electron-settings';
 
-const ANT_BG_CHANNEL_ID = 0;
-const ANT_FEC_CHANNEL_ID = 1;
-const ANT_BP_CHANNEL_ID = 2;
-const ANT_HRM_CHANNEL_ID = 3;
-
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +27,7 @@ export default class Main extends React.Component {
     }    
     this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
     this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
+    this.onHrmChannelStatus = this.onHrmChannelStatus.bind(this);
   }
 
   initAnt() {
@@ -40,7 +36,6 @@ export default class Main extends React.Component {
     let fec = new AntFec();
     let bpAverager = new PowerAverager(bp);
     let hrm = new HeartRateMonitor();
-    hrm.openChannel(ANT_HRM_CHANNEL_ID);
     let ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: fec,
@@ -63,11 +58,13 @@ export default class Main extends React.Component {
   componentDidMount() {
     this.state.ant.fec.on('channel_status', this.onFecChannelStatus);
     this.state.ant.bp.on('channel_status', this.onBpChannelStatus);
+    this.state.ant.hrm.on('channel_status', this.onHrmChannelStatus);
   }
 
   componentWillUnmount() {
     this.state.ant.fec.removeListener('channel_status', this.onFecChannelStatus);
     this.state.ant.bp.removeListener('channel_status', this.onBpChannelStatus);
+    this.state.ant.hrm.removeListener('channel_status', this.onHrmChannelStatus);
   }
 
   getDeviceKey(deviceType) {
@@ -95,6 +92,10 @@ export default class Main extends React.Component {
 
   onFecChannelStatus(status, deviceId) {
     this.onChannelStatus(antlib.FEC_DEVICE_TYPE, status, deviceId);
+  }
+
+  onHrmChannelStatus(status, deviceId) {
+    this.onChannelStatus(antlib.HEART_RATE_DEVICE_TYPE, status, deviceId);
   }
 
   onChannelStatus(deviceType, status, deviceId) {

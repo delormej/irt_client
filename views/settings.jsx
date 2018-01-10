@@ -8,6 +8,11 @@ import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
 
+const ANT_BG_CHANNEL_ID = 0;
+const ANT_FEC_CHANNEL_ID = 1;
+const ANT_BP_CHANNEL_ID = 2;
+const ANT_HRM_CHANNEL_ID = 3;
+
 function CancelSearch(props) {
     let className = "cancel " +
         deviceType.getDeviceClassName(props.deviceType);
@@ -56,12 +61,12 @@ export default class Settings extends React.Component {
             if (bpDeviceId) 
                 this.onConnectDevice(antlib.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
         }        
-        /*if (ElectronSettings.has('hrmDeviceId') &&
+        if (ElectronSettings.has('hrmDeviceId') &&
                 this.props.hrmDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
             let hrmDeviceId = ElectronSettings.get('hrmDeviceId');
             if (hrmDeviceId) 
                 this.onConnectDevice(antlib.HEART_RATE_DEVICE_TYPE, hrmDeviceId);
-        }*/               
+        }
     }
 
     onConnectDevice(deviceType, deviceId) {
@@ -83,11 +88,11 @@ export default class Settings extends React.Component {
                 throw new Error("Trainer (FE-C) channel already assigned.");            
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
-            // let channelStatus = this.hrm.getChannelStatus();
-            // if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
-                this.hrm.openChannel(deviceId);
-            // else 
-            //     throw new Error("Trainer (FE-C) channel already assigned.");            
+            let channelStatus = this.hrm.getChannelStatus();
+            if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
+                this.hrm.openChannel(ANT_HRM_CHANNEL_ID, deviceId);
+            else 
+                throw new Error("Heart Rate Monitor channel already assigned.");            
         }
     }
 
@@ -99,8 +104,7 @@ export default class Settings extends React.Component {
             this.fec.closeChannel();
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
-            // not implemented yet.
-            // this.hrm.closeChannel();
+            this.hrm.closeChannel();
         }
     }
 

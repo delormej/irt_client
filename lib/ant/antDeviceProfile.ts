@@ -18,7 +18,7 @@ const antlib = require('./antlib.js');
     }
 
     interface ChannelDevice {
-        deviceId: number; 
+        deviceId: number;
         deviceType: number;
         transmissionType: number;
     }
@@ -56,11 +56,12 @@ const antlib = require('./antlib.js');
             if (deviceId) 
                 this._channelConfig.deviceId = deviceId;
             this._channelId = channelId;
+            this._channelStatus = ChannelStatus.STATUS_ASSIGNED_CHANNEL;
             antlib.openChannel(channelId, this._channelConfig);
         }
 
         public closeChannel() {
-            throw new Error("Not implemented!");
+            antlib.closeChannel(this._channelId);
         }
 
         public getChannelDevice(): ChannelDevice {
@@ -72,35 +73,39 @@ const antlib = require('./antlib.js');
             return device;
         }
 
+        public getChannelStatus(): ChannelStatus {
+            return this._channelStatus;
+        }
+
         protected abstract updateChannelConfig(config: ChannelConfig);
         protected abstract onMessage(messageId: number, timestamp: number);
 
         private onChannelStatus(channelId: number, status: ChannelStatus) {
             if (this._channelStatus != status) {
-                this._channelStatus = status;
-                this.raiseChannelStatus();
+                this.updateChannelStatus(status);
             }
         }
         
         private onChannelId(channelId: number, channelDevice: ChannelDevice) {
-            if (this._channelConfig.deviceId != channelDevice.deviceId) {
-                this._channelConfig.deviceId = channelDevice.deviceId;
-                this._channelConfig.deviceType = channelDevice.deviceType;
-                this._channelConfig.transmissionType = channelDevice.transmissionType;
-                this.raiseChannelStatus();
-            }
+            this._channelConfig.deviceId = channelDevice.deviceId;
+            this._channelConfig.deviceType = channelDevice.deviceType;
+            this._channelConfig.transmissionType = channelDevice.transmissionType;
+            this.updateChannelStatus(ChannelStatus.STATUS_TRACKING_CHANNEL);
         }
 
         private onChannelEvent(channelId: number, eventId: number, timestamp?: number) {
             switch(eventId) {
                 case antlib.EVENT_RX_BROADCAST:
                 case antlib.EVENT_RX_FLAG_BROADCAST:
+                    this.ensureDeviceTracking();
                     this.onMessage(this.getMessageId(), timestamp);
                     break;
                 case antlib.EVENT_RX_FAIL_GO_TO_SEARCH:
                 case antlib.EVENT_RX_SEARCH_TIMEOUT:
+                    this.updateChannelStatus(ChannelStatus.STATUS_SEARCHING_CHANNEL);
+                    break;
                 case antlib.EVENT_CHANNEL_CLOSED:
-                    // Do we want to do something here?
+                    this.updateChannelStatus(ChannelStatus.STATUS_ASSIGNED_CHANNEL);
                     break;
                 default: // eventId
                     console.log('Unrecognized event.', eventId);
@@ -108,11 +113,18 @@ const antlib = require('./antlib.js');
             }
         }
         
+        private ensureDeviceTracking() {
+            if (this._channelStatus != ChannelStatus.STATUS_TRACKING_CHANNEL) 
+                antlib.requestChannelId(this._channelId);
+        }
+
         private getMessageId(): number {
             return this._channelConfig.buffer[1]; 
         }
 
-        private raiseChannelStatus() {
+        private updateChannelStatus(status: ChannelStatus) {
+            console.log('channel_status updated: ', status);
+            this._channelStatus = status;
             this.emit('channel_status', this._channelStatus, this._channelConfig.deviceId);            
         }
 
