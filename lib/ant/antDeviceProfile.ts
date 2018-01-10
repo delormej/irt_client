@@ -13,10 +13,6 @@ const antlib = require('./antlib.js');
         (channelId: number, eventId: number, timestamp?: number)
     }
 
-    interface ChannelStatusFunc {
-        (channelId: number, status: ChannelStatus)
-    }
-
     interface ChannelDevice {
         deviceId: number;
         deviceType: number;
@@ -35,7 +31,6 @@ const antlib = require('./antlib.js');
         frequency: number;
         channelPeriod: number;
         channelCallback: ChannelEventFunc;
-        channelStatusCallback: ChannelStatusFunc;
         channelIdCallback: ChannelIdFunc;
         buffer: Buffer;
     }    
@@ -137,7 +132,6 @@ const antlib = require('./antlib.js');
                 frequency: 0,
                 channelPeriod: 0,
                 channelCallback: null,
-                channelStatusCallback: null,
                 channelIdCallback: null,
                 buffer: null
             }
@@ -147,8 +141,6 @@ const antlib = require('./antlib.js');
                 https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript */
             this._channelConfig.channelCallback = (channelId, eventId, timestamp) => 
                 { this.onChannelEvent(channelId, eventId, timestamp) };
-            this._channelConfig.channelStatusCallback = (channelId, status) => 
-                { this.onChannelStatus(channelId, status) };
             this._channelConfig.channelIdCallback = (channelId, channelDevice) =>
                 { this.onChannelId(channelId, channelDevice) };
         }
