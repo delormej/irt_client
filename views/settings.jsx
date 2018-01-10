@@ -24,6 +24,18 @@ function CancelSearch(props) {
     );
 }
 
+function HrmConnected(props) {
+    return (
+        <div className="heartRate">
+            <div className="deviceTitle">Heart Rate Monitor</div>
+            <button onClick={() => props.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)}>Disconnect</button>
+            <div>
+                Device ID: {props.deviceId}<br/>
+            </div>                        
+        </div>
+    );
+}
+
 export default class Settings extends React.Component {
     constructor(props) {
         super(props);
@@ -126,7 +138,8 @@ export default class Settings extends React.Component {
             }
             else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
                 return (
-                    <div>hrm</div>
+                    <HrmConnected deviceId={this.props.fecDevice.deviceId}
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
         }

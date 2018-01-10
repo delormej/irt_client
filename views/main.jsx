@@ -18,7 +18,6 @@ export default class Main extends React.Component {
     let ant = this.initAnt();
     let page = this.getCurrentPage(ant.fec);
     this.state = {
-      foo: '',
       status: { "type": "info", "message": "" },
       currentPage: page,
       ant: ant,
@@ -104,8 +103,7 @@ export default class Main extends React.Component {
     if (deviceKey == null)
       return;
     this.setState( {
-      [deviceKey]: { "deviceId": deviceId, "status": status },
-      foo: 'bar'
+      [deviceKey]: { "deviceId": deviceId, "status": status }
     });
     if (status == antlib.STATUS_TRACKING_CHANNEL) {
       ElectronSettings.set(deviceKey+'Id', deviceId);
