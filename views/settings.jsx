@@ -138,7 +138,7 @@ export default class Settings extends React.Component {
             }
             else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
                 return (
-                    <HrmConnected deviceId={this.props.fecDevice.deviceId}
+                    <HrmConnected deviceId={this.props.hrmDevice.deviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }

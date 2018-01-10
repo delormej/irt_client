@@ -74,7 +74,7 @@ const antlib = require('./antlib.js');
         }
 
         public getChannelStatus(): ChannelStatus {
-            return this._channelStatus;
+            return this._channelStatus.valueOf();
         }
 
         protected abstract updateChannelConfig(config: ChannelConfig);
