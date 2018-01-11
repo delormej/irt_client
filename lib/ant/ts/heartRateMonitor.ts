@@ -17,7 +17,6 @@ export default class HeartRateMonitor extends Ant.DeviceProfile {
     protected onMessage(messageId: number, timestamp: number) {
         let pageChange: boolean = (messageId & 0x80) == 1;
         let pageNumber: number =  (messageId & 0x7F);
-        console.log("hrm message: ", messageId);
         this.interpretGeneralHrmData(this._eventBuffer);
         this.emit('heartRate', this._lastHrm, timestamp);
     }
@@ -28,7 +27,6 @@ export default class HeartRateMonitor extends Ant.DeviceProfile {
         let computedHeartRate: number = buffer[8];
         if (computedHeartRate != 0) {
             this._lastHrm = computedHeartRate;
-            console.log('this HRM: ', computedHeartRate);
         }
         return this._lastHrm;
     }

@@ -7,6 +7,7 @@ import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
+import HrmConnected from '../views/hrmConnected.jsx';
 
 const ANT_BG_CHANNEL_ID = 0;
 const ANT_FEC_CHANNEL_ID = 1;
@@ -20,18 +21,6 @@ function CancelSearch(props) {
         <div className={className}>
             <div>Attempting to connect...</div>
             <button onClick={() => props.onDisconnectDevice(props.deviceType)}>Cancel</button>
-        </div>
-    );
-}
-
-function HrmConnected(props) {
-    return (
-        <div className="heartRate">
-            <div className="deviceTitle">Heart Rate Monitor</div>
-            <button onClick={() => props.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)}>Disconnect</button>
-            <div>
-                Device ID: {props.deviceId}<br/>
-            </div>                        
         </div>
     );
 }
@@ -139,6 +128,7 @@ export default class Settings extends React.Component {
             else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
                 return (
                     <HrmConnected deviceId={this.props.hrmDevice.deviceId}
+                        hrm={this.hrm}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
             }
