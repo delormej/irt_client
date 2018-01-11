@@ -38,11 +38,13 @@ export interface ChannelConfig {
 export abstract class DeviceProfile extends EventEmitter {
     private _channelConfig: ChannelConfig;
     protected _channelId: number;
-    protected _channelStatus: ChannelStatus;          
+    protected _channelStatus: ChannelStatus;
+    protected _eventBuffer: Buffer;
     
     constructor() {
         super();
         this._channelStatus = ChannelStatus.STATUS_UNASSIGNED_CHANNEL;
+        this._eventBuffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
         this.internalCreateChannelConfig();
     }
 
@@ -136,7 +138,7 @@ export abstract class DeviceProfile extends EventEmitter {
             buffer: null
         }
         this.updateChannelConfig(this._channelConfig);
-        this._channelConfig.buffer = new Buffer(antlib.MESG_MAX_SIZE_VALUE);
+        this._channelConfig.buffer = this._eventBuffer;
         /* NOTE the syntax for assigning channelCallback which is required to handle 'this':
             https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript */
         this._channelConfig.channelCallback = (channelId, eventId, timestamp) => 
