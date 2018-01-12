@@ -46,16 +46,21 @@
 
 .trainerPower {
     grid-row: 1;
-    grid-column: 6;
+    grid-column: 7;
+    margin-top: 105px;
+    text-align: right;
+    color: grey;
 }
 
 .trainerPower .dataLabel {
+    display: inline;
     font-size: 18px;
-    margin-bottom: -10px;    
+    margin-right: 10px;
 }
 
 .trainerPower .dataValue {
     font-size: 50px;
+    display: inline;
 }
 
 .targetPower {
