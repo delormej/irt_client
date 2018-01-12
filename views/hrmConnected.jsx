@@ -1,29 +1,11 @@
 'use babel';
 
 import React from 'react';
+import HeartRate from '../views/heartRate';
 
-export default class HrmConnected extends React.Component {
+export default class HrmConnected extends HeartRate {
     constructor(props) {
         super(props);
-        this.hrm = props.hrm;
-        this.onHeartRate = this.onHeartRate.bind(this);
-        this.state = { 
-            heartRateBpm: 0
-        };
-    }
-
-    onHeartRate(value, timestamp) {
-        this.setState( {
-            heartRateBpm: value
-        });
-    }
-
-    componentDidMount() {
-        this.hrm.on('heartRate', this.onHeartRate);
-    }
-
-    componentWillUnmount() {
-        this.hrm.removeListener('heartRate', this.onHeartRate);
     }
 
     render() {

@@ -40,13 +40,22 @@
 }
 
 .bikePowerAverage {
-    grid-row: 1;
-    grid-column: 8;    
+    grid-row: 2;
+    grid-column: 7;    
 }
 
 .trainerPower {
-    grid-row: 2;
-    grid-column: 7;
+    grid-row: 1;
+    grid-column: 6;
+}
+
+.trainerPower .dataLabel {
+    font-size: 18px;
+    margin-bottom: -10px;    
+}
+
+.trainerPower .dataValue {
+    font-size: 50px;
 }
 
 .targetPower {

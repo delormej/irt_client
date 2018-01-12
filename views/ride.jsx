@@ -12,12 +12,14 @@ import Cadence from '../views/cadence.jsx';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
 import PowerMeterConnected from '../views/powerMeterConnected.jsx';
 import ResistanceLevel from '../views/resistanceLevel.jsx';
+import HeartRate from '../views/heartRate.jsx';
 
 export default class Ride extends React.Component {
     constructor(props) {
       super(props);
       this.fec = this.props.ant.fec;
       this.bp = this.props.ant.bp;
+      this.hrm = this.props.ant.hrm;
       this.bpAverager = this.props.ant.bpAverager;
       this.bgScanner = this.props.ant.bgScanner;
       this.state = {
@@ -34,6 +36,7 @@ export default class Ride extends React.Component {
         return (
             <div className="ride">
               <SpeedMph fec={this.fec} />
+              <HeartRate hrm={this.hrm} />
               <DistanceTravelled fec={this.fec} />
               <ElapsedTime fec={this.fec} />
               <TrainerPower fec={this.fec} />
@@ -44,7 +47,7 @@ export default class Ride extends React.Component {
                 seconds={this.state.averageSeconds} />
               <ResistanceLevel fec={this.fec} />
             </div>
-          );      
+        );      
     }
 }  
   

@@ -12,8 +12,9 @@ export default class PowerAverage extends PowerMeter {
     }
 
     render() {
+        let label = this.averageSeconds + "s AVERAGE";
         return (
-            <RideDataComponent class="bikePowerAverage" label="AVERAGE"
+            <RideDataComponent class="bikePowerAverage" label={label}
                 value={this.bpAverager.getAverage(this.averageSeconds)} />
         );
     }

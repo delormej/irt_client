@@ -11,7 +11,7 @@ export default class TrainerPower extends SpecificTrainerData {
 
     render() {
         return (
-            <RideDataComponent class="trainerPower" label="WATTS"
+            <RideDataComponent class="trainerPower" label="TRAINER WATTS"
                     value={this.state.instantPower} />
           );
     }
