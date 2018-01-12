@@ -2,6 +2,7 @@
 
 import React from 'react';
 import HeartRate from '../views/heartRate';
+import antlib from '../lib/ant/antlib.js';
 
 export default class HrmConnected extends HeartRate {
     constructor(props) {
