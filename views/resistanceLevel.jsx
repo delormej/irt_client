@@ -10,7 +10,7 @@ export default class ResistanceLevel extends GeneralSettings {
 
     getResistanceLevelStyle(resistanceLevel) {
         let style = {
-            background: `linear-gradient(to right, green , yellow, red)`,
+            background: `linear-gradient(to right, rgb(0,255,0) , rgb(255,255,0), rgb(255,0,0))`,
             width: `${resistanceLevel}%`  
         }      
         return style;
@@ -20,7 +20,7 @@ export default class ResistanceLevel extends GeneralSettings {
         return (
             <div className="resistanceLevelBox">
                 <div className="dataLabel">RESISTANCE LEVEL</div>
-                <div className="dataValue">{this.state.resistanceLevel}</div>
+                <div className="dataValue">{this.state.resistanceLevel + '%'}</div>
                 <div className="resistanceLevel" style={this.getResistanceLevelStyle(this.state.resistanceLevel)}></div>
             </div>
         );
