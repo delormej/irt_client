@@ -51,6 +51,12 @@
     margin-right: 5px;
     text-align: right;
     color: grey;
+/*
+#grad {
+  background: linear-gradient(to right, green , yellow, red);
+}
+*/
+
 }
 
 .trainerPower .dataLabel {

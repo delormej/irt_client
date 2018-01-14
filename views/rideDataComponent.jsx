@@ -11,7 +11,7 @@ export default class RideDataComponent extends React.Component {
         return (
             <div className={this.props.class}>
               <div className="dataLabel">{this.props.label}</div>
-              <div className="dataValue">{this.props.value}</div>
+              <div className="dataValue" style={this.props.style}>{this.props.value}</div>
             </div>
         );      
     }
