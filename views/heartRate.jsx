@@ -32,11 +32,14 @@ export default class HeartRate extends React.Component {
         let percentOfMax = heartRate / this.state.maxHeartRateBpm;
         let r = 0, g = 0, b = 0;
         if (percentOfMax < 0.50) {
-            r = Math.floor((percentOfMax * 2) * 255);
+            r = 0;
             g = 255;
-        } else if (percentOfMax >= 0.50) {
+        } else if (percentOfMax >= .75) {
             r = 255;
-            g =255 - Math.floor((((percentOfMax*2)*255))-255);
+            g = Math.floor(255 * (1-(percentOfMax-0.75)/0.25));
+        } else if (percentOfMax >= 0.50) {
+            r = Math.floor(255 * ((percentOfMax-0.5)/0.25));
+            g = 255;
         }
         let rgb = [r, g, b];
         let color = { color: `rgb(${rgb})` };
