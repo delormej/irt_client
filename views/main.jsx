@@ -127,7 +127,9 @@ export default class Main extends React.Component {
             status={this.state.status} />
         { (this.state.currentPage === "ride") ? 
             <Ride ant={this.state.ant} /> :
-            <Settings firstLoad={this.state.firstLoad} ant={this.state.ant} 
+            <Settings firstLoad={this.state.firstLoad} 
+              fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
+              ant={this.state.ant} 
               bpDevice={this.state.bpDevice}
               fecDevice={this.state.fecDevice}
               hrmDevice={this.state.hrmDevice} />

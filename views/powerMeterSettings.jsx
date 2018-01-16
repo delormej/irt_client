@@ -105,48 +105,54 @@ export default class PowerMeterSettings extends DeviceSettings {
                         value={this.state.ftp}
                         onChange={this.handleInputChange} />                                
                 </div>
-                <div className="advancedPowerMeterSettings">
-                    <div className="description">Pair to rollers to adjust resistance based on power meter.</div>
-                    <label>
-                        <input type="radio" name="pairToPowerMeter" 
-                            checked={this.state.pairToPowerMeter === true}
-                            value={true}
-                            onChange={this.handlePairToPowerMeterChange} />
-                        Power Meter Id
-                    </label>
-                    <input type="textbox" name="powerMeterId" 
-                        value={this.state.powerMeterId}
-                        onChange={this.handleInputChange} />
-                    <label>
-                        <input type="radio" name="pairToPowerMeter" 
-                            checked={this.state.pairToPowerMeter === false}
-                            value={false}
-                            onChange={this.handlePairToPowerMeterChange} />
-                        Do not pair with power meter
-                    </label>
-                    <div className="label">...</div>
-                    <div className="label">Power Meter Average Seconds</div>
-                    <input type="textbox" name="powerMeterAverageSeconds" 
-                        value={this.state.powerMeterAverageSeconds}
-                        onChange={this.handleInputChange} />
-                    <div className="label">Resistance Adjust Seconds</div>
-                    <input type="textbox" name="resistanceAdjustSeconds" 
-                        value={this.state.resistanceAdjustSeconds}
-                        onChange={this.handleInputChange} />
-                    <div className="label">Minimum Adjust Speed (mph)</div>
-                    <input type="textbox" name="minAdjustSpeedMph" 
-                        value={this.state.minAdjustSpeedMph}
-                        onChange={this.handleInputChange} />
-                    <div className="label">Servo Smoothing Steps</div>
-                    <input type="textbox" name="servoSmoothingSteps" 
-                        value={this.state.servoSmoothingSteps}
-                        onChange={this.handleInputChange} />
-                    <div className="label">Save to Flash</div>       
-                    <input name="saveToFlashEnabled" type="checkbox" 
-                        checked={this.state.saveToFlashEnabled} 
-                        onChange={this.handleInputChange}/>
-                </div>
-                <button onClick={() => this.onSave()}>Save</button>
+                {this.props.fecConnected ? this.getAdvancedPowerMeterSettings() : null}
+            </div>
+        );
+    }
+
+    getAdvancedPowerMeterSettings() {
+        return (
+            <div className="advancedPowerMeterSettings">
+                <div className="description">Pair to rollers to adjust resistance based on power meter.</div>
+                <label>
+                    <input type="radio" name="pairToPowerMeter" 
+                        checked={this.state.pairToPowerMeter === true}
+                        value={true}
+                        onChange={this.handlePairToPowerMeterChange} />
+                    Power Meter Id
+                </label>
+                <input type="textbox" name="powerMeterId" 
+                    value={this.state.powerMeterId}
+                    onChange={this.handleInputChange} />
+                <label>
+                    <input type="radio" name="pairToPowerMeter" 
+                        checked={this.state.pairToPowerMeter === false}
+                        value={false}
+                        onChange={this.handlePairToPowerMeterChange} />
+                    Do not pair with power meter
+                </label>
+                <div className="label">...</div>
+                <div className="label">Power Meter Average Seconds</div>
+                <input type="textbox" name="powerMeterAverageSeconds" 
+                    value={this.state.powerMeterAverageSeconds}
+                    onChange={this.handleInputChange} />
+                <div className="label">Resistance Adjust Seconds</div>
+                <input type="textbox" name="resistanceAdjustSeconds" 
+                    value={this.state.resistanceAdjustSeconds}
+                    onChange={this.handleInputChange} />
+                <div className="label">Minimum Adjust Speed (mph)</div>
+                <input type="textbox" name="minAdjustSpeedMph" 
+                    value={this.state.minAdjustSpeedMph}
+                    onChange={this.handleInputChange} />
+                <div className="label">Servo Smoothing Steps</div>
+                <input type="textbox" name="servoSmoothingSteps" 
+                    value={this.state.servoSmoothingSteps}
+                    onChange={this.handleInputChange} />
+                <div className="label">Save to Flash</div>       
+                <input name="saveToFlashEnabled" type="checkbox" 
+                    checked={this.state.saveToFlashEnabled} 
+                    onChange={this.handleInputChange}/>
+                <button onClick={() => this.onSave()}>Save</button>    
             </div>
         );
     }

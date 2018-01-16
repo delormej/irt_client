@@ -111,6 +111,7 @@ export default class Settings extends React.Component {
             if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
                 return (
                     <PowerMeterSettings fec={this.fec} 
+                        fecConnected={this.props.fecConnected}
                         deviceId={this.props.bpDevice.deviceId}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );
