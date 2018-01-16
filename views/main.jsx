@@ -18,6 +18,7 @@ export default class Main extends React.Component {
     let ant = this.initAnt();
     let page = this.getCurrentPage(ant.fec);
     this.state = {
+      firstLoad: true,
       status: { "type": "info", "message": "" },
       currentPage: page,
       ant: ant,
@@ -119,19 +120,21 @@ export default class Main extends React.Component {
   }
 
   render() {
-    return (
+    let children = (
       <div>
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
             status={this.state.status} />
         { (this.state.currentPage === "ride") ? 
             <Ride ant={this.state.ant} /> :
-            <Settings ant={this.state.ant} 
+            <Settings firstLoad={this.state.firstLoad} ant={this.state.ant} 
               bpDevice={this.state.bpDevice}
               fecDevice={this.state.fecDevice}
               hrmDevice={this.state.hrmDevice} />
         }
       </div>
     );  
+    this.state.firstLoad = false;
+    return children;
   }
 }

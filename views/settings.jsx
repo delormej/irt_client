@@ -32,17 +32,14 @@ export default class Settings extends React.Component {
         this.bp = props.ant.bp;
         this.hrm = props.ant.hrm;
         this.bgScanner = props.ant.bgScanner;
-        this.state = {
-            firstLoad: true
-        }
     }
 
     componentDidMount() {
         this.bgScanner.openChannel();
-        // if (this.state.firstLoad) {
-        //     this.tryLastConnections();
-        //     this.state.firstLoad = false;
-        // }
+        if (this.props.firstLoad == true) {
+            this.tryLastConnections();
+            console.log("DidMount, trying connections.");
+        }
     }
 
     componentWillUnmount() {
