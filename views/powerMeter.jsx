@@ -11,8 +11,7 @@ export default class PowerMeter extends React.Component {
       this.onBikePower = this.onBikePower.bind(this);
       this.state = {
           instantPower: 0,
-          instantCadence: 0,
-          ftp: 280
+          instantCadence: 0
       };
     }
 
@@ -36,7 +35,7 @@ export default class PowerMeter extends React.Component {
     render() {
         return (
             <RideDataComponent class="bikePower" label="WATTS"
-                style={ColorStyle.getColorStyle(this.state.instantPower, this.state.ftp)}
+                style={ColorStyle.getColorStyle(this.state.instantPower, this.props.ftp)}
                 value={this.state.instantPower} />
           );      
     }

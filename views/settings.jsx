@@ -36,35 +36,51 @@ export default class Settings extends React.Component {
 
     componentDidMount() {
         this.bgScanner.openChannel();
-        if (this.props.firstLoad == true) {
+        if (this.props.firstLoad == true) 
             this.tryLastConnections();
-            console.log("DidMount, trying connections.");
-        }
     }
 
     componentWillUnmount() {
         this.bgScanner.closeChannel();
+        this.saveSettings();
     }
 
     tryLastConnections() {
         if (ElectronSettings.has('fecDeviceId') &&
-                this.props.fecDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
+                this.fec.status != antlib.STATUS_TRACKING_CHANNEL) {
             let fecDeviceId = ElectronSettings.get('fecDeviceId')
             if (fecDeviceId) 
                 this.onConnectDevice(antlib.FEC_DEVICE_TYPE, fecDeviceId);
         }
         if (ElectronSettings.has('bpDeviceId') &&
-                this.props.bpDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
+                this.bp.status != antlib.STATUS_TRACKING_CHANNEL) {
             let bpDeviceId = ElectronSettings.get('bpDeviceId');
             if (bpDeviceId) 
                 this.onConnectDevice(antlib.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
         }        
         if (ElectronSettings.has('hrmDeviceId') &&
-                this.props.hrmDevice.status != antlib.STATUS_TRACKING_CHANNEL) {
+                this.hrm.status != antlib.STATUS_TRACKING_CHANNEL) {
             let hrmDeviceId = ElectronSettings.get('hrmDeviceId');
             if (hrmDeviceId) 
                 this.onConnectDevice(antlib.HEART_RATE_DEVICE_TYPE, hrmDeviceId);
         }
+    }
+
+    saveSettings() {
+        if (this.fec.status == antlib.STATUS_TRACKING_CHANNEL) {
+            let deviceId = this.fec.getDeviceId();
+            ElectronSettings.set('fecDeviceId', deviceId);
+        }
+        if (this.bp.status == antlib.STATUS_TRACKING_CHANNEL) {
+            let deviceId = this.bp.getDeviceId();
+            ElectronSettings.set('bpDeviceId', deviceId);
+        }        
+        if (this.hrm.status == antlib.STATUS_TRACKING_CHANNEL) {
+            let deviceId = this.hrm.getDeviceId();
+            ElectronSettings.set('hrmDeviceId', deviceId);
+        }
+        ElectronSettings.set("maxHeartRateBpm", this.props.maxHeartRateBpm);
+        ElectronSettings.set("ftp", this.props.ftp);
     }
 
     onConnectDevice(deviceType, deviceId) {
@@ -113,7 +129,9 @@ export default class Settings extends React.Component {
                     <PowerMeterSettings fec={this.fec} 
                         fecConnected={this.props.fecConnected}
                         deviceId={this.props.bpDevice.deviceId}
-                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
+                        ftp={this.props.ftp}
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
+                        onFtpChange={this.props.onFtpChange} />
                 );
             }
             else if (deviceType == antlib.FEC_DEVICE_TYPE) {
@@ -127,7 +145,9 @@ export default class Settings extends React.Component {
                 return (
                     <HeartRateConnected deviceId={this.props.hrmDevice.deviceId}
                         hrm={this.hrm}
-                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
+                        maxHeartRateBpm={this.props.maxHeartRateBpm}
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
+                        onMaxHeartRateChange={this.props.onMaxHeartRateChange} />
                 );
             }
         }

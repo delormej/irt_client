@@ -54,7 +54,10 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     handleInputChange(event) {
-        super.handleInputChange(event, this);
+        if (event.target.name === "ftp")
+            this.props.onFtpChange(event.target.value);
+        else
+            super.handleInputChange(event, this);
     }
 
     handlePairToPowerMeterChange(event) {
@@ -102,7 +105,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                     <div>Device ID: {this.state.deviceId}</div>
                     <div className="label">Functional Threshold Power</div>
                     <input type="textbox" name="ftp" 
-                        value={this.state.ftp}
+                        value={this.props.ftp}
                         onChange={this.handleInputChange} />                                
                 </div>
                 {this.props.fecConnected ? this.getAdvancedPowerMeterSettings() : null}
@@ -111,6 +114,8 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     getAdvancedPowerMeterSettings() {
+        // TODO: this needs to be refactored into a seperate component so that it's not 
+        // updating content here while this part is not mounted.
         return (
             <div className="advancedPowerMeterSettings">
                 <div className="description">Pair to rollers to adjust resistance based on power meter.</div>

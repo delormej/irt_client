@@ -22,9 +22,6 @@ export default class Ride extends React.Component {
       this.hrm = this.props.ant.hrm;
       this.bpAverager = this.props.ant.bpAverager;
       this.bgScanner = this.props.ant.bgScanner;
-      this.state = {
-        averageSeconds: 10
-      };
     }
 
     /*
@@ -36,15 +33,15 @@ export default class Ride extends React.Component {
         return (
             <div className="ride">
               <SpeedMph fec={this.fec} />
-              <HeartRate hrm={this.hrm} />
+              <HeartRate hrm={this.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
               <DistanceTravelled fec={this.fec} />
               <ElapsedTime fec={this.fec} />
               <TrainerPower fec={this.fec} />
-              <PowerMeter bp={this.bp} />
+              <PowerMeter bp={this.bp} ftp={this.props.ftp} />
               <TargetPower fec={this.fec} />
               <Cadence bp={this.bp} />
               <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
-                seconds={this.state.averageSeconds} />
+                seconds={this.props.averageSeconds} />
               <ResistanceLevel fec={this.fec} />
             </div>
         );      

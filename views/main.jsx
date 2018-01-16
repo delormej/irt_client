@@ -24,11 +24,16 @@ export default class Main extends React.Component {
       ant: ant,
       bpDevice: { deviceId: 0, status: 0 },
       fecDevice: { deviceId: 0, status: 0 },
-      hrmDevice: { deviceId: 0, status: 0 }
+      hrmDevice: { deviceId: 0, status: 0 },
+      averageSeconds: ElectronSettings.get("averageSeconds", 10),
+      ftp: ElectronSettings.get("ftp", undefined),
+      maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined)
     }    
     this.onFecChannelStatus = this.onFecChannelStatus.bind(this);
     this.onBpChannelStatus = this.onBpChannelStatus.bind(this);
     this.onHrmChannelStatus = this.onHrmChannelStatus.bind(this);
+    this.handleFtpChange = this.handleFtpChange.bind(this);
+    this.handleMaxHeartRateChange = this.handleMaxHeartRateChange.bind(this);
   }
 
   initAnt() {
@@ -106,9 +111,18 @@ export default class Main extends React.Component {
     this.setState( {
       [deviceKey]: { "deviceId": deviceId, "status": status }
     });
-    if (status == antlib.STATUS_TRACKING_CHANNEL) {
-      ElectronSettings.set(deviceKey+'Id', deviceId);
-    }    
+  }
+
+  handleFtpChange(ftp) {
+    this.setState( {
+      ftp: ftp
+    });
+  }
+
+  handleMaxHeartRateChange(bpm) {
+    this.setState( {
+      maxHeartRateBpm: bpm
+    });
   }
 
   navigate(page) {
@@ -126,10 +140,18 @@ export default class Main extends React.Component {
             fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
             status={this.state.status} />
         { (this.state.currentPage === "ride") ? 
-            <Ride ant={this.state.ant} /> :
+            <Ride ant={this.state.ant} 
+              averageSeconds={this.state.averageSeconds}
+              ftp={this.state.ftp}
+              maxHeartRateBpm={this.state.maxHeartRateBpm}/> :
             <Settings firstLoad={this.state.firstLoad} 
               fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
+              ftp={this.state.ftp}
+              maxHeartRateBpm={this.state.maxHeartRateBpm}
+              onFtpChange={this.handleFtpChange}
+              onMaxHeartRateChange={this.handleMaxHeartRateChange}
               ant={this.state.ant} 
+              /* TODO: do we need these or can we just glean from ant object?  */
               bpDevice={this.state.bpDevice}
               fecDevice={this.state.fecDevice}
               hrmDevice={this.state.hrmDevice} />
