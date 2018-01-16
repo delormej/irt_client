@@ -7,7 +7,7 @@ import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
-import HrmConnected from '../views/hrmConnected.jsx';
+import HeartRateConnected from '../views/heartRateConnected.jsx';
 
 const ANT_BG_CHANNEL_ID = 0;
 const ANT_FEC_CHANNEL_ID = 1;
@@ -124,7 +124,7 @@ export default class Settings extends React.Component {
             }
             else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
                 return (
-                    <HrmConnected deviceId={this.props.hrmDevice.deviceId}
+                    <HeartRateConnected deviceId={this.props.hrmDevice.deviceId}
                         hrm={this.hrm}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} />
                 );

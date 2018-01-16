@@ -44,7 +44,7 @@
     font-size: 25px;
 }
 
-.heartRateConnected heartRate {
+.heartRateConnected {
 
 }
 
@@ -55,14 +55,14 @@
     grid-template-columns: 150px 45px;
 }
 
-.advancedPowerMeterSettings {
+.advancedPowerMeterSettings, .heartRateSettings {
     display: grid;
     grid-template-columns: 250px 45px;
     margin-top: 25px;
     margin-bottom: 10px;
 }
 
-.advancedPowerMeterSettings input {
+.advancedPowerMeterSettings input, .heartRateSettings input {
     grid-column: 2;
 }
 
@@ -102,5 +102,14 @@
 
 .advancedTrainerSettings .label {
     grid-column: 1;
+}
+
+.heartRateSettings .label {
+    grid-column: 1;
+}
+
+.heartRateBpm {
+    font-weight: bold;
+    grid-column: 2;
 }
 
