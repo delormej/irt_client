@@ -7,14 +7,14 @@ import ColorScale from '../lib/ant/ts/colorScale';
 export default class ResistanceLevel extends GeneralSettings {
     constructor(props) {
       super(props);
-      this.state.resistanceLevel = 80;
+      this.state.resistanceLevel = 0;
     }
 
     render() {
         return (
             <div className="resistanceLevelBox">
                 <div className="dataLabel">RESISTANCE LEVEL</div>
-                <div className="dataValue">{this.state.resistanceLevel + '%'}</div>
+                <div className="dataValue">{this.state.resistanceLevel * 100 + '%'}</div>
                 <div className="resistanceLevel" style={this.getResistanceLevelStyle()}></div>
             </div>
         );
@@ -28,7 +28,8 @@ export default class ResistanceLevel extends GeneralSettings {
                 rgb(${this.getGreenGradient(resistanceLevel)}) , 
                 rgb(${this.getYellowGradient(resistanceLevel)}), 
                 rgb(${this.getRedGradeint(resistanceLevel)}))`,
-            width: `${resistanceLevel}%`  
+            //width: `${resistanceLevel}%`  
+            width: '100%'  
         }      
         return style;
     }
@@ -36,8 +37,8 @@ export default class ResistanceLevel extends GeneralSettings {
     getGreenGradient() {
         let r = 0, g = 0, b = 0;
         let value = this.state.resistanceLevel;
-        if (value < 33) {
-            let percentOfMax = value / 33;
+        if (value < 0.33) {
+            let percentOfMax = value / 0.33;
             g = Math.floor(255 * percentOfMax);
         }
         else {
@@ -47,22 +48,24 @@ export default class ResistanceLevel extends GeneralSettings {
     }
 
     getYellowGradient() {
-        let r = 0, g = 0, b = 0;
+        let r = 255, g = 255, b = 255;
         let value = this.state.resistanceLevel;
-        if (value < 33) {
-            r = 255;
-            g = 255;
-            b = 255;
+        if (value > 0.33) {
+            let percentOfMax = value / 0.66;
+            b -= Math.floor(255 * percentOfMax);
         }
-        else if (value < 66) {
-
-        }
-
         return [r,g,b];
     }
 
     getRedGradeint() {
-        let r = 0, g = 0, b = 0;
+        let r = 255, g = 255, b = 255;
+        let value = this.state.resistanceLevel;
+        if (value >= 0.66) {
+            let percentOfMax = value / 1.0;
+            let color = Math.floor(255 * percentOfMax);
+            b -= color;
+            g -= color;
+        }        
         return [r,g,b];
     }
 }
