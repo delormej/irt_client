@@ -14,10 +14,20 @@ export default class ResistanceLevel extends GeneralSettings {
         return (
             <div className="resistanceLevelBox">
                 <div className="dataLabel">RESISTANCE LEVEL</div>
-                <div className="dataValue">{this.state.resistanceLevel * 100 + '%'}</div>
+                <div className="dataValue">{this.formatResistanceLevel(this.state.resistanceLevel)}</div>
                 <div className="resistanceLevel" style={this.getResistanceLevelStyle()}></div>
             </div>
         );
+    }
+
+    formatResistanceLevel(level) {
+        let formatted = "";
+        let value = level * 100;
+        if (value % 1 == 0)
+            formatted = value + '%';
+        else
+            formatted = (value).toFixed(1) + '%';
+        return formatted;
     }
 
     getResistanceLevelStyle() {
