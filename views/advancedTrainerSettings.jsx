@@ -14,12 +14,12 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
             deviceId: props.deviceId,
-            rawSettings: 0,
-            servoOffset: 0,
-            drag: 0,
-            rr: 0,
-            riderWeightKg: 0,
-            bikeWeightKg: 0,
+            rawSettings: undefined,
+            servoOffset: undefined,
+            drag: undefined,
+            rr: undefined,
+            riderWeightKg: undefined,
+            bikeWeightKg: undefined,
             saveToFlashEnabled: true,
         };        
     }
@@ -67,6 +67,12 @@ export default class AdvancedTrainerSettings extends React.Component {
 
     onSave() {
         console.log("Sending settings to FE-C...");
+        this.fec.setIrtSettings(this.state.drag, this.state.rr, this.state.servoOffset, 
+            this.state.settings, this.state.saveToFlashEnabled);
+        setTimeout(function () {
+            this.fec.setUserConfiguration(this.state.userWeightKg, 
+                this.state.bikeWeightKg, null, null);
+        }, 50);        
     }
 
     onRefresh() {
