@@ -7,7 +7,6 @@ export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
         super(props);
         this.fec = props.fec;
-        this.onUserConfig = this.onUserConfig.bind(this);
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
         this.onIrtSettings = this.onIrtSettings.bind(this);        
@@ -18,14 +17,11 @@ export default class AdvancedTrainerSettings extends React.Component {
             servoOffset: undefined,
             drag: undefined,
             rr: undefined,
-            riderWeightKg: undefined,
-            bikeWeightKg: undefined,
             saveToFlashEnabled: true,
         };        
     }
 
     componentDidMount() {
-        this.fec.on('userConfig', this.onUserConfig);        
         this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.on('batteryStatus', this.onBatteryStatus);
         this.fec.on('irtSettings', this.onIrtSettings);
@@ -33,18 +29,10 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('userConfig', this.onUserConfig);
         this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.removeListener('batteryStatus', this.onBatteryStatus);
         this.fec.removeListener('irtSettings', this.onIrtSettings);
     }    
-
-    onUserConfig(data, timestamp) {
-        this.setState( {
-            riderWeightKg: data.userWeightKg.toFixed(1),
-            bikeWeightKg: data.bikeWeightKg.toFixed(1)
-        });
-    }
 
     onIrtExtraInfo(data, timestamp) {
     }
@@ -68,11 +56,7 @@ export default class AdvancedTrainerSettings extends React.Component {
     onSave() {
         console.log("Sending settings to FE-C...");
         this.fec.setIrtSettings(this.state.drag, this.state.rr, this.state.servoOffset, 
-            this.state.settings, this.state.saveToFlashEnabled);
-        setTimeout(function () {
-            this.fec.setUserConfiguration(this.state.userWeightKg, 
-                this.state.bikeWeightKg, null, null);
-        }, 50);        
+            this.state.rawSettings, this.state.saveToFlashEnabled);
     }
 
     onRefresh() {
@@ -108,14 +92,6 @@ export default class AdvancedTrainerSettings extends React.Component {
                 <input name="rr" type="textbox" 
                     value={this.state.rr} 
                     onChange={this.handleInputChange}/>                           
-                <div className="label">Rider Weight (kg)</div>
-                <input name="riderWeightKg" type="textbox" 
-                    value={this.state.riderWeightKg} 
-                    onChange={this.handleInputChange}/>                    
-                <div className="label">Bike Weight (kg)</div>
-                <input name="bikeWeightKg" type="textbox" 
-                    value={this.state.bikeWeightKg} 
-                    onChange={this.handleInputChange}/>     
                 <div className="label">Save to Flash</div>
                 <input name="saveToFlashEnabled" type="checkbox" 
                     checked={this.state.saveToFlashEnabled} 

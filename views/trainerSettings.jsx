@@ -9,6 +9,8 @@ export default class TrainerSettings extends React.Component {
     constructor(props) {
         super(props);
         this.fec = props.fec;
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.onUserConfig = this.onUserConfig.bind(this);
         this.onDisconnectDevice = props.onDisconnectDevice;
         this.onManufacturerInfo = this.onManufacturerInfo.bind(this);
         this.onProductInfo = this.onProductInfo.bind(this);
@@ -16,17 +18,21 @@ export default class TrainerSettings extends React.Component {
             deviceId: props.deviceId,
             swRevision: '',
             serial: '',
+            riderWeightKg: undefined,
+            bikeWeightKg: undefined,
             showAdvanced: false
         };
     }
 
     componentDidMount() {
+        this.fec.on('userConfig', this.onUserConfig);
         this.fec.on('manufacturerInfo', this.onManufacturerInfo);
         this.fec.on('productInfo', this.onProductInfo);
-        this.fec.getSettings();
+        this.fec.getUserConfiguration();
     }
 
     componentWillUnmount() {
+        this.fec.removeListener('userConfig', this.onUserConfig);  
         this.fec.removeListener('manufacturerInfo', this.onManufacturerInfo);
         this.fec.removeListener('productInfo', this.onProductInfo);
     }    
@@ -41,6 +47,13 @@ export default class TrainerSettings extends React.Component {
         });
     }
 
+    onUserConfig(data, timestamp) {
+        this.setState( {
+            riderWeightKg: data.userWeightKg.toFixed(1),
+            bikeWeightKg: data.bikeWeightKg.toFixed(1)
+        });
+    }
+
     onIdentify() {
         this.fec.blinkLed();
     }
@@ -48,6 +61,21 @@ export default class TrainerSettings extends React.Component {
     onShowAdvanced() {
         this.setState( {
             showAdvanced: true
+        });
+    }
+    
+    onSave() {
+        console.log("Sending settings to FE-C...");
+        this.fec.setUserConfiguration(this.state.riderWeightKg, 
+                this.state.bikeWeightKg, null, null);
+    }
+    
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
         });
     }
 
@@ -66,13 +94,24 @@ export default class TrainerSettings extends React.Component {
         return (
             <div className={className}>
                 <div className="deviceTitle">Configure Trainer</div>
-                <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button>
+                <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button><br/>
+                <button onClick={() => this.onIdentify()}>Identify</button><br/>
                 <div>
                     Device ID: {this.state.deviceId}<br/>
                     Firmware v{this.state.swRevision}<br/>
                     Serial No: {this.state.serial}<br/>
                 </div>                        
-                <button onClick={() => this.onIdentify()}>Identify</button><br/>
+                <div className="advancedTrainerSettings">
+                    <div className="label">Rider Weight (kg)</div>
+                    <input name="riderWeightKg" type="textbox" 
+                        value={this.state.riderWeightKg} 
+                        onChange={this.handleInputChange}/>                    
+                    <div className="label">Bike Weight (kg)</div>
+                    <input name="bikeWeightKg" type="textbox" 
+                        value={this.state.bikeWeightKg} 
+                        onChange={this.handleInputChange}/>     
+                </div>
+                <button onClick={() => this.onSave()}>Save</button><br/>
                 {this.renderAdvanced()}
             </div>
         )
