@@ -138,6 +138,7 @@ export default class Main extends React.Component {
       <div>
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}
+            bpConnected={this.state.bpDevice.status == antlib.STATUS_TRACKING_CHANNEL}
             status={this.state.status} />
         { (this.state.currentPage === "ride") ? 
             <Ride ant={this.state.ant} 

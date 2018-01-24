@@ -3,6 +3,15 @@
 import React from 'react';
 import VersionInfo from '../views/versionInfo.jsx';
 
+function getConnectedStatusClass(className, connected) {
+  if (connected) {
+    return className + " connectedStatus";
+  }
+  else {
+    return className + " notConnectedStatus";
+  }
+}
+
 function Menu(props) {
     let navigatePage;
     let linkLabel;
@@ -17,7 +26,9 @@ function Menu(props) {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
-        {props.fecConnected ? <div>Connected</div> : <div>Not Connected</div> }
+        <div className={getConnectedStatusClass("fecConnectedStatus", props.fecConnected)}><b>FE-C&nbsp;</b>{props.fecConnected ? "Connected" : "Not Connected"}</div>
+        <div className={getConnectedStatusClass("bpConnectedStatus", props.bpConnected)}><b>PWR&nbsp;</b>{props.bpConnected ? "Connected" : "Not Connected"}</div>
+        <img src="./images/close.png" id="closeBtn" />
       </div>
     );
 }
@@ -40,7 +51,8 @@ export default class Header extends React.Component {
       let menu = null;
       if (this.props.page)
         menu = <Menu page={this.props.page} onClick={this.props.onClick} 
-                  fecConnected={this.props.fecConnected} />;
+                  fecConnected={this.props.fecConnected}
+                  bpConnected={this.props.bpConnected} />;
       return (
           <div className="header">
               <img className="logo" src="./images/logo.png" />

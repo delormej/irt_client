@@ -1,5 +1,12 @@
 {
-  "name": "irt-test-client",
+  "name": "irt-client",
+  "description": "Test client for ANT+ Inside Ride rollers.",
+  "publisher": "IRT, LLC",
+  "author": {
+    "email": "jason@insideride.com",
+    "name": "Jason De Lorme",
+    "url": "http://www.insideride.com"
+  },
   "version": "2.2.0",
   "main": "./src/main.js",
   "license": "MIT",
@@ -39,6 +46,7 @@
     "forge": {
       "make_targets": {
         "win32": [
+          "zip",
           "squirrel"
         ],
         "darwin": [
