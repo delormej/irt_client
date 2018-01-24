@@ -21,8 +21,9 @@ app.on('ready', () => {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
   // mainWindow.setFullScreen(true); // if we don't want the title bar,min,max,close buttons.
   mainWindow.maximize();
-  // Disable the menubar (production only).
+  // Disable the menubar
   // mainWindow.setMenu(null)  
+  // mainWindow.webContents.openDevTools();
   preventShutdown();
   mainWindow.on('closed', () => {
     mainWindow = null;

@@ -17,20 +17,26 @@ The renderer entry point `index.html` does basically the same, but loads the
 
 1. git clone repo
 2. install node globally
+   a. Upgrade npm: npm install npm@latest -g
 3. install windows-build-tools (not sure how this works on mac yet)
     npm install --global --add-python-to-path --production windows-build-tools
 4. install install type script globally
     npm install -g typescript
-5. npm install
-6. npm start
+5. install electron-forge globally
+    npm install -g electron-forge
+6. npm install
+7. npm start
 
 ## Top Level Library Dependencies
 
+[node.js] Node v6.10.0 installed globally
+[npm] Is installed with node, but you'll need to upgrade npm > 4 for electron-forge package to work.
 [ES6]: http://exploringjs.com/
 [React]: https://facebook.github.io/react/
 [Electron]: http://electron.atom.io/
-[Babel]: http://babeljs.io
+[Babel]: http://babeljs.io (hoping to remove this dependency and just use electron-forge)
 [TypeScript]: http://www.typescriptlang.org
+[Electron-Forge]: https://www.npmjs.com/package/electron-forge (Packages electron app for distribution)
 
 ## Note
 ```bash

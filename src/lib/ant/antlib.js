@@ -222,6 +222,10 @@ function isRunningInAsar() {
 	return process.mainModule.filename.indexOf('app.asar') !== -1;    
 }
 
+function isRunningInPackage() {
+    return /ant$/.test(__dirname);
+}
+
 // Determins the right library path based on OS version.
 function libPath() {
     var path = require('path');
@@ -233,14 +237,17 @@ function libPath() {
         if (isRunningInAsar()) {
             lib = 'ANT_DLL';
         }
-        else
-        {
+        else if (isRunningInPackage()) {
+            lib = path.join(__dirname, 'ANT_DLL');  
+        }
+        else {
             /*
               NOTE: if you get a Win32 Error Code 126, it likely means that the cwd electron is starting in is wrong, 
               electron's cwd should be the root workspace (not src).  
               console.log("Current dir:" + process.cwd());
             */
-            lib = path.join('lib/ant', 'ANT_DLL');        
+            console.log("Current dir:" + process.cwd());
+            lib = path.join('src/lib/ant', 'ANT_DLL');        
         }
     }
     else 

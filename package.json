@@ -1,15 +1,15 @@
 {
   "name": "irt-test-client",
   "version": "2.1.1",
-  "main": "main.js",
+  "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
   "scripts": {
     "start": "electron-forge start",
     "prestart": "npm run build",
     "postinstall": "./node_modules/.bin/electron-rebuild",
-    "build": "tsc --project ./lib/ant/ts/tsconfig.json",
-    "clean": "rmdir node_modules /s /q",
+    "build": "tsc --project ./src/lib/ant/ts/tsconfig.json",
+    "clean": "rmdir ./src/node_modules /s /q",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
