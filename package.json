@@ -1,6 +1,6 @@
 {
   "name": "irt-test-client",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
@@ -50,7 +50,8 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "icon": "src/images/irt.ico"
       },
       "electronWinstallerConfig": {
         "name": "irt_test_client"
