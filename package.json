@@ -7,7 +7,7 @@
     "name": "Jason De Lorme",
     "url": "http://www.insideride.com"
   },
-  "version": "2.2.2",
+  "version": "2.3.0",
   "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
@@ -40,7 +40,9 @@
     "babel-preset-react": "^6.24.1",
     "electron-forge": "^4.2.0",
     "electron-prebuilt-compile": "1.7.11",
-    "electron-rebuild": "^1.6.0"
+    "electron-rebuild": "^1.6.0",
+    "@amcharts/amcharts3-react": "^3.0.0",
+    "react-scripts": "1.0.14"
   },
   "config": {
     "forge": {

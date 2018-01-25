@@ -13,6 +13,7 @@ import SpecificTrainerData from '../views/specificTrainerData.jsx';
 import PowerMeterConnected from '../views/powerMeterConnected.jsx';
 import ResistanceLevel from '../views/resistanceLevel.jsx';
 import HeartRate from '../views/heartRate.jsx';
+import RideChart from '../views/rideChart.jsx';
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -43,6 +44,7 @@ export default class Ride extends React.Component {
               <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
                 seconds={this.props.averageSeconds} />
               <ResistanceLevel fec={this.fec} />
+              <RideChart bp={this.bp} />
             </div>
         );      
     }

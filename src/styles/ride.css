@@ -104,3 +104,8 @@
     height: 75px;
     margin-top: -95px;
 }
+
+.rideChart {
+    grid-row: 4;
+    grid-column: 1 / 9;
+}
