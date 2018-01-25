@@ -12,6 +12,22 @@ function getConnectedStatusClass(className, connected) {
   }
 }
 
+function DeviceConnectedStatus(props) {
+  let className = props.deviceType + "ConnectedStatus";
+  let deviceTypeName;
+  if (props.deviceType === "fec") {
+    deviceTypeName = "FE-C";
+  }
+  else if (props.deviceType === "bp") {
+    deviceTypeName = "PWR";
+  }
+  return (
+    <div className={getConnectedStatusClass(className, props.isConnected)}>
+      <b>{deviceTypeName}&nbsp;</b>{props.isConnected ? "Connected" : "Not Connected"}
+    </div>
+    );
+}
+
 function Menu(props) {
     let navigatePage;
     let linkLabel;
@@ -26,8 +42,8 @@ function Menu(props) {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
-        <div className={getConnectedStatusClass("fecConnectedStatus", props.fecConnected)}><b>FE-C&nbsp;</b>{props.fecConnected ? "Connected" : "Not Connected"}</div>
-        <div className={getConnectedStatusClass("bpConnectedStatus", props.bpConnected)}><b>PWR&nbsp;</b>{props.bpConnected ? "Connected" : "Not Connected"}</div>
+        <DeviceConnectedStatus deviceType="fec" isConnected={props.fecConnected} />
+        <DeviceConnectedStatus deviceType="bp" isConnected={props.bpConnected} />
         <img src="./images/close.png" id="closeBtn" />
       </div>
     );

@@ -7,7 +7,7 @@
     "name": "Jason De Lorme",
     "url": "http://www.insideride.com"
   },
-  "version": "2.2.0",
+  "version": "2.2.2",
   "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
