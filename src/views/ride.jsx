@@ -9,8 +9,6 @@ import PowerMeter from '../views/powerMeter.jsx';
 import AveragePower from '../views/averagePower.jsx';
 import TargetPower from '../views/targetPower.jsx';
 import Cadence from '../views/cadence.jsx';
-import SpecificTrainerData from '../views/specificTrainerData.jsx';
-import PowerMeterConnected from '../views/powerMeterConnected.jsx';
 import ResistanceLevel from '../views/resistanceLevel.jsx';
 import HeartRate from '../views/heartRate.jsx';
 import RideChart from '../views/rideChart.jsx';
@@ -24,11 +22,6 @@ export default class Ride extends React.Component {
       this.bpAverager = this.props.ant.bpAverager;
       this.bgScanner = this.props.ant.bgScanner;
     }
-
-    /*
-    <SpecificTrainerData fec={this.fec} />   
-    <PowerMeterConnected fec={this.fec} />
-    */
 
     render() {
         return (

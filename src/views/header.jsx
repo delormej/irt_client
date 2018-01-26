@@ -2,6 +2,7 @@
 
 import React from 'react';
 import VersionInfo from '../views/versionInfo.jsx';
+import SpecificTrainerData from '../views/specificTrainerData.jsx';
 
 function getConnectedStatusClass(className, connected) {
   if (connected) {
@@ -54,7 +55,10 @@ function Status(props) {
   if (props.type === "error")
     className += " error";
   return (
-    <div className={className}>{props.message}</div>
+    <div className={className}>
+      <span>{props.message}</span>
+      <SpecificTrainerData fec={props.fec} />                
+    </div>
   );
 }
 
@@ -73,7 +77,8 @@ export default class Header extends React.Component {
           <div className="header">
               <img className="logo" src="./images/logo.png" />
               <VersionInfo />
-              <Status type={this.props.status.type} message={this.props.status.message} />
+              <Status type={this.props.status.type} message={this.props.status.message}
+                fec={this.props.fec} />
               {menu}
           </div>
       );

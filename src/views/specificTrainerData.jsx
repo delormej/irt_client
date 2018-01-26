@@ -22,7 +22,7 @@ export default class SpecificTrainerData extends React.Component {
         this.state = {
             instantPower: 0,
             trainerStatus: 0,
-            target_power_status: 0,
+            targetPowerLimits: 0,
             feState: 0
         }
         this.fec = props.fec;
@@ -41,8 +41,8 @@ export default class SpecificTrainerData extends React.Component {
         this.setState({
             instantPower: data.instantPower,
             trainerStatus: data.trainerStatus,
-            targetPowerStatus: data.target_power_status,
-            feState: data.feState
+            feState: data.feState,
+            targetPowerLimits: data.targetPowerLimits
         });
     }
 
@@ -50,7 +50,7 @@ export default class SpecificTrainerData extends React.Component {
         return (
             <div>
                 <TrainerStatus value={this.state.trainerStatus} />
-                <TargetPowerStatus value={this.state.targetPowerStatus} />
+                <TargetPowerStatus value={this.state.targetPowerLimits} />
                 <FeState value={this.state.feState} />
             </div>
         );
