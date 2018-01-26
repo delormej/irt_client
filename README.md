@@ -42,6 +42,8 @@ The renderer entry point `index.html` does basically the same, but loads the
 ```bash
 You cannot use the bash shell on Windows for npm install, likely because it compiles native libraries.
 
+Make sure that git is in your path, i.e. "c:\program files\git\bin\"
+
 ## Using Native Libraries
 #ffi is used to talk to the native ANT libraries.
     This requires electron-rebuild
