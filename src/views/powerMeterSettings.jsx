@@ -55,7 +55,7 @@ export default class PowerMeterSettings extends DeviceSettings {
 
     handleInputChange(event) {
         if (event.target.name === "ftp")
-            this.props.onFtpChange(event.target.value);
+            this.props.onChange("ftp", event.target.value);
         else
             super.handleInputChange(event, this);
     }

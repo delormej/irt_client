@@ -131,7 +131,7 @@ export default class Settings extends React.Component {
                         deviceId={this.props.bpDevice.deviceId}
                         ftp={this.props.ftp}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
-                        onFtpChange={this.props.onFtpChange} />
+                        onChange={this.props.onChange} />
                 );
             }
             else if (deviceType == antlib.FEC_DEVICE_TYPE) {
@@ -147,7 +147,7 @@ export default class Settings extends React.Component {
                         hrm={this.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
-                        onMaxHeartRateChange={this.props.onMaxHeartRateChange} />
+                        onChange={this.props.onChange} />
                 );
             }
         }

@@ -12,7 +12,7 @@ export default class HeartRateConnected extends HeartRate {
 
     handleInputChange(event) {
         if (event.target.name === "maxHeartRateBpm")
-            this.props.onMaxHeartRateChange(event.target.value);
+            this.props.onChange("maxHeartRateBpm", event.target.value);
     }
 
     render() {
