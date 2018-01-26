@@ -169,7 +169,8 @@ const AntFec = function() {
                 distanceTravelled: getDistance(fecChannelEventBuffer[4]),
                 speedMps : getSpeed(fecChannelEventBuffer[5], fecChannelEventBuffer[6]),
                 distanceTraveledEnabled : fecChannelEventBuffer[8] & 0x04,
-                state : getCapabilitiesState(fecChannelEventBuffer[8]) 
+                state : getCapabilitiesState(fecChannelEventBuffer[8]),
+                targetPowerLimits : fecChannelEventBuffer[8] & 0x03
         };
                 
         //console.log(page);
@@ -181,7 +182,8 @@ const AntFec = function() {
         var page = {
             wheelCircumference : parseInt(fecChannelEventBuffer[4]),
             resistanceLevel : getResistance(fecChannelEventBuffer[7]),     
-            state : getCapabilitiesState(fecChannelEventBuffer[8])
+            state : getCapabilitiesState(fecChannelEventBuffer[8]),
+            targetPowerLimits : fecChannelEventBuffer[8] & 0x03
         };
         //console.log(page);
         return page;                
@@ -196,8 +198,8 @@ const AntFec = function() {
             instantPower : ( (fecChannelEventBuffer[7] & 0x0F) << 8 |
                 fecChannelEventBuffer[6] ),
             trainerStatus : getTrainerStatus(fecChannelEventBuffer[7] & 0xF0),
-            flags : fecChannelEventBuffer[8] & 0x0F,
-            feState : fecChannelEventBuffer[7] & 0xF0
+            feState : fecChannelEventBuffer[7] & 0xF0,
+            targetPowerLimits : fecChannelEventBuffer[8] & 0x03
         };
         
         return page;
@@ -621,9 +623,13 @@ const AntFec = function() {
             settings : buffer[8]
         */        
         if (drag != null && !isNaN(drag)) {
-            transmitBuffer[1] =  (drag * 1000000) & 0xFF; // DragLSB
-            transmitBuffer[2] =  (drag * 1000000) >> 8; //DragMSB
+            let dragInt = drag * 1000000;
+            if (dragInt >= 0xFFF) 
+                throw new Error("Invalid drag value, must be less than 0.065.");
+            transmitBuffer[1] = dragInt & 0xFF; // DragLSB
+            transmitBuffer[2] = dragInt >> 8; //DragMSB
             hasChanges = true;
+
         }
         else {
             transmitBuffer[1] = 0xFF;
