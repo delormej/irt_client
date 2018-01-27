@@ -8,7 +8,7 @@ export default class SetServo extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="advancedTrainerSettings">
                 <div className="label">Servo Position</div>
                 <input name="servo" type="textbox" 
                     value={this.state.servo} 
