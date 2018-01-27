@@ -123,16 +123,15 @@ export default class Settings extends React.Component {
     }
 
     renderForChannelStatus(deviceType, channelStatus) {
+        let powerMeterSettings = <PowerMeterSettings fec={this.fec} 
+            fecConnected={this.props.fecConnected}
+            deviceId={this.props.bpDevice.deviceId}
+            ftp={this.props.ftp}
+            onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
+            onChange={this.props.onChange} />;
         if (channelStatus == antlib.STATUS_TRACKING_CHANNEL) {
             if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
-                return (
-                    <PowerMeterSettings fec={this.fec} 
-                        fecConnected={this.props.fecConnected}
-                        deviceId={this.props.bpDevice.deviceId}
-                        ftp={this.props.ftp}
-                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
-                        onChange={this.props.onChange} />
-                );
+                return powerMeterSettings;
             }
             else if (deviceType == antlib.FEC_DEVICE_TYPE) {
                 return (
