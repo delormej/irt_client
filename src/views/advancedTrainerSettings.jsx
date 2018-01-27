@@ -2,6 +2,7 @@
 
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
+import SetServo from '../views/SetServo';
 
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
         this.onIrtSettings = this.onIrtSettings.bind(this);        
+        this.onSetServo = this.onSetServo.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
             deviceId: props.deviceId,
@@ -18,6 +20,7 @@ export default class AdvancedTrainerSettings extends React.Component {
             drag: undefined,
             rr: undefined,
             saveToFlashEnabled: true,
+            servo: 0
         };        
     }
 
@@ -35,6 +38,10 @@ export default class AdvancedTrainerSettings extends React.Component {
     }    
 
     onIrtExtraInfo(data, timestamp) {
+        this.setState( {
+            servo: data.servoPosition,
+            flywheelRevs: data.flywheelRevs
+        })
     }
 
     onBatteryStatus(data, timestamp) {
@@ -57,6 +64,11 @@ export default class AdvancedTrainerSettings extends React.Component {
         console.log("Sending settings to FE-C...");
         this.fec.setIrtSettings(this.state.drag, this.state.rr, this.state.servoOffset, 
             this.state.rawSettings, this.state.saveToFlashEnabled);
+    }
+
+    onSetServo(position) {
+        console.log("Setting servo to: " + position);
+        this.fec.setServoPosition(position);
     }
 
     onRefresh() {
@@ -98,6 +110,7 @@ export default class AdvancedTrainerSettings extends React.Component {
                     onChange={this.handleInputChange}/>
                 <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
+                <SetServo servo={this.state.servo} onSetServo={this.onSetServo} />
             </div>
         );
     }

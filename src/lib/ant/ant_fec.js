@@ -615,28 +615,20 @@ const AntFec = function() {
         console.log('setIrtSettings, persist? ', persist);
         var hasChanges = false;
         transmitBuffer[0] = IRT_SETTINGS_PAGE;
-        
-        /*
-            drag : (buffer[2] | buffer[3] << 8) / 1000000.0,
-            rr :  (buffer[4] | buffer[5] << 8) / 1000.0,
-            servoOffset : buffer[6] | buffer[7] << 8,
-            settings : buffer[8]
-        */        
-        if (drag != null && !isNaN(drag)) {
+        if (drag != null && !isNaN(drag) && drag > 0) {
             let dragInt = drag * 1000000;
             if (dragInt >= 0xFFF) 
                 throw new Error("Invalid drag value, must be less than 0.065.");
             transmitBuffer[1] = dragInt & 0xFF; // DragLSB
             transmitBuffer[2] = dragInt >> 8; //DragMSB
             hasChanges = true;
-
         }
         else {
             transmitBuffer[1] = 0xFF;
             transmitBuffer[2] = 0xFF;
         }
 
-        if (rr != null && !isNaN(rr)) {
+        if (rr != null && !isNaN(rr) && rr > 0) {
             transmitBuffer[3] =  (rr * 1000) & 0xFF; // RRLSB
             transmitBuffer[4] =  (rr * 1000) >> 8; //RRMSB
             hasChanges = true;
