@@ -294,9 +294,13 @@ function init() {
     
     var ver = antVersion();
     console.log(ver);
-
-    var success = antlib.ANT_Init(ANT_DEVICE_NUMBER, 
-        BAUD_RATE, PORT_TYPE_USB, FRAMER_TYPE_BASIC);
+    
+    let success = false;
+    let deviceNumberTries = 3;
+    do {
+        success = antlib.ANT_Init(deviceNumberTries, 
+            BAUD_RATE, PORT_TYPE_USB, FRAMER_TYPE_BASIC);
+    } while (deviceNumberTries-- > 0 && !success)
     
     if (!success) {
         throw new Error('Unable to initialize ANT+, please check USB key is available and not in use by another application.');

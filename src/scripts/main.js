@@ -8,8 +8,8 @@ window.onload = function(){
   ReactDOM.render(<ErrorBoundry><Main /></ErrorBoundry>, 
     document.getElementById('app'));
 
-    document.getElementById("closeBtn").addEventListener("click", function (e) {
+  document.getElementById("closeBtn").addEventListener("click", function (e) {
       var window = remote.getCurrentWindow();
       window.close();
-    }); 
+  }); 
 }

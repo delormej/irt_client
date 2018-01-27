@@ -45,7 +45,6 @@ function Menu(props) {
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
         <DeviceConnectedStatus deviceType="fec" isConnected={props.fecConnected} />
         <DeviceConnectedStatus deviceType="bp" isConnected={props.bpConnected} />
-        <img src="./images/close.png" id="closeBtn" />
       </div>
     );
 }
@@ -57,7 +56,7 @@ function Status(props) {
   return (
     <div className={className}>
       <span>{props.message}</span>
-      <SpecificTrainerData fec={props.fec} />                
+      {props.fec && <SpecificTrainerData fec={props.fec} />}
     </div>
   );
 }
