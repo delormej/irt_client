@@ -43,14 +43,15 @@ export default class RideChart extends Component {
       "type": "serial",
       "theme": "light",
       "marginRight": 40,
-      "marginLeft": 40,
+      "marginLeft": 80,
       "autoMarginOffset": 20,
       "mouseWheelZoomEnabled": true,
       "valueAxes": [{
         "id": "v1",
         "axisAlpha": 0,
         "position": "left",
-        "ignoreAxisWidth": true
+        "ignoreAxisWidth": true,
+        "fontSize": 40
       }],
       "balloon": {
         "borderThickness": 1,
@@ -74,21 +75,6 @@ export default class RideChart extends Component {
         "valueField": "value",
         "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
       }],
-      "chartScrollbar": {
-        "graph": "g1",
-        "oppositeAxis": false,
-        "offset":30,
-        "scrollbarHeight": 80,
-        "backgroundAlpha": 0,
-        "selectedBackgroundAlpha": 0.1,
-        "selectedBackgroundColor": "#888888",
-        "graphFillAlpha": 0,
-        "graphLineAlpha": 0.5,
-        "selectedGraphFillAlpha": 0,
-        "selectedGraphLineAlpha": 1,
-        "autoGridCount": true,
-        "color":"#AAAAAA"
-      },
       "chartCursor": {
         "pan": true,
         "valueLineEnabled": true,
@@ -108,7 +94,8 @@ export default class RideChart extends Component {
       "categoryAxis": {
         "parseDates": false,
         "dashLength": 1,
-        "minorGridEnabled": true
+        "minorGridEnabled": true,
+        "labelsEnabled": false
       },
       "dataProvider": this.state.instantPowerEvents
     };
