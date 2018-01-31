@@ -73,6 +73,7 @@ const STATUS_ASSIGNED_CHANNEL = 0x01;
 const STATUS_SEARCHING_CHANNEL = 0x02;
 const STATUS_TRACKING_CHANNEL = 0x03;
 
+const SEARCH_TIMEOUT_INFINITE = 0xFF;
 const BG_SCANNING_CHANNEL_ID = 0;
 
 // Internal memory structures used by ANT library for sending and recieving messages. 
@@ -338,7 +339,6 @@ function openBackgroundScanningChannel(config) {
     const WILDCARD_DEVICE_ID = 0;
     const WILDCARD_DEVICE_TYPE = 0;
     const TRANSMISSION_TYPE = 0;
-    const SEARCH_TIMEOUT_INFINITE = 0xFF;
     const TIMEOUT_DISABLED = 0;
     const CHANNEL_FREQUENCY = 57;
 
@@ -372,7 +372,7 @@ function openBackgroundScanningChannel(config) {
 
 function openChannel(channelId, config) {
     const HIGH_PRI_SEARCH_TIMEOUT = 2; 
-    const LOW_PRI_SEARCH_TIMEOUT = 10; // 10 == 25s
+    const LOW_PRI_SEARCH_TIMEOUT = SEARCH_TIMEOUT_INFINITE; //10; // 10 == 25s
     const ffiChannelCallback = ffi.Callback('bool', [ 'uchar', 'uchar' ], config.channelCallback);
     // A copy of the ffi version of the callback is required to be stored, otherwise it will be garbage collected.
     let channelConfig = {
