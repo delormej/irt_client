@@ -197,7 +197,14 @@ export default class Settings extends React.Component {
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
                 </DeviceSettings>
-                {this.renderHeartRate()}
+                <DeviceSettings ant={this.props.ant}>
+                    <HeartRateConnected deviceId={this.props.hrmDevice.deviceId}
+                        hrm={this.hrm}
+                        maxHeartRateBpm={this.props.maxHeartRateBpm}
+                        onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
+                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
+                        onChange={this.props.onChange} />                
+                </DeviceSettings>
             </div>
         );
     }
