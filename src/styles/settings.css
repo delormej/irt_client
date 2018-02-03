@@ -9,14 +9,17 @@
 }
 
 .trainer {
+    grid-row: 1;
     grid-column: 1;   
 }
 
 .powerMeter {
+    grid-row: 1;
     grid-column: 2;
 }
 
-.heartRate {
+.settings .heartRate {
+    grid-row: 1;
     grid-column: 3;
 }
 

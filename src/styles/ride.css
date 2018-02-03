@@ -70,8 +70,8 @@
 }
 
 .heartRate {
-    grid-row: 3;
-    grid-column: 1;   
+    grid-row: 1;
+    grid-column: 7 / 9;   
 }
 
 .distance {
