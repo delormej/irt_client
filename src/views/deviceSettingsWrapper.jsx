@@ -1,5 +1,10 @@
 'use babel';
 
+//
+// TODO: filename should be changed to deviceSettings.jsx when we remove the 
+// deviceSettings inheritance currently being used.
+//
+
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AvailableDevices from './availableDevices';
@@ -51,9 +56,17 @@ export default class DeviceSettings extends React.Component {
             throw new Error("Invalid element, can't determine device type.");
     }
     
+    getChildElement(element) {
+        if (element.length != undefined)
+            return element[0];
+        else 
+            return element;
+    }
+
     render() 
     {
-        let deviceType = this.getDeviceTypeFromElement(this.props.children);
+        let child = this.getChildElement(this.props.children);
+        let deviceType = this.getDeviceTypeFromElement(child);
         let channelStatus = this.getChannelStatus(this.props.ant, deviceType);
         switch (channelStatus) {
             case antlib.STATUS_TRACKING_CHANNEL:
@@ -61,11 +74,11 @@ export default class DeviceSettings extends React.Component {
             case antlib.STATUS_SEARCHING_CHANNEL:
                 return (
                     <CancelSearch deviceType={deviceType} 
-                        onDisconnectDevice={this.props.children.props.onDisconnectDevice} />);
+                        onDisconnectDevice={child.props.onDisconnectDevice} />);
             default:        
                 return (
                     <AvailableDevices bgScanner={this.props.ant.bgScanner} deviceType={deviceType}
-                        onConnectDevice={this.props.children.props.onConnectDevice} />
+                        onConnectDevice={child.props.onConnectDevice} />
                 );
         }
     }    

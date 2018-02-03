@@ -3,6 +3,7 @@
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
+import AdvancedPowerMeterSettings from '../views/advancedPowerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
@@ -185,11 +186,18 @@ export default class Settings extends React.Component {
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.props.fecDevice.deviceId}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={this.onDisconnectDevice} />                    
+                        onDisconnectDevice={this.onDisconnectDevice} />
+                    <AdvancedPowerMeterSettings fec={this.fec} 
+                        onChange={this.props.onChange} />                                            
                 </DeviceSettings>
-                {this.renderPowerMeter()}
+                <DeviceSettings ant={this.props.ant}>
+                    <PowerMeterSettings
+                        deviceId={this.props.bpDevice.deviceId} 
+                        ftp={this.props.ftp}
+                        onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
+                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
+                </DeviceSettings>
                 {this.renderHeartRate()}
-                {this.getPowerMeterSettings()}
             </div>
         );
     }
