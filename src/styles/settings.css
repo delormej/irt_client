@@ -47,23 +47,17 @@
 }
 
 .availableDevices {
-    z-index: 10;
-    display: inline-block;
+
 }
 
 .powerMeterSettings {
-    z-index: 1;
+
 }
 
 .trainerSettings {}
 
-.advancedTrainerSettings, .advancedPowerMeterSettings {
-    display: sub-grid;
-    grid-template-columns: 150px 45px;
-}
-
-.advancedPowerMeterSettings, .heartRateSettings {
-    display: sub-grid;
+.advancedTrainerSettings, .advancedPowerMeterSettings, .heartRateSettings {
+    display: grid;
     grid-template-columns: 250px 45px;
     margin-top: 25px;
     margin-bottom: 10px;
@@ -90,7 +84,7 @@
     grid-column: 1;
 }
 
-.advancedPowerMeterSettings .label {
+.advancedPowerMeterSettings .label, .advancedTrainerSettings .label, .heartRateSettings .label {
     grid-column: 1;
 }
 
@@ -104,14 +98,6 @@
 
 .advancedTrainerSettings input[type="checkbox"] {
     grid-column: 2;
-}
-
-.advancedTrainerSettings .label {
-    grid-column: 1;
-}
-
-.heartRateSettings .label {
-    grid-column: 1;
 }
 
 .heartRateBpm {
