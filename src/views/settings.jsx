@@ -5,7 +5,6 @@ import TrainerSettings from '../views/trainerSettings.jsx';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import AdvancedPowerMeterSettings from '../views/advancedPowerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
-import deviceType from '../scripts/deviceType.js';
 import ElectronSettings from 'electron-settings';
 import HeartRateConnected from '../views/heartRateConnected.jsx';
 import DeviceSettings from '../views/deviceSettingsWrapper';
@@ -120,7 +119,7 @@ export default class Settings extends React.Component {
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.props.fecDevice.deviceId}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={this.onDisconnectDevice} />
+                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />
                     <AdvancedPowerMeterSettings fec={this.fec} 
                         onChange={this.props.onChange} />                                            
                 </DeviceSettings>
@@ -136,7 +135,7 @@ export default class Settings extends React.Component {
                         hrm={this.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={(deviceType) => this.onDisconnectDevice(deviceType)} 
+                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} />                
                 </DeviceSettings>
             </div>

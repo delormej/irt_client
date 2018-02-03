@@ -1,5 +1,7 @@
 'use babel';
 
+import DeviceType from '../scripts/deviceType.js';
+
 //
 // TODO: filename should be changed to deviceSettings.jsx when we remove the 
 // deviceSettings inheritance currently being used.
@@ -11,7 +13,7 @@ import AvailableDevices from './availableDevices';
 
 function CancelSearch(props) {
     let className = "cancel " +
-        deviceType.getDeviceClassName(props.deviceType);
+        DeviceType.getDeviceClassName(props.deviceType);
     return (
         <div className={className}>
             <div>Attempting to connect...</div>
