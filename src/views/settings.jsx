@@ -127,6 +127,7 @@ export default class Settings extends React.Component {
                     <PowerMeterSettings
                         deviceId={this.props.bpDevice.deviceId} 
                         ftp={this.props.ftp}
+                        onChange={this.props.onChange} 
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
                 </DeviceSettings>

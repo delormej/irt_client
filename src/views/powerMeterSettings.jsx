@@ -14,6 +14,12 @@ export default class PowerMeterSettings extends DeviceSettings {
         this.state = {
             deviceId: props.deviceId
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    handleInputChange(event) {
+        if (event.target.name === "ftp")
+            this.props.onChange(event.target.name, event.target.value);
     }
 
     render() {
@@ -27,8 +33,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                 <div className="label">Functional Threshold Power</div>
                 <input type="textbox" name="ftp" 
                     value={this.props.ftp}
-                    onChange={(event) => 
-                        InputHelper.handleInputChange(this, event)}/>
+                    onChange={this.handleInputChange} />
                              
             </div>
         );
