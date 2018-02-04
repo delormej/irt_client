@@ -75,11 +75,8 @@
     grid-column: 2;
 }
 
-.powerMeterSettings label, .advancedPowerMeterSettings label {
-    grid-column: 1;
-}
-
-.advancedPowerMeterSettings label input[type="radio"] {
+.powerMeterSettings .label, .advancedPowerMeterSettings .label, .advancedPowerMeterSettings input[type="radio"],
+.advancedPowerMeterSettings label {
     grid-column: 1;
 }
 
