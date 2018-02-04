@@ -53,20 +53,16 @@
 
 }
 
-.powerMeterSettings {
-
-}
-
 .trainerSettings {}
 
-.advancedTrainerSettings, .advancedPowerMeterSettings, .heartRateSettings {
+.advancedTrainerSettings, .advancedPowerMeterSettings, .heartRateSettings, .powerMeterSettings {
     display: grid;
     grid-template-columns: 250px 45px;
     margin-top: 25px;
     margin-bottom: 10px;
 }
 
-.advancedPowerMeterSettings input, .heartRateSettings input {
+.powerMeterSettings input, .advancedPowerMeterSettings input, .heartRateSettings input {
     grid-column: 2;
 }
 
@@ -79,7 +75,7 @@
     grid-column: 2;
 }
 
-.advancedPowerMeterSettings label {
+.powerMeterSettings label, .advancedPowerMeterSettings label {
     grid-column: 1;
 }
 

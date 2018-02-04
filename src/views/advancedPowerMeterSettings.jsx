@@ -3,6 +3,7 @@
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import DeviceSettings from '../views/deviceSettings.jsx'
+import DeviceType from '../scripts/deviceType.js';
 
 const INVALID_POWER_METER = 65535;
 
@@ -92,8 +93,10 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
     }
 
     render() {
+        let className = "advancedPowerMeterSettings " + 
+            DeviceType.getDeviceClassName(antlib.BIKE_POWER_DEVICE_TYPE);
         return (
-            <div className="advancedPowerMeterSettings">
+            <div className={className}>
                 <div className="description">Pair to rollers to adjust resistance based on power meter.</div>
                 <label>
                     <input type="radio" name="pairToPowerMeter" 

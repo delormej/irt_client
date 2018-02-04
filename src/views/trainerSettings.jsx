@@ -3,7 +3,6 @@
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
-import AdvancedTrainerSettings from '../views/advancedTrainerSettings.jsx';
 
 export default class TrainerSettings extends React.Component {
     constructor(props) {
@@ -19,8 +18,7 @@ export default class TrainerSettings extends React.Component {
             swRevision: '',
             serial: '',
             riderWeightKg: undefined,
-            bikeWeightKg: undefined,
-            showAdvanced: false
+            bikeWeightKg: undefined
         };
     }
 
@@ -58,12 +56,6 @@ export default class TrainerSettings extends React.Component {
         this.fec.blinkLed();
     }
 
-    onShowAdvanced() {
-        this.setState( {
-            showAdvanced: true
-        });
-    }
-    
     onSave() {
         console.log("Sending settings to FE-C...");
         this.fec.setUserConfiguration(this.state.riderWeightKg, 
@@ -77,15 +69,6 @@ export default class TrainerSettings extends React.Component {
         this.setState({
             [name]: value
         });
-    }
-
-    renderAdvanced() {
-        let showAdvanced = null;
-        if (this.state.showAdvanced)
-            showAdvanced = <AdvancedTrainerSettings fec={this.fec} />;
-        else 
-            showAdvanced = <button onClick={() => this.onShowAdvanced()}>Advanced</button>;
-        return showAdvanced;
     }
 
     render() {
@@ -112,7 +95,6 @@ export default class TrainerSettings extends React.Component {
                         onChange={this.handleInputChange}/>     
                 </div>
                 <button onClick={() => this.onSave()}>Save</button><br/>
-                {this.renderAdvanced()}
             </div>
         )
     }

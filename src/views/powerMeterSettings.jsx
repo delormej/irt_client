@@ -23,18 +23,18 @@ export default class PowerMeterSettings extends DeviceSettings {
     }
 
     render() {
-        let className = "powerMeterSettings " + 
-            DeviceType.getDeviceClassName(antlib.BIKE_POWER_DEVICE_TYPE);
+        let className = DeviceType.getDeviceClassName(antlib.BIKE_POWER_DEVICE_TYPE);
         return (
             <div className={className}>
                 <div className="deviceTitle">Configure Power Meter</div>
                 <button onClick={this.props.onDisconnectDevice}>Disconnect</button>
-                <div>Device ID: {this.state.deviceId}</div>
-                <div className="label">Functional Threshold Power</div>
-                <input type="textbox" name="ftp" 
-                    value={this.props.ftp}
-                    onChange={this.handleInputChange} />
-                             
+                <div className="powerMeterSettings">
+                    <div className="label">Device ID: {this.state.deviceId}</div>
+                    <div className="label">Functional Threshold Power</div>
+                    <input type="textbox" name="ftp" 
+                        value={this.props.ftp}
+                        onChange={this.handleInputChange} />
+                </div>
             </div>
         );
     }

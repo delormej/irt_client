@@ -2,6 +2,7 @@
 
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
+import AdvancedTrainerSettings from '../views/advancedTrainerSettings';
 import PowerMeterSettings from '../views/powerMeterSettings.jsx';
 import AdvancedPowerMeterSettings from '../views/advancedPowerMeterSettings.jsx';
 import antlib from '../lib/ant/antlib.js';
@@ -15,9 +16,21 @@ const ANT_FEC_CHANNEL_ID = 1;
 const ANT_BP_CHANNEL_ID = 2;
 const ANT_HRM_CHANNEL_ID = 3;
 
+function ToggleAdvancedTrainerSettings(props) {
+    let showAdvanced;
+    if (props.showAdvanced)
+        showAdvanced = <AdvancedTrainerSettings fec={props.fec} />;
+    else 
+        showAdvanced = <button onClick={() => props.onShowAdvanced()}>Advanced</button>;
+    return showAdvanced;
+}
+
 export default class Settings extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showAdvanced: false
+        }
         this.fec = props.ant.fec;
         this.bp = props.ant.bp;
         this.hrm = props.ant.hrm;
@@ -111,6 +124,12 @@ export default class Settings extends React.Component {
             this.hrm.closeChannel();
         }
     }
+    
+    onShowAdvanced() {
+        this.setState( {
+            showAdvanced: true
+        });
+    }
 
     render() {
         return (
@@ -120,17 +139,23 @@ export default class Settings extends React.Component {
                         deviceId={this.props.fecDevice.deviceId}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />
-                    <AdvancedPowerMeterSettings fec={this.fec} 
-                        onChange={this.props.onChange} />                                            
+                    <ToggleAdvancedTrainerSettings 
+                        showAdvanced={this.state.showAdvanced} 
+                        onShowAdvanced={() => this.onShowAdvanced()}
+                        fec={this.fec}  />                        
                 </DeviceSettings>
-                <DeviceSettings ant={this.props.ant}>
-                    <PowerMeterSettings
-                        deviceId={this.props.bpDevice.deviceId} 
-                        ftp={this.props.ftp}
-                        onChange={this.props.onChange} 
-                        onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
-                </DeviceSettings>
+                <div className="powerMeter">
+                    <DeviceSettings ant={this.props.ant}>
+                        <PowerMeterSettings
+                            deviceId={this.props.bpDevice.deviceId} 
+                            ftp={this.props.ftp}
+                            onChange={this.props.onChange} 
+                            onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
+                            onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
+                    </DeviceSettings>
+                    {this.state.showAdvanced && <AdvancedPowerMeterSettings 
+                        fec={this.fec} onChange={this.props.onChange} /> }
+                </div>
                 <DeviceSettings ant={this.props.ant}>
                     <HeartRateConnected deviceId={this.props.hrmDevice.deviceId}
                         hrm={this.hrm}
