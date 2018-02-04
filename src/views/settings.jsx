@@ -118,6 +118,9 @@ export default class Settings extends React.Component {
             this.bp.closeChannel();
         }
         else if (deviceType == antlib.FEC_DEVICE_TYPE) {
+            this.setState( {
+                showAdvanced: false
+            });
             this.fec.closeChannel();
         }
         else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
@@ -138,11 +141,11 @@ export default class Settings extends React.Component {
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.props.fecDevice.deviceId}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />
+                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />           
                     <ToggleAdvancedTrainerSettings 
-                        showAdvanced={this.state.showAdvanced} 
-                        onShowAdvanced={() => this.onShowAdvanced()}
-                        fec={this.fec}  />                        
+                            showAdvanced={this.state.showAdvanced} 
+                            onShowAdvanced={() => this.onShowAdvanced()}
+                            fec={this.fec}  />                            
                 </DeviceSettings>
                 <div className="powerMeter">
                     <DeviceSettings ant={this.props.ant}>
