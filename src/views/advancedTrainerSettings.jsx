@@ -11,9 +11,8 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
         this.onIrtSettings = this.onIrtSettings.bind(this);        
-        this.onSetServo = this.onSetServo.bind(this);
-        this.onSetTarget = this.onSetTarget.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSetResistance = this.handleSetResistance.bind(this);
         this.state = {
             deviceId: props.deviceId,
             rawSettings: undefined,
@@ -69,13 +68,18 @@ export default class AdvancedTrainerSettings extends React.Component {
             this.state.rawSettings, this.state.saveToFlashEnabled);
     }
 
-    onSetServo(position) {
-        console.log("Setting servo to: " + position);
-        this.fec.setServoPosition(position);
-    }
-
-    onSetTarget(power) {
-        this.fec.setTargetPower(power);
+    handleSetResistance(resistanceType, value) {
+        console.log("type: " + resistanceType + " value: " + value);
+        switch (resistanceType) {
+            case "servo":
+                this.fec.setServoPosition(value);
+                break;
+            case "target":
+                this.fec.setTargetPower(value);
+                break;
+            default:
+                console.log("setResistanceType not implemented yet.");
+        }
     }
 
     onRefresh() {
@@ -117,7 +121,8 @@ export default class AdvancedTrainerSettings extends React.Component {
                     onChange={this.handleInputChange}/>
                 <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
-                <SetResistance servo="2000" grade="0" target="230" resistance="37.5" />
+                <SetResistance servo="2000" grade="0" target="230" resistance="37.5"
+                    onSetResistance={this.handleSetResistance} />
             </div>
         );
     }

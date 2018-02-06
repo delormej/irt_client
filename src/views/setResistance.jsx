@@ -38,10 +38,10 @@ export default class SetResistance extends React.Component {
         super(props);
         this.state = {
             resistanceType: "servo",
-            servo: 2000,
-            target: 0,
-            resistance: 0,
-            grade: 0
+            servo: props.servo,
+            target: props.target,
+            resistance: props.resistance,
+            grade: props.grade
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -57,7 +57,9 @@ export default class SetResistance extends React.Component {
     }
 
     handleClick(event) {
-        console.log("Clicked.");
+        const type = this.state.resistanceType; 
+        const value = this.state[type];
+        this.props.onSetResistance(type, value);
     }
 
     render() {
