@@ -96,6 +96,16 @@
     grid-column: 2;
 }
 
+.setTargetPower {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.setServo {
+    grid-column: 1;
+    grid-row: 1;
+}
+
 .heartRateBpm {
     font-weight: bold;
     grid-column: 2;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
-import SetServo from '../views/SetServo';
+import SetResistance from '../views/setResistance';
 
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
@@ -12,6 +12,7 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
         this.onIrtSettings = this.onIrtSettings.bind(this);        
         this.onSetServo = this.onSetServo.bind(this);
+        this.onSetTarget = this.onSetTarget.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
             deviceId: props.deviceId,
@@ -20,6 +21,7 @@ export default class AdvancedTrainerSettings extends React.Component {
             drag: undefined,
             rr: undefined,
             saveToFlashEnabled: true,
+            target: 0,
             servo: 0
         };        
     }
@@ -40,7 +42,8 @@ export default class AdvancedTrainerSettings extends React.Component {
     onIrtExtraInfo(data, timestamp) {
         this.setState( {
             servo: data.servoPosition,
-            flywheelRevs: data.flywheelRevs
+            flywheelRevs: data.flywheelRevs,
+            target: data.target
         })
     }
 
@@ -69,6 +72,10 @@ export default class AdvancedTrainerSettings extends React.Component {
     onSetServo(position) {
         console.log("Setting servo to: " + position);
         this.fec.setServoPosition(position);
+    }
+
+    onSetTarget(power) {
+        this.fec.setTargetPower(power);
     }
 
     onRefresh() {
@@ -110,7 +117,7 @@ export default class AdvancedTrainerSettings extends React.Component {
                     onChange={this.handleInputChange}/>
                 <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
-                <SetServo servo={this.state.servo} onSetServo={this.onSetServo} />
+                <SetResistance servo="2000" grade="0" target="230" resistance="37.5" />
             </div>
         );
     }
