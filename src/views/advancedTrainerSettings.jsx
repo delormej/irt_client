@@ -10,7 +10,8 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.fec = props.fec;
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
-        this.onIrtSettings = this.onIrtSettings.bind(this);        
+        this.onIrtSettings = this.onIrtSettings.bind(this);
+        this.onCommandStatus = this.onCommandStatus.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSetResistance = this.handleSetResistance.bind(this);
         this.state = {
@@ -20,6 +21,7 @@ export default class AdvancedTrainerSettings extends React.Component {
             drag: undefined,
             rr: undefined,
             saveToFlashEnabled: true,
+            powerMeterConnected: false,
             resistance: 0,
             grade: 0,
             target: 0,
@@ -31,6 +33,7 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.on('batteryStatus', this.onBatteryStatus);
         this.fec.on('irtSettings', this.onIrtSettings);
+        this.fec.on('commandStatus', this.onCommandStatus);
         this.fec.getSettings();
     }
 
@@ -38,14 +41,42 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
         this.fec.removeListener('batteryStatus', this.onBatteryStatus);
         this.fec.removeListener('irtSettings', this.onIrtSettings);
+        this.fec.removeListener('commandStatus', this.onCommandStatus);
     }    
 
     onIrtExtraInfo(data, timestamp) {
         this.setState( {
             servo: data.servoPosition,
             flywheelRevs: data.flywheelRevs,
-            target: data.target
-        })
+            target: data.target,
+            powerMeterConnected: data.powerMeterConnected
+        });
+    }
+
+    onCommandStatus(data, timestamp) {
+        console.log("got command status");
+        const BASIC_RESISTANCE_PAGE = 0x30;
+        const TARGET_POWER_PAGE = 0x31;
+        const WIND_RESISTANCE_PAGE = 0x32;
+        const TRACK_RESISTANCE_PAGE = 0x33;        
+        let name; 
+        let value = data.data;
+        switch (data.lastCommand) {
+            case BASIC_RESISTANCE_PAGE:
+                name = "resistance";
+                break;
+            case TARGET_POWER_PAGE:
+                name = "target";
+                break;
+            case TRACK_RESISTANCE_PAGE:
+                name = "grade";
+                break;
+            default:
+                return;
+        }
+        this.setState( {
+            [name]: value
+        });
     }
 
     onBatteryStatus(data, timestamp) {

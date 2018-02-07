@@ -314,6 +314,7 @@ const AntFec = function() {
         switch(eventId) {
             case antlib.EVENT_RX_BROADCAST:
             case antlib.EVENT_RX_FLAG_BROADCAST:
+            case antlib.EVENT_RX_FLAG_ACKNOWLEDGED:
                 ensureDeviceTracking();
                 var messagedId = fecChannelEventBuffer[1];
                 switch (messagedId) {
