@@ -3,6 +3,7 @@
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
+import BatteryStatus from './batteryStatus';
 
 export default class TrainerSettings extends React.Component {
     constructor(props) {
@@ -83,6 +84,7 @@ export default class TrainerSettings extends React.Component {
                     Device ID: {this.state.deviceId}<br/>
                     Firmware v{this.state.swRevision}<br/>
                     Serial No: {this.state.serial}<br/>
+                    <BatteryStatus ant={this.fec} />
                 </div>                        
                 <div className="advancedTrainerSettings">
                     <div className="label">Rider Weight (kg)</div>

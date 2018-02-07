@@ -23,42 +23,24 @@ export default class BatteryStatus extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('batteryStatus', this.onBatteryStatus);
+        this.antDevice.on('batteryStatus', this.onBatteryStatus);
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('batteryStatus', this.onBatteryStatus);
+        this.antDevice.removeListener('batteryStatus', this.onBatteryStatus);
     }
 
     getStatusDescription(status) {
-        let description;
-        switch (status) {
-            case 0x01:
-                description = "New";
-                break;
-            case 0x02:
-                description = "Good";
-                break;
-            case 0x03:
-                description = "Ok";
-                break;
-            case 0x04:
-                description = "Low"
-                break;
-            case 0x05:
-                description = "Critical";
-                break;
-            default:
-                description = "";
-                break;
-        }
-        return description;
+        const description = [ "New", "Good", "Ok", "Low", "Critical" ];
+        if (status > description.length-1)
+            return "";
+        return description[status];
     }
 
     render() {
         return (
             <div className="batteryStatus">
-                {getStatusDescription(this.state.status)}
+                Battery: {this.getStatusDescription(this.state.status)}
             </div>
         );
     }
