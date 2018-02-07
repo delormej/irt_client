@@ -484,16 +484,18 @@ const AntFec = function() {
     }
 
     // Sets basic resistance.
-    function setBasicResistance(totalResistance) {
+    function setBasicResistance(resistancePct) {
         transmitBuffer[0] = BASIC_RESISTANCE_PAGE;
         
+        let resistance = (resistancePct * 2) & 0xFF;
+
         // Pad reserved bytes.
         for (var index = 1; index < 6; index++) {
             transmitBuffer[index] = 0xFF;
         }
         
         // Resistance level.  0-254, 0.5% increments 
-        transmitBuffer[7] = totalResistance; // Resistance level.
+        transmitBuffer[7] = resistance; 
         
         var result = antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
         console.log('setting resistance:', result);
@@ -504,20 +506,26 @@ const AntFec = function() {
     // Sets target grade and coefficient of rolling resistance.
     function setTrackResistance(grade, crr) {
         transmitBuffer[0] = TRACK_RESISTANCE_PAGE;
-
+        transmitBuffer[1] = 0xFF;
+        transmitBuffer[2] = 0xFF;
+        transmitBuffer[3] = 0xFF;
+        transmitBuffer[4] = 0xFF;
+        // -200% - 200% in 0.01%
+        let simGrade = (grade * 100) + 20000;
+        transmitBuffer[5] = simGrade & 0xFF;
+        transmitBuffer[6] = simGrade >> 8;
+        if (!crr)
+            crr = 0.004; // default
+        // 0.0 - 0.0127
+        let simCrr =  crr / (Math.pow(10, -5) * 5);
+        transmitBuffer[7] = simCrr;
         var result = antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);
-        console.log('setting track resistance:', result);
-        // Verify it worked by async aking for last command.
-        requestLastCommand();
-
     }
 
     // Sets erg mode and target watts.
     function setTargetPower(watts) {
-        
         // in 0.25 watts
-        var value = watts * 4;
-        
+        var value = watts * 4;        
         transmitBuffer[0] = TARGET_POWER_PAGE;
         transmitBuffer[1] = 0xFF;
         transmitBuffer[2] = 0xFF;
@@ -742,6 +750,7 @@ const AntFec = function() {
     AntFec.prototype.blinkLed = blinkLed;
     AntFec.prototype.setBasicResistance = setBasicResistance;
     AntFec.prototype.setTargetPower = setTargetPower;
+    AntFec.prototype.setTrackResistance = setTrackResistance;
     AntFec.prototype.setUserConfiguration = setUserConfiguration;    
     AntFec.prototype.getSettings = getSettings;
     AntFec.prototype.getUserConfiguration = getUserConfiguration;

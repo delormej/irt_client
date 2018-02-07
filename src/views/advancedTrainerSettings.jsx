@@ -20,6 +20,8 @@ export default class AdvancedTrainerSettings extends React.Component {
             drag: undefined,
             rr: undefined,
             saveToFlashEnabled: true,
+            resistance: 0,
+            grade: 0,
             target: 0,
             servo: 0
         };        
@@ -69,7 +71,6 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     handleSetResistance(resistanceType, value) {
-        console.log("type: " + resistanceType + " value: " + value);
         switch (resistanceType) {
             case "servo":
                 this.fec.setServoPosition(value);
@@ -77,9 +78,18 @@ export default class AdvancedTrainerSettings extends React.Component {
             case "target":
                 this.fec.setTargetPower(value);
                 break;
+            case "resistance":
+                this.fec.setBasicResistance(value);
+                break;
+            case "grade":
+                this.fec.setTrackResistance(value);
+                break;
             default:
-                console.log("setResistanceType not implemented yet.");
+                break;
         }
+        this.setState({
+            [resistanceType]: value
+        });
     }
 
     onRefresh() {
@@ -121,7 +131,8 @@ export default class AdvancedTrainerSettings extends React.Component {
                     onChange={this.handleInputChange}/>
                 <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
-                <SetResistance servo="2000" grade="0" target="230" resistance="37.5"
+                <SetResistance servo={this.state.servo} grade={this.state.grade} 
+                    target={this.state.target} resistance={this.state.resistance}
                     onSetResistance={this.handleSetResistance} />
             </div>
         );
