@@ -103,10 +103,11 @@ const AntFec = function() {
         return (resistance/200);
     }
 
-    function getCapabilitiesState(byte) {
+    function getCapabilitiesState() {
+        const byte = fecChannelEventBuffer[8];
         var state = {
                 virtualSpeed : byte & 0x08,
-                feState : byte & 0xE0,
+                feState : (byte >> 4) & 0x07,
                 lapToggle : byte & 0x80 
         };
         return state;
@@ -122,6 +123,10 @@ const AntFec = function() {
         
         return capabilities;
     }
+
+    function getTargetPowerLimits() {
+        return (fecChannelEventBuffer[8] >> 4) & 0x02;
+    }    
 
     // Returns an object with trainer status flags.
     function getTrainerStatus(bits) {
@@ -169,8 +174,8 @@ const AntFec = function() {
                 distanceTravelled: getDistance(fecChannelEventBuffer[4]),
                 speedMps : getSpeed(fecChannelEventBuffer[5], fecChannelEventBuffer[6]),
                 distanceTraveledEnabled : fecChannelEventBuffer[8] & 0x04,
-                state : getCapabilitiesState(fecChannelEventBuffer[8]),
-                targetPowerLimits : fecChannelEventBuffer[8] & 0x03
+                state : getCapabilitiesState(),
+                targetPowerLimits : getTargetPowerLimits()
         };
                 
         //console.log(page);
@@ -182,8 +187,8 @@ const AntFec = function() {
         var page = {
             wheelCircumference : parseInt(fecChannelEventBuffer[4]),
             resistanceLevel : getResistance(fecChannelEventBuffer[7]),     
-            state : getCapabilitiesState(fecChannelEventBuffer[8]),
-            targetPowerLimits : fecChannelEventBuffer[8] & 0x03
+            state : getCapabilitiesState(),
+            targetPowerLimits : getTargetPowerLimits()
         };
         //console.log(page);
         return page;                
@@ -198,8 +203,8 @@ const AntFec = function() {
             instantPower : ( (fecChannelEventBuffer[7] & 0x0F) << 8 |
                 fecChannelEventBuffer[6] ),
             trainerStatus : getTrainerStatus(fecChannelEventBuffer[7] & 0xF0),
-            feState : fecChannelEventBuffer[7] & 0xF0,
-            targetPowerLimits : fecChannelEventBuffer[8] & 0x03
+            state : getCapabilitiesState(),
+            targetPowerLimits : getTargetPowerLimits()
         };
         
         return page;
