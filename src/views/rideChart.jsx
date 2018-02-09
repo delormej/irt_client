@@ -8,10 +8,13 @@ export default class RideChart extends Component {
   constructor(props) {
     super(props);
     this.bp = this.props.bp;
+    this.hrm = this.props.hrm;
     this.onBikePower = this.onBikePower.bind(this);
+    this.onHeartRate = this.onHeartRate.bind(this);
     this.state = {
         instantPowerEvents: [],
-        instantCadenceEvents: []
+        instantCadenceEvents: [],
+        heartRateEvents: []
     };
   }
   
@@ -28,14 +31,25 @@ export default class RideChart extends Component {
     });
   }
 
+  onHeartRate(value, timestamp) {
+    let hrm = this.state.heartRateEvents.slice();
+
+    hrm.push({"timestamp": timestamp, "value": value});
+    this.setState({
+      heartRateEvents: hrm
+    });
+  }
+
   componentDidMount() {
     this.bp.on('standardPowerOnly', this.onBikePower);
     this.bp.on('ctfMainPage', this.onBikePower);
+    this.hrm.on('heartRate', this.onHeartRate);
   }
 
   componentWillUnmount() {
     this.bp.removeListener('standardPowerOnly', this.onBikePower);
     this.bp.removeListener('ctfMainPage', this.onBikePower);
+    this.hrm.removeListener('heartRate', this.onHeartRate);
   }
 
   render() {
