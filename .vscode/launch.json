@@ -2,27 +2,34 @@
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+    // top/file:///C:/Users/delor/dev/irt_client/src/C:/Users/delor/dev/irt_client/src
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "main",
             "type": "node",
             "request": "launch",
-            "name": "main",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-forge-vscode-nix",
-            "windows": {
-                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron-forge-vscode-win.cmd"
-            },
+            "protocol": "inspector",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
             "runtimeArgs": [
-                "--remote-debugging-port=9222"
+                "./src/main.js",
+                "--remote-debugging-port=9223"
             ],
-            "cwd": "${workspaceRoot}"
+            "windows": {
+                "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+            },            
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true
         },
         {
+            "name": "renderer",
             "type": "chrome",
             "request": "attach",
-            "name": "renderer",
-            "port": 9222,
-            "webRoot": "${workspaceFolder}"
+            "port": 9223,
+            "webRoot": "{workspaceRoot}",
+            "sourceMaps": true,
+            "timeout": 3000
         }
     ],
     "compounds": [
