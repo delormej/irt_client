@@ -54,26 +54,36 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     onCommandStatus(data, timestamp) {
-        console.log("got command status");
         const BASIC_RESISTANCE_PAGE = 0x30;
         const TARGET_POWER_PAGE = 0x31;
         const WIND_RESISTANCE_PAGE = 0x32;
         const TRACK_RESISTANCE_PAGE = 0x33;        
         let name; 
-        let value = data.data;
+        let value;;
         switch (data.lastCommand) {
             case BASIC_RESISTANCE_PAGE:
                 name = "resistance";
+                value = data.resistance;
                 break;
             case TARGET_POWER_PAGE:
                 name = "target";
+                value = data.targetPower;
+                break;
+            case WIND_RESISTANCE_PAGE:
+                // data.windCoeff = buffer[6];
+                // data.windSpeed = buffer[7];
+                // data.draftFactor = buffer[8]; 
+                name = "wind";
+                value = data.windSpeed;
                 break;
             case TRACK_RESISTANCE_PAGE:
                 name = "grade";
+                value = data.slope;
                 break;
             default:
                 return;
         }
+        console.log("got command status: ", name, value);
         this.setState( {
             [name]: value
         });
