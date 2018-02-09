@@ -29,7 +29,9 @@ export default class TargetPowerStatus extends React.Component {
     render() {
         return (
             <div className="targetPowerStatus">
-                {this.formatTargetPowerStatus(this.props.value)}
+                { this.props.value >= 1 && this.props.value <= 2 && 
+                    this.formatTargetPowerStatus(this.props.value)
+                }
             </div>
         );
     }

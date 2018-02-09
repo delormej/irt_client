@@ -15,14 +15,17 @@
             "runtimeArgs": [
                 "--remote-debugging-port=9222"
             ],
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true
         },
         {
             "type": "chrome",
             "request": "attach",
             "name": "renderer",
             "port": 9222,
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "trace": true
         }
     ],
     "compounds": [
