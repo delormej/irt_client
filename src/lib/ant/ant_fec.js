@@ -125,7 +125,7 @@ const AntFec = function() {
     }
 
     function getTargetPowerLimits() {
-        return (fecChannelEventBuffer[8] >> 4) & 0x02;
+        return (fecChannelEventBuffer[8] & 0x03);
     }    
 
     // Returns an object with trainer status flags.
