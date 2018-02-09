@@ -761,6 +761,7 @@ const AntFec = function() {
     AntFec.prototype.setUserConfiguration = setUserConfiguration;
     AntFec.prototype.getChannelStatus = getChannelStatus;
     AntFec.prototype.getDeviceId = getDeviceId;
+    AntFec.prototype.requestLastCommand = requestLastCommand;
 };
 
 util.inherits(AntFec, EventEmitter);

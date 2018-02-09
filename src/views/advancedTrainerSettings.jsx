@@ -125,6 +125,7 @@ export default class AdvancedTrainerSettings extends React.Component {
 
     onRefresh() {
         this.fec.getSettings();
+        this.fec.requestLastCommand();
     }
 
     handleInputChange(event) {
