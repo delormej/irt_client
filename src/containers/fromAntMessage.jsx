@@ -7,16 +7,16 @@ function fromAntMessage(WrappedComponent, message) {
         constructor(props) {
             super(props);
             this.state = { message: null };
-            this.fec = props.fec;
+            this.ant = props.ant;
             this.onMessage = this.onMessage.bind(this);
         }
 
         componentDidMount() {
-            this.fec.on(message, this.onMessage);
+            this.ant.on(message, this.onMessage);
         }
     
         componentWillUnmount() {
-            this.fec.removeListener(message, this.onMessage);
+            this.ant.removeListener(message, this.onMessage);
         }    
     
         onMessage(data, timestamp) {

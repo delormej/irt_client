@@ -37,7 +37,7 @@ export default class Ride extends React.Component {
               <AveragePower bp={this.bp} bpAverager={this.bpAverager} 
                 seconds={this.props.averageSeconds} />
               <ResistanceLevel fec={this.fec} />
-              <RideChart bp={this.bp} />
+              <RideChart bp={this.bp} hrm={this.hrm} />
             </div>
         );      
     }
