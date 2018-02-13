@@ -2,7 +2,7 @@
 
 import React from 'react';
 import GeneralFEData from '../views/generalFEData.jsx';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 
 export default class DistanceTravelled extends GeneralFEData {
     constructor(props) {

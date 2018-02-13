@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 import ColorStyle from '../lib/ant/ts/colorScale';
 
 export default class PowerMeter extends React.Component {

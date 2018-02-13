@@ -2,7 +2,7 @@
 
 import React from 'react';
 import SpecificTrainerData from '../views/specificTrainerData.jsx';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 
 export default class TrainerPower extends SpecificTrainerData {
     constructor(props) {

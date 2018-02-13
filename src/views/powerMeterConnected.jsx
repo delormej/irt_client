@@ -2,7 +2,7 @@
 
 import React from 'react';
 import IrtExtraInfo from '../views/irtExtraInfo.jsx';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 
 export default class PowerMeterConnected extends IrtExtraInfo {
     constructor(props) {

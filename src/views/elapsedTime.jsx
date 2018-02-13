@@ -2,7 +2,7 @@
 
 import React from 'react';
 import GeneralFEData from '../views/generalFEData.jsx';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 import util from 'util';
 import zpad from 'zpad';
 

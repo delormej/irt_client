@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from './rideDataComponent';
 import TargetPowerStatus from '../views/targetPowerStatus.jsx';
 import FeState from '../views/feState.jsx';
 
