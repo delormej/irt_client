@@ -32,8 +32,8 @@ export default class FeState extends React.Component {
 
     render() {
         let state;
-        if (this.props.data != undefined)
-            state = this.formatFeState(this.props.data.state.feState);
+        if (this.props.state != undefined)
+            state = this.formatFeState(this.props.state.feState);
         else
             state = "";
         return (<div className="feState">{state}</div>);

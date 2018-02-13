@@ -19,21 +19,14 @@ export interface InjectedProps {
     data: any;
 }
 
-// Options for the HOC factory that are not dependent on props values
-interface Options {
-    message: string;
-}
-
-export const hocAntMessage = (options: Options) =>
+export const hocAntMessage = (message: string) =>
     <TOriginalProps extends {}>(
         Component: (React.ComponentClass<TOriginalProps & InjectedProps>
             | React.StatelessComponent<TOriginalProps & InjectedProps>)
     ) => {
-        // Do something with the options here or some side effects
-
         type ResultProps = TOriginalProps & ExternalProps;
         const result = class HocAntMessage extends React.Component<ResultProps, State> {
-            // Define how your HOC is shown in ReactDevTools
+            // Define how HOC is shown in ReactDevTools
             static displayName = `hocAntMessage(${Component.displayName})`;
 
             constructor(props: ResultProps) {
@@ -45,11 +38,11 @@ export const hocAntMessage = (options: Options) =>
             }
         
             componentDidMount() {
-                this.props.ant.on(options.message, this.onMessage);
+                this.props.ant.on(message, this.onMessage);
             }
         
             componentWillUnmount() {
-                this.props.ant.removeListener(options.message, this.onMessage);
+                this.props.ant.removeListener(message, this.onMessage);
             }    
         
             onMessage(data, timestamp) {
@@ -57,13 +50,10 @@ export const hocAntMessage = (options: Options) =>
                     data: data
                 });
             }
-        
-            // Implement other methods here
 
             render(): JSX.Element {
-                // Render all your added markup
                 return (
-                    <Component {...this.props} {...this.state} />
+                    <Component {...this.state.data} />
                 );
             }
         };
