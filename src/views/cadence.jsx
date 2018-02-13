@@ -1,10 +1,9 @@
 'use babel';
 
 import React from 'react';
-import PowerMeter from '../views/powerMeter';
 import RideDataComponent from './rideDataComponent';
 
-export default class Cadence extends PowerMeter {
+export default class Cadence extends React.Component {
     constructor(props) {
       super(props);
     }
