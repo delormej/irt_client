@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import PowerMeter from '../views/powerMeter.jsx';
+import PowerMeter from '../views/powerMeter';
 import RideDataComponent from './rideDataComponent';
 
 export default class Cadence extends PowerMeter {
@@ -12,7 +12,7 @@ export default class Cadence extends PowerMeter {
     render() {
         return (
             <RideDataComponent class="cadence" label="RPM"
-                value={this.state.instantCadence} />
+                value={this.props.instantCadence} />
           );      
     }
 }  

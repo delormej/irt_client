@@ -53,7 +53,7 @@ export const hocAntMessage = (message: string) =>
 
             render(): JSX.Element {
                 return (
-                    <Component {...this.state.data} />
+                    <Component {...this.props} {...this.state.data} />
                 );
             }
         };

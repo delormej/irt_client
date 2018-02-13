@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import PowerMeter from '../views/powerMeter.jsx'
+import PowerMeter from '../views/powerMeter'
 import RideDataComponent from './rideDataComponent';
 
 export default class PowerAverage extends PowerMeter {
