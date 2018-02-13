@@ -14,10 +14,11 @@ import HeartRate from '../views/heartRate.jsx';
 import RideChart from '../views/rideChart.jsx';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
-const SpeedMphFromAnt = hocAntMessage('generalFEData')(SpeedMph);
-const PowerMeterFromAnt = hocAntMessage('standardPowerOnly')(PowerMeter);
-const AveragePowerFromAnt = hocAntMessage('standardPowerOnly')(AveragePower);
-const CadenceFromAnt = hocAntMessage('standardPowerOnly')(Cadence);
+const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
+const SpeedMphFromAnt = hocAntMessage(['generalFEData'])(SpeedMph);
+const PowerMeterFromAnt = hocAntMessage(powerMessages)(PowerMeter);
+const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
+const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
 
 export default class Ride extends React.Component {
     constructor(props) {

@@ -12,10 +12,7 @@ export default class PowerMeter extends React.Component<PowerMeterProps> {
     constructor(props: PowerMeterProps) {
       super(props);
     }
-
-        //this.bp.on('standardPowerOnly', this.onBikePower);
-        //this.bp.on('ctfMainPage', this.onBikePower);
-
+    
     render(): JSX.Element {
         let power: string;
         if (this.props.instantPower == undefined)

@@ -19,7 +19,7 @@ export interface InjectedProps {
     data: any;
 }
 
-export const hocAntMessage = (message: string) =>
+export const hocAntMessage = (messages: string[]) =>
     <TOriginalProps extends {}>(
         Component: (React.ComponentClass<TOriginalProps & InjectedProps>
             | React.StatelessComponent<TOriginalProps & InjectedProps>)
@@ -38,11 +38,16 @@ export const hocAntMessage = (message: string) =>
             }
         
             componentDidMount() {
-                this.props.ant.on(message, this.onMessage);
+                messages.forEach(element => {
+                    this.props.ant.on(element, this.onMessage);    
+                });
+                
             }
         
             componentWillUnmount() {
-                this.props.ant.removeListener(message, this.onMessage);
+                messages.forEach(element => {
+                    this.props.ant.removeListener(element, this.onMessage);    
+                });
             }    
         
             onMessage(data, timestamp) {

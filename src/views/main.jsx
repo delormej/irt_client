@@ -14,7 +14,7 @@ import ElectronSettings from 'electron-settings';
 import FeState from '../views/feState';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
-const FeStateFromAntMessage = hocAntMessage('specificTrainerData')(FeState);
+const FeStateFromAntMessage = hocAntMessage(['specificTrainerData'])(FeState);
 
 export default class Main extends React.Component {
   constructor(props) {
