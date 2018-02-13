@@ -5,7 +5,8 @@
     },
     "include": [
         "./lib/ant/ts/*.ts",
-        "./containers/*.ts*"
+        "./containers/*.ts*",
+        "./views/*.tsx"
     ],
     "exclude": [
     ]

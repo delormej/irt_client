@@ -4,4 +4,6 @@ ao_debug_ao_libusb_receive.*
 lib/ant/ts/*.js*
 src/lib/ant/ts/*.js*
 src/containers/*.js*
+src/views/*.js
+**/*.js.map
 out/

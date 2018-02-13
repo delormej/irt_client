@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import SpeedMph from '../views/speedMph.jsx';
+import SpeedMph from '../views/speedMph';
 import DistanceTravelled from '../views/distanceTravelled.jsx';
 import ElapsedTime from '../views/elapsedTime.jsx';
 import TrainerPower from '../views/trainerPower.jsx';
