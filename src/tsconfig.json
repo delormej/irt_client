@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "jsx": "react"
+    },
+    "include": [
+        "./lib/ant/ts/*.ts",
+        "./containers/*.ts*"
+    ],
+    "exclude": [
+    ]
+}

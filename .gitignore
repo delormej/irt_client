@@ -3,4 +3,5 @@ Device*.txt
 ao_debug_ao_libusb_receive.*
 lib/ant/ts/*.js*
 src/lib/ant/ts/*.js*
+src/containers/*.js*
 out/

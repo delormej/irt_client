@@ -15,12 +15,13 @@
     "start": "electron-forge start",
     "prestart": "npm run build",
     "postinstall": "./node_modules/.bin/electron-rebuild",
-    "build": "tsc --project ./src/lib/ant/ts/tsconfig.json",
+    "build": "tsc --project ./src/tsconfig.json",
     "clean": "rmdir ./src/node_modules /s /q",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
   "dependencies": {
+    "@types/react": "^16.0.36",
     "asar": "^0.14.0",
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",

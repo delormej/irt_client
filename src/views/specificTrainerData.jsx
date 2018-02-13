@@ -47,11 +47,13 @@ export default class SpecificTrainerData extends React.Component {
     }
 
     render() {
-        return (
+        return null;   
+            /*
+         (
             <div>
                 <TargetPowerStatus value={this.state.targetPowerLimits} />
                 <FeState value={this.state.feState} />
-            </div>
-        );
+            </div> 
+        ); */
     }
 }

@@ -11,6 +11,14 @@ import Header from '../views/header.jsx';
 import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
 import ElectronSettings from 'electron-settings';
+import FeState from '../views/feState';
+//import fromAntMessage from '../containers/fromAntMessage';
+import { hocAntMessage } from '../containers/hocAntMessage';
+
+//const FeStateFromAntMessage = fromAntMessage(FeState, 'specificTrainerData');
+const options = { message: 'specificTrainerData' };
+//const FeStateFromAntMessage = hocAntMessage('specificTrainerData')(FeState);
+const FeStateFromAntMessage = hocAntMessage(options)(FeState);
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -130,6 +138,7 @@ export default class Main extends React.Component {
   render() {
     let children = (
       <div>
+        <FeStateFromAntMessage ant={this.state.ant.fec} message="specificTrainerData" />
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fec={this.state.ant.fec}
             fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}

@@ -4,6 +4,7 @@
         ".gitignore": true,
         "node_modules": true,
         "ao_debug*": true,
-        "lib/ant/ts/*.js": true
+        "lib/ant/ts/*.js": true,
+        "src/containers/*.js*": true
     }
 }
