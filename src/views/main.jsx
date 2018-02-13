@@ -134,7 +134,7 @@ export default class Main extends React.Component {
   render() {
     let children = (
       <div>
-        <FeStateFromAntMessage ant={this.state.ant.fec} message="specificTrainerData" />
+        <FeStateFromAntMessage ant={this.state.ant.fec} />
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fec={this.state.ant.fec}
             fecConnected={this.state.fecDevice.status == antlib.STATUS_TRACKING_CHANNEL}

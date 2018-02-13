@@ -1,10 +1,9 @@
 'use babel';
 
 import React from 'react';
-import GeneralFEData from '../views/generalFEData.jsx';
-import RideDataComponent from '../views/rideDataComponent.jsx';
+import RideDataComponent from  './rideDataComponent';
 
-export default class SpeedMph extends GeneralFEData {
+export default class SpeedMph extends React.Component {
     constructor(props) {
       super(props);
     }
@@ -17,7 +16,7 @@ export default class SpeedMph extends GeneralFEData {
     render() {
         return (
             <RideDataComponent class="speed" label="MPH"
-                value={this.calculateMph(this.state.speedMps)} />
+                value={this.calculateMph(this.props.speedMps)} />
           );      
     }
 }  

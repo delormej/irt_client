@@ -12,6 +12,9 @@ import Cadence from '../views/cadence.jsx';
 import ResistanceLevel from '../views/resistanceLevel.jsx';
 import HeartRate from '../views/heartRate.jsx';
 import RideChart from '../views/rideChart.jsx';
+import { hocAntMessage } from '../containers/hocAntMessage';
+
+const SpeedMphFromAnt = hocAntMessage('generalFEData')(SpeedMph);
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -26,7 +29,7 @@ export default class Ride extends React.Component {
     render() {
         return (
             <div className="ride">
-              <SpeedMph fec={this.fec} />
+              <SpeedMphFromAnt ant={this.fec} />
               <HeartRate hrm={this.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
               <DistanceTravelled fec={this.fec} />
               <ElapsedTime fec={this.fec} />
