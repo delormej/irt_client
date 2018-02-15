@@ -12,7 +12,7 @@ export default class PowerMeter extends React.Component<PowerMeterProps> {
     constructor(props: PowerMeterProps) {
       super(props);
     }
-    
+
     render(): JSX.Element {
         let power: string;
         if (this.props.instantPower == undefined)

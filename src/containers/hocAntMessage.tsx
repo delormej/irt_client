@@ -35,6 +35,8 @@ export const hocAntMessage = (messages: string[]) =>
                     data: null
                 };
                 this.onMessage = this.onMessage.bind(this);
+                if (!Array.isArray(messages))  
+                    messages = [messages];
             }
         
             componentDidMount() {

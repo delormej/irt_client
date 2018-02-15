@@ -15,7 +15,7 @@ import RideChart from '../views/rideChart.jsx';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
 const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
-const SpeedMphFromAnt = hocAntMessage(['generalFEData'])(SpeedMph);
+const SpeedMphFromAnt = hocAntMessage('generalFEData')(SpeedMph);
 const PowerMeterFromAnt = hocAntMessage(powerMessages)(PowerMeter);
 const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
 const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
