@@ -48,7 +48,7 @@ const AntBikePower = function() {
             var elapsedTime = antlib.getDeltaWithRollover16(
                 lastCtfMainPage.timestamp, 
                 ctfPage.timestamp);
-            var events = antlib.getDeltaWithRollover16(
+            var events = antlib.getDeltaWithRollover8(
                 lastCtfMainPage.eventCount, 
                 ctfPage.eventCount);                
             

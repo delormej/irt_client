@@ -576,6 +576,10 @@ function getDeltaWithRollover16(prior, current) {
     return (prior > current ? (0xFFFF ^ prior) + current : current - prior);
 }
 
+function getDeltaWithRollover8(prior, current) {
+    return (prior > current ? (0xFF ^ prior) + current : current - prior);    
+}
+
 // Gets the average power for a specified period of seconds. 
 function getAveragePower(seconds,  powerEvents) {
    
@@ -622,6 +626,7 @@ exports.requestChannelId = requestChannelId;
 exports.accumulateByte = accumulateByte;
 exports.accumulateDoubleByte = accumulateDoubleByte;
 exports.getDeltaWithRollover16 = getDeltaWithRollover16;
+exports.getDeltaWithRollover8 = getDeltaWithRollover8;
 exports.getAveragePower = getAveragePower;
 exports.enableExtendedMessages = enableExtendedMessages;
 exports.getTimestamp = getTimestamp;
