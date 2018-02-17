@@ -6,6 +6,7 @@ import * as EventEmitter from 'events';
 
 // State of the HOC you need to compute the InjectedProps
 interface State {
+    message: string;
     data: any;
 }
 
@@ -32,35 +33,37 @@ export const hocAntMessage = (messages: string[]) =>
             constructor(props: ResultProps) {
                 super(props);
                 this.state = {
+                    message: null,
                     data: null
                 };
-                this.onMessage = this.onMessage.bind(this);
                 if (!Array.isArray(messages))  
                     messages = [messages];
             }
         
             componentDidMount() {
-                messages.forEach(element => {
-                    this.props.ant.on(element, this.onMessage);    
+                messages.forEach(message => {
+                    this.props.ant.on(message, 
+                        this.onMessage.bind(this, message));    
                 });
                 
             }
         
             componentWillUnmount() {
-                messages.forEach(element => {
-                    this.props.ant.removeListener(element, this.onMessage);    
+                messages.forEach(message => {
+                    this.props.ant.removeAllListeners(message);    
                 });
             }    
         
-            onMessage(data, timestamp) {
+            onMessage(message, data, timestamp) {
                 this.setState( {
+                    message: message,
                     data: data
                 });
             }
 
             render(): JSX.Element {
                 return (
-                    <Component {...this.props} {...this.state.data} />
+                    <Component {...this.props} message={this.state.message} {...this.state.data} />
                 );
             }
         };
