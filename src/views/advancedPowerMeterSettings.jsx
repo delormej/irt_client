@@ -21,6 +21,7 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
             resistanceAdjustSeconds: 0,
             minAdjustSpeedMph: 0,
             servoSmoothingSteps: 0,
+            powerMeterConnected: false,
             saveToFlashEnabled: true
         }
     }
@@ -38,7 +39,9 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
     }    
 
     onIrtExtraInfo(data, timestamp) {
-
+        this.setState( {
+            powerMeterConnected: data.powerMeterConnected
+        })
     }
 
     onIrtSettingsPowerAdjust(data, timestamp) {
@@ -116,6 +119,7 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
                     Do not pair with power meter
                 </label>
                 <div className="label">...</div>
+                <div className="label">Connected to rollers: {this.state.powerMeterConnected.toString()}</div>       
                 <div className="label">Power Meter Average Seconds</div>
                 <input type="textbox" name="powerMeterAverageSeconds" 
                     value={this.state.powerMeterAverageSeconds}
