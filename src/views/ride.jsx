@@ -11,7 +11,7 @@ import TargetPower from '../views/targetPower.jsx';
 import Cadence from '../views/cadence.jsx';
 import ResistanceLevel from '../views/resistanceLevel.jsx';
 import HeartRate from '../views/heartRate.jsx';
-import RideChart from '../views/rideChart.jsx';
+import RideChart from '../views/rideChart';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
 const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
@@ -44,7 +44,8 @@ export default class Ride extends React.Component {
               <AveragePowerFromAnt ant={this.bp} bpAverager={this.bpAverager} 
                 seconds={this.props.averageSeconds} />
               <ResistanceLevel fec={this.fec} />
-              <RideChart bp={this.bp} hrm={this.hrm} />
+              <RideChart bp={this.bp} hrm={this.hrm} fec={this.fec} 
+                bpAverager={this.bpAverager} averageSeconds={this.props.averageSeconds} />
             </div>
         );      
     }
