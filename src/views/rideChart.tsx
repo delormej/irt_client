@@ -1,7 +1,6 @@
 
 import * as React from 'react';
 import * as EventEmitter from 'events';
-
 import * as AmCharts from "@amcharts/amcharts3-react";
 
 interface RideChartProps {
@@ -27,6 +26,7 @@ interface RideChartState {
 
 export default class RideChart extends React.Component<RideChartProps, RideChartState> {
   private current: ChartEvent;
+  private timer: NodeJS.Timer;
 
   constructor(props) {
     super(props);
@@ -72,7 +72,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     this.props.fec.on('irtExtraInfo', this.onIrtExtraInfo);
 
     const TIMEOUT_MS = 1000;
-    setInterval(this.updateState, TIMEOUT_MS);
+    this.timer = setInterval(this.updateState, TIMEOUT_MS);
   }
 
   componentWillUnmount() {
@@ -80,6 +80,8 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     this.props.bp.removeListener('ctfMainPage', this.onBikePower);
     this.props.hrm.removeListener('heartRate', this.onHeartRate);
     this.props.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+
+    clearTimeout(this.timer);
   }
 
   updateState() {
