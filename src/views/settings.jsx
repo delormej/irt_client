@@ -139,7 +139,7 @@ export default class Settings extends React.Component {
             <div className="settings">
                 <DeviceSettings ant={this.props.ant}>
                     <TrainerSettings fec={this.fec} 
-                        deviceId={this.props.fecDevice.deviceId}
+                        deviceId={this.fec.getDeviceId()}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />           
                     <ToggleAdvancedTrainerSettings 
@@ -150,7 +150,7 @@ export default class Settings extends React.Component {
                 <div className="powerMeter">
                     <DeviceSettings ant={this.props.ant}>
                         <PowerMeterSettings
-                            deviceId={this.props.bpDevice.deviceId} 
+                            deviceId={this.bp.getDeviceId()} 
                             ftp={this.props.ftp}
                             onChange={this.props.onChange} 
                             onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
@@ -160,7 +160,7 @@ export default class Settings extends React.Component {
                         fec={this.fec} onChange={this.props.onChange} /> }
                 </div>
                 <DeviceSettings ant={this.props.ant}>
-                    <HeartRateConnected deviceId={this.props.hrmDevice.deviceId}
+                    <HeartRateConnected deviceId={this.hrm.getDeviceId()}
                         hrm={this.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
