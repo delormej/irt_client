@@ -74,6 +74,10 @@ export abstract class DeviceProfile extends EventEmitter {
         return this._channelStatus.valueOf();
     }
 
+    public getDeviceId(): Number {
+        return this._channelConfig.deviceId;
+    }
+
     protected abstract updateChannelConfig(config: ChannelConfig);
     protected abstract onMessage(messageId: number, timestamp: number);
 
