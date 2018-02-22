@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Main from '../views/main.jsx';
+import Main from '../views/main';
 import ErrorBoundry from '../views/errorBoundry.jsx';
 const remote = require('electron').remote;
 
