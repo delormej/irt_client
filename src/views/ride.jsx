@@ -1,17 +1,17 @@
 'use babel';
 
 import React from 'react';
-import SpeedMph from '../views/speedMph';
-import PowerMeter from '../views/powerMeter';
-import DistanceTravelled from '../views/distanceTravelled.jsx';
-import ElapsedTime from '../views/elapsedTime.jsx';
-import TrainerPower from '../views/trainerPower.jsx';
-import AveragePower from '../views/averagePower.jsx';
-import TargetPower from '../views/targetPower.jsx';
-import Cadence from '../views/cadence.jsx';
-import ResistanceLevel from '../views/resistanceLevel.jsx';
-import HeartRate from '../views/heartRate.jsx';
-import RideChart from '../views/rideChart';
+import SpeedMph from './speedMph';
+import PowerMeter from './powerMeter';
+import DistanceTravelled from './distanceTravelled';
+import ElapsedTime from './elapsedTime';
+import TrainerPower from './trainerPower';
+import AveragePower from './averagePower';
+import TargetPower from './targetPower';
+import Cadence from './cadence';
+import ResistanceLevel from './resistanceLevel';
+import HeartRate from './heartRate';
+import RideChart from './rideChart';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
 const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
@@ -19,6 +19,7 @@ const SpeedMphFromAnt = hocAntMessage('generalFEData')(SpeedMph);
 const PowerMeterFromAnt = hocAntMessage(powerMessages)(PowerMeter);
 const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
 const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
+const TrainerPowerFromAnt = hocAntMessage('specificTrainerData')(TrainerPower);
 
 export default class Ride extends React.Component {
     constructor(props) {
@@ -37,7 +38,7 @@ export default class Ride extends React.Component {
               <HeartRate hrm={this.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
               <DistanceTravelled fec={this.fec} />
               <ElapsedTime fec={this.fec} />
-              <TrainerPower fec={this.fec} />
+              <TrainerPowerFromAnt ant={this.fec} />
               <PowerMeterFromAnt ant={this.bp} ftp={this.props.ftp} />
               <TargetPower fec={this.fec} />
               <CadenceFromAnt ant={this.bp} />

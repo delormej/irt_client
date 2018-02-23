@@ -2,7 +2,6 @@
 
 import React from 'react';
 import VersionInfo from './versionInfo.jsx';
-import SpecificTrainerData from './specificTrainerData.jsx';
 import AntDevicesConnectedStatus from './deviceConnectedStatus';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
@@ -37,7 +36,6 @@ function Status(props) {
   return (
     <div className={className}>
       <span>{props.message}</span>
-      {props.fec && <SpecificTrainerData fec={props.fec} />}
     </div>
   );
 }
