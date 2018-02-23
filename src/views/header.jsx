@@ -36,10 +36,12 @@ function Menu(props) {
       navigatePage = "ride";
       linkLabel = "RIDE";
     }
-    else {
+    else if (props.page === "ride") {
       navigatePage = "settings";
       linkLabel = "SETUP";
     }
+    else 
+      return null; // don't try to show menu in an error condition.
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
@@ -67,18 +69,15 @@ export default class Header extends React.Component {
     }    
     
     render() {
-      let menu = null;
-      if (this.props.page)
-        menu = <Menu page={this.props.page} onClick={this.props.onClick} 
-                  fecConnected={this.props.fecConnected}
-                  bpConnected={this.props.bpConnected} />;
       return (
           <div className="header">
               <img className="logo" src="./images/logo.png" />
               <VersionInfo />
               <Status type={this.props.status.type} message={this.props.status.message}
                 fec={this.props.fec} />
-              {menu}
+              <Menu page={this.props.page} onClick={this.props.onClick} 
+                  fecConnected={this.props.fecConnected}
+                  bpConnected={this.props.bpConnected} />;
           </div>
       );
   }
