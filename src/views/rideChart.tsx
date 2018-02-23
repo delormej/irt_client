@@ -8,16 +8,16 @@ interface RideChartProps {
   fec: EventEmitter;
   bp: EventEmitter;
   bpAverager: any;
-  averageSeconds: Number;
+  averageSeconds: number;
 }
 
 interface ChartEvent {
-  timestamp: Number;
-  heartRate: Number;
-  watts: Number;
-  targetWatts: Number;
-  averageWatts: Number;
-  servoPosition: Number;
+  timestamp: number;
+  heartRate: number;
+  watts: number;
+  targetWatts: number;
+  averageWatts: number;
+  servoPosition: number;
 }
 
 interface RideChartState {

@@ -17,7 +17,7 @@ interface StatusMessage {
 }
 
 interface AntProfile extends EventEmitter {
-  getChannelStatus(): Number;
+  getChannelStatus(): number;
 }
 
 export interface AntObjects {
@@ -39,7 +39,7 @@ interface MainState {
 }
 
 export default class Main extends React.Component<MainProps, MainState> {
-  private firstLoad: Boolean = true;
+  private firstLoad: boolean = true;
   private ant: AntObjects = this.initAnt();
 
   constructor(props) {
@@ -69,7 +69,7 @@ export default class Main extends React.Component<MainProps, MainState> {
     };
   }
 
-  getCurrentPage(channelStatus: Number): string {
+  getCurrentPage(channelStatus: number): string {
     let page: string;
     if (channelStatus == antlib.STATUS_TRACKING_CHANNEL)
       page = "ride";

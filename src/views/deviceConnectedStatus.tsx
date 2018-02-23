@@ -1,35 +1,37 @@
 import * as React from 'react';
 
 interface CapabilitiesState {
-    virtualSpeed: Boolean;
-    feState: Number;
-    lapToggle: Boolean; 
+    virtualSpeed: boolean;
+    feState: number;
+    lapToggle: boolean; 
 }
 
 interface ConnectedStatusProps {
-    bpConnected: Boolean;
-    bpIsConnectedToFec: Boolean;
-    hrmConnected: Boolean;
-    fecConnected: Boolean;
+    bpConnected: boolean;
+    bpIsConnectedToFec: boolean;
+    hrmConnected: boolean;
+    fecConnected: boolean;
     state: CapabilitiesState;
-    powerMeterConnected: Boolean;
+    powerMeterConnected: boolean;
+    message?:string;
 }
 
 export default class AntDevicesConnectedStatus extends React.Component<ConnectedStatusProps> {
+    feState: number = 0;
+    powerMeterConnected: boolean = false;
     constructor(props) {
       super(props);
     }
 
     render(): JSX.Element {
-        let feState: Number;
-        if (this.props.state == null) 
-            feState = 0;
-        else
-            feState = this.props.state.feState;
+        if (this.props.message === 'specificTrainerData' && this.props.state != null) 
+            this.feState = this.props.state.feState;
+        if (this.props.message === 'irtExtraInfo') 
+            this.powerMeterConnected = this.props.powerMeterConnected;
 
         return (
             <React.Fragment>
-                <FecConnectedStatus isConnected={this.props.fecConnected} feState={feState} />
+                <FecConnectedStatus isConnected={this.props.fecConnected} feState={this.feState} />
                 <BpConnectedStatus isConnected={this.props.bpConnected} powerMeterConnected={this.props.powerMeterConnected} />
                 <DeviceConnectedStatus deviceType="hrm" isConnected={this.props.hrmConnected} />
             </React.Fragment>
@@ -46,8 +48,8 @@ function getConnectedStatusClass(className, connected) {
     }
   }
 
-function getFeStatus(feState: Number): String {
-    let value: String = null;
+function getFeStatus(feState: number): string {
+    let value: string = null;
     switch (feState) {
         case 1: /*FE_ASLEEP_OFF*/
             value = "Off";
@@ -68,12 +70,12 @@ function getFeStatus(feState: Number): String {
 }
 
 function FecConnectedStatus(props): JSX.Element {
-    let status: String = getFeStatus(props.feState);
+    let status: string = getFeStatus(props.feState);
     return (<DeviceConnectedStatus deviceType='fec' isConnected={props.isConnected} status={status} />);
 }
   
 function BpConnectedStatus(props): JSX.Element {
-    let status: String = null;
+    let status: string = null;
     if (props.powerMeterConnected)
         status = 'Paired to FE-C';
     return (<DeviceConnectedStatus deviceType='bp' {...props} status={status} />);

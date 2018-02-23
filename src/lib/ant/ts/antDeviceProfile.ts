@@ -74,7 +74,7 @@ export abstract class DeviceProfile extends EventEmitter {
         return this._channelStatus.valueOf();
     }
 
-    public getDeviceId(): Number {
+    public getDeviceId(): number {
         return this._channelConfig.deviceId;
     }
 

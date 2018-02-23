@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface TargetPowerStatusProps {
-    targetPowerLimits: Number;    
+    targetPowerLimits: number;    
 }
 
 export default class TargetPowerStatus extends React.Component<TargetPowerStatusProps> {
