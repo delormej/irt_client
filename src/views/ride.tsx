@@ -19,6 +19,7 @@ const PowerMeterFromAnt = hocAntMessage(powerMessages)(PowerMeter);
 const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
 const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
 const TrainerPowerFromAnt = hocAntMessage(['specificTrainerData'])(TrainerPower);
+const ResistanceLevelFromAnt = hocAntMessage(['generalSettings'])(ResistanceLevel);
 
 interface RideProps {
     ant: AntObjects;
@@ -45,7 +46,7 @@ export default class Ride extends React.Component<RideProps> {
               <CadenceFromAnt ant={this.props.ant.bp} />
               <AveragePowerFromAnt ant={this.props.ant.bp} bpAverager={this.props.ant.bpAverager} 
                 averageSeconds={this.props.averageSeconds} />
-              <ResistanceLevel fec={this.props.ant.fec} />
+              <ResistanceLevelFromAnt ant={this.props.ant.fec} resistanceLevel={0} />
               <RideChart bp={this.props.ant.bp} hrm={this.props.ant.hrm} fec={this.props.ant.fec} 
                 bpAverager={this.props.ant.bpAverager} averageSeconds={this.props.averageSeconds} />
             </div>
