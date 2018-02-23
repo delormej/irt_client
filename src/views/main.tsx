@@ -10,8 +10,6 @@ import Header from '../views/header.jsx';
 import Ride from '../views/ride.jsx';
 import Settings from '../views/settings.jsx';
 import * as ElectronSettings from 'electron-settings';
-import FeState from '../views/feState';
-import { hocAntMessage } from '../containers/hocAntMessage';
 
 interface StatusMessage {
   type: String;
@@ -40,8 +38,6 @@ interface MainState {
   maxHeartRateBpm: Number;
   targetPowerLimits: Number;  
 }
-
-const FeStateFromAntMessage = hocAntMessage(['specificTrainerData'])(FeState);
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: Boolean = true;
@@ -138,7 +134,6 @@ export default class Main extends React.Component<MainProps, MainState> {
   render(): JSX.Element {
     let children = (
       <div>
-        <FeStateFromAntMessage ant={this.ant.fec} />
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fec={this.ant.fec}
             fecConnected={this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}

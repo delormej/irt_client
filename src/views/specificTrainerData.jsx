@@ -3,7 +3,6 @@
 import React from 'react';
 import RideDataComponent from './rideDataComponent';
 import TargetPowerStatus from '../views/targetPowerStatus.jsx';
-import FeState from '../views/feState.jsx';
 
 function TrainerStatus(props) {
     // Does nothing right now...
@@ -48,12 +47,5 @@ export default class SpecificTrainerData extends React.Component {
 
     render() {
         return null;   
-            /*
-         (
-            <div>
-                <TargetPowerStatus value={this.state.targetPowerLimits} />
-                <FeState value={this.state.feState} />
-            </div> 
-        ); */
     }
 }

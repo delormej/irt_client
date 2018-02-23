@@ -4,6 +4,9 @@ import React from 'react';
 import VersionInfo from './versionInfo.jsx';
 import SpecificTrainerData from './specificTrainerData.jsx';
 import AntDevicesConnectedStatus from './deviceConnectedStatus';
+import { hocAntMessage } from '../containers/hocAntMessage';
+
+const DevicesConnectedFromAnt = hocAntMessage(['specificTrainerData', 'irtExtraInfo'])(AntDevicesConnectedStatus);
 
 function Menu(props) {
     let navigatePage;
@@ -21,7 +24,7 @@ function Menu(props) {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
-        <AntDevicesConnectedStatus fecConnected={props.fecConnected} 
+        <DevicesConnectedFromAnt ant={props.ant} fecConnected={props.fecConnected} 
           bpConnected={props.bpConnected} hrmConnected={props.hrmConnected} />
       </div>
     );
@@ -52,6 +55,7 @@ export default class Header extends React.Component {
               <Status type={this.props.status.type} message={this.props.status.message}
                 fec={this.props.fec} />
               <Menu page={this.props.page} onClick={this.props.onClick} 
+                  ant={this.props.fec}
                   fecConnected={this.props.fecConnected}
                   bpConnected={this.props.bpConnected}
                   hrmConnected={this.props.hrmConnected} />;
