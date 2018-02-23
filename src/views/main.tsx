@@ -6,21 +6,21 @@ import * as AntBikePower from '../lib/ant/ant_bp.js';
 import HeartRateMonitor from '../lib/ant/ts/heartRateMonitor';
 import * as PowerAverager from '../lib/ant/powerAverager.js';
 import * as AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
-import Header from '../views/header.jsx';
-import Ride from '../views/ride.jsx';
-import Settings from '../views/settings.jsx';
+import Header from './header';
+import Ride from './ride';
+import Settings from './settings.jsx';
 import * as ElectronSettings from 'electron-settings';
 
 interface StatusMessage {
-  type: String;
-  message: String;
+  type: string;
+  message: string;
 }
 
 interface AntProfile extends EventEmitter {
   getChannelStatus(): Number;
 }
 
-interface AntObjects {
+export interface AntObjects {
     bgScanner: EventEmitter;
     fec: AntProfile; 
     bp: AntProfile;
@@ -32,10 +32,10 @@ interface MainProps {}
 
 interface MainState {
   status: StatusMessage;
-  currentPage: String;
-  averageSeconds: Number;
-  ftp: Number;
-  maxHeartRateBpm: Number;
+  currentPage: string;
+  averageSeconds: number;
+  ftp: number;
+  maxHeartRateBpm: number;
 }
 
 export default class Main extends React.Component<MainProps, MainState> {
@@ -44,7 +44,7 @@ export default class Main extends React.Component<MainProps, MainState> {
 
   constructor(props) {
     super(props);
-    let page = this.getCurrentPage(this.ant.fec.getChannelStatus());
+    let page: string = this.getCurrentPage(this.ant.fec.getChannelStatus());
     
     this.state = {
       status: { "type": "info", "message": "" },
@@ -69,8 +69,8 @@ export default class Main extends React.Component<MainProps, MainState> {
     };
   }
 
-  getCurrentPage(channelStatus: Number): String {
-    let page: String;
+  getCurrentPage(channelStatus: Number): string {
+    let page: string;
     if (channelStatus == antlib.STATUS_TRACKING_CHANNEL)
       page = "ride";
     else 

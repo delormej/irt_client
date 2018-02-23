@@ -3,7 +3,7 @@ import RideDataComponent from  './rideDataComponent';
 import ColorStyle from '../lib/ant/ts/colorScale';
 
 export interface PowerMeterProps {
-    message: string;
+    message?: string;
     instantPower: number;
     instantCadence: number;
     ftp: number;

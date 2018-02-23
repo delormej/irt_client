@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import RideDataComponent from  './rideDataComponent';
 
@@ -6,7 +5,7 @@ export interface SpeedProps {
     speedMps: number;
 }
 
-export default class SpeedMph extends React.Component<SpeedProps, {}> {
+export class SpeedMph extends React.Component<SpeedProps> {
     constructor(props: SpeedProps) {
       super(props);
     }

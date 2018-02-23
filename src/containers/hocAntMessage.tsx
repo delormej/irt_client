@@ -15,15 +15,11 @@ interface ExternalProps {
     ant: EventEmitter;
 }
 
-// Props the HOC adds to the wrapped component
-export interface InjectedProps {
-    data: any;
-}
 
 export const hocAntMessage = (messages: string[]) =>
     <TOriginalProps extends {}>(
-        Component: (React.ComponentClass<TOriginalProps & InjectedProps>
-            | React.StatelessComponent<TOriginalProps & InjectedProps>)
+        Component: (React.ComponentClass<TOriginalProps>
+            | React.StatelessComponent<TOriginalProps>)
     ) => {
         type ResultProps = TOriginalProps & ExternalProps;
         const result = class HocAntMessage extends React.Component<ResultProps, State> {
