@@ -89,10 +89,6 @@
     grid-column: 3 / 4;   
 }
 
-.targetPowerStatus, .feState, .powerMeterConnectedStatus {
-    font-size: 10px;
-}
-
 .resistanceLevelBox {
     grid-row: 3 / 4;
     grid-column: 7 / 9;

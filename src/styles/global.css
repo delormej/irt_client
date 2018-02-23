@@ -88,12 +88,19 @@ body {
     width: 40px;
 }
 
-.status {
+.status, .targetPowerStatus {
     grid-row: 1 / 2;
     grid-column: 3 / span 3;
     text-align: center;
     padding: 30px;
     font-size: 25px;
+}
+
+.targetPowerStatus {
+    color: red;
+    font-size: 35px;
+    font-weight: 800;
+    font-variant-caps: all-small-caps;
 }
 
 .status.error {

@@ -3,9 +3,11 @@
 import React from 'react';
 import VersionInfo from './versionInfo.jsx';
 import AntDevicesConnectedStatus from './deviceConnectedStatus';
+import TargetPowerStatus from './targetPowerStatus';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
 const DevicesConnectedFromAnt = hocAntMessage(['specificTrainerData', 'irtExtraInfo'])(AntDevicesConnectedStatus);
+const TargetPowerStatusFromAnt = hocAntMessage('specificTrainerData')(TargetPowerStatus);
 
 function Menu(props) {
     let navigatePage;
@@ -33,6 +35,7 @@ function Status(props) {
   let className = "status";
   if (props.type === "error")
     className += " error";
+
   return (
     <div className={className}>
       <span>{props.message}</span>
@@ -50,8 +53,8 @@ export default class Header extends React.Component {
           <div className="header">
               <img className="logo" src="./images/logo.png" />
               <VersionInfo />
-              <Status type={this.props.status.type} message={this.props.status.message}
-                fec={this.props.fec} />
+              <Status type={this.props.status.type} message={this.props.status.message} />
+              <TargetPowerStatusFromAnt ant={this.props.fec} />
               <Menu page={this.props.page} onClick={this.props.onClick} 
                   ant={this.props.fec}
                   fecConnected={this.props.fecConnected}

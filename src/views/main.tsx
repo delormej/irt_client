@@ -36,7 +36,6 @@ interface MainState {
   averageSeconds: Number;
   ftp: Number;
   maxHeartRateBpm: Number;
-  targetPowerLimits: Number;  
 }
 
 export default class Main extends React.Component<MainProps, MainState> {
@@ -52,8 +51,7 @@ export default class Main extends React.Component<MainProps, MainState> {
       currentPage: page,
       averageSeconds: ElectronSettings.get("averageSeconds", 10),
       ftp: ElectronSettings.get("ftp", undefined),
-      maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined),
-      targetPowerLimits: 0
+      maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined)
     }
 
     this.handleChange = this.handleChange.bind(this);
