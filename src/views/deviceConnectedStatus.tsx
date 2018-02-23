@@ -70,7 +70,9 @@ function getFeStatus(feState: number): string {
 }
 
 function FecConnectedStatus(props): JSX.Element {
-    let status: string = getFeStatus(props.feState);
+    let status: string;
+    if (props.isConnected)
+        status = getFeStatus(props.feState);
     return (<DeviceConnectedStatus deviceType='fec' isConnected={props.isConnected} status={status} />);
 }
   

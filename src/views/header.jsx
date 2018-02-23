@@ -54,7 +54,7 @@ export default class Header extends React.Component {
               <img className="logo" src="./images/logo.png" />
               <VersionInfo />
               <Status type={this.props.status.type} message={this.props.status.message} />
-              <TargetPowerStatusFromAnt ant={this.props.fec} />
+              <TargetPowerStatusFromAnt ant={this.props.fec} targetPowerLimits={0} />
               <Menu page={this.props.page} onClick={this.props.onClick} 
                   ant={this.props.fec}
                   fecConnected={this.props.fecConnected}
