@@ -32,7 +32,7 @@ export default class AntDevicesConnectedStatus extends React.Component<Connected
         return (
             <React.Fragment>
                 <FecConnectedStatus isConnected={this.props.fecConnected} feState={this.feState} />
-                <BpConnectedStatus isConnected={this.props.bpConnected} powerMeterConnected={this.props.powerMeterConnected} />
+                <BpConnectedStatus isConnected={this.props.bpConnected} powerMeterConnected={this.powerMeterConnected} />
                 <DeviceConnectedStatus deviceType="hrm" isConnected={this.props.hrmConnected} />
             </React.Fragment>
         );
