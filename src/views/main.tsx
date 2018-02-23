@@ -143,6 +143,7 @@ export default class Main extends React.Component<MainProps, MainState> {
             fec={this.ant.fec}
             fecConnected={this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
             bpConnected={this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
+            hrmConnected={this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
             status={this.state.status} />
         {this.getCurrentPageElement()}
       </div>

@@ -1,33 +1,9 @@
 'use babel';
 
 import React from 'react';
-import VersionInfo from '../views/versionInfo.jsx';
-import SpecificTrainerData from '../views/specificTrainerData.jsx';
-
-function getConnectedStatusClass(className, connected) {
-  if (connected) {
-    return className + " connectedStatus";
-  }
-  else {
-    return className + " notConnectedStatus";
-  }
-}
-
-function DeviceConnectedStatus(props) {
-  let className = props.deviceType + "ConnectedStatus";
-  let deviceTypeName;
-  if (props.deviceType === "fec") {
-    deviceTypeName = "FE-C";
-  }
-  else if (props.deviceType === "bp") {
-    deviceTypeName = "PWR";
-  }
-  return (
-    <div className={getConnectedStatusClass(className, props.isConnected)}>
-      <b>{deviceTypeName}&nbsp;</b>{props.isConnected ? "Connected" : "Not Connected"}
-    </div>
-    );
-}
+import VersionInfo from './versionInfo.jsx';
+import SpecificTrainerData from './specificTrainerData.jsx';
+import AntDevicesConnectedStatus from './deviceConnectedStatus';
 
 function Menu(props) {
     let navigatePage;
@@ -45,8 +21,8 @@ function Menu(props) {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
-        <DeviceConnectedStatus deviceType="fec" isConnected={props.fecConnected} />
-        <DeviceConnectedStatus deviceType="bp" isConnected={props.bpConnected} />
+        <AntDevicesConnectedStatus fecConnected={props.fecConnected} 
+          bpConnected={props.bpConnected} hrmConnected={props.hrmConnected} />
       </div>
     );
 }
@@ -77,7 +53,8 @@ export default class Header extends React.Component {
                 fec={this.props.fec} />
               <Menu page={this.props.page} onClick={this.props.onClick} 
                   fecConnected={this.props.fecConnected}
-                  bpConnected={this.props.bpConnected} />;
+                  bpConnected={this.props.bpConnected}
+                  hrmConnected={this.props.hrmConnected} />;
           </div>
       );
   }

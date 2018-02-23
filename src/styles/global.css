@@ -66,6 +66,12 @@ body {
     margin-top: -10px;
 }
 
+.hrmConnectedStatus {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 10px;    
+}
+
 .connectedStatus {
     color: green;
 }
