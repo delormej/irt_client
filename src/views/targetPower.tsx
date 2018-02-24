@@ -1,10 +1,10 @@
-'use babel';
-
-import React from 'react';
-import IrtExtraInfo from '../views/irtExtraInfo.jsx';
+import * as React from 'react';
 import RideDataComponent from './rideDataComponent';
 
-export default class TargetPower extends IrtExtraInfo {
+interface TargetPowerProps {
+    target: string;
+}
+export default class TargetPower extends React.Component<TargetPowerProps> {
     constructor(props) {
       super(props);
     }
@@ -12,7 +12,7 @@ export default class TargetPower extends IrtExtraInfo {
     render() {
         return (
             <RideDataComponent class="targetPower" label="TARGET"
-                value={this.state.target} />
+                value={this.props.target} />
           );      
     }
 }  
