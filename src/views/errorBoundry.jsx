@@ -1,7 +1,7 @@
 'use babel';
 
 import React from 'react';
-import Header from '../views/header.jsx';
+import Header from './header';
 
 export default class ErrorBoundry extends React.Component {
     constructor(props) {

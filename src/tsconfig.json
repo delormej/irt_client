@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "jsx": "react"
+        "jsx": "react",
+        "lib": [ "es2017" ] 
     },
     "include": [
         "./lib/ant/ts/*.ts",
