@@ -18,8 +18,7 @@ export default class PowerMeter extends React.Component<PowerMeterProps> {
 
     render(): JSX.Element {
         let power: string;
-        if (this.props.message === 'ctfMainPage')
-            this.usingCtf = true;
+        this.usingCtf = (this.props.message === 'ctfMainPage');
         if (this.props.instantPower == undefined)
             power = "0";
         else 
