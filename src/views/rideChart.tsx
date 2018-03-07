@@ -27,6 +27,7 @@ interface RideChartState {
 export default class RideChart extends React.Component<RideChartProps, RideChartState> {
   private current: ChartEvent;
   private timer: NodeJS.Timer;
+  private filterGeneration: number;
 
   constructor(props) {
     super(props);
@@ -84,11 +85,55 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     clearTimeout(this.timer);
   }
 
-  updateState() {
+  filterEvents(element: any, index: number, array: Array<any>): boolean{
+    const BATCH_SIZE: number = 250;
+    let start: number = (BATCH_SIZE / 2) * this.filterGeneration;
+    let end: number = start + BATCH_SIZE;
+    if (index > start && index <= end)
+      return (index % 2 == 0);
+    else
+      return true;
+  }
+
+  // DEBUG ONLY
+  generateEvents(): ChartEvent[] {
+    let events: ChartEvent[] = new Array<ChartEvent>();
+    let event: ChartEvent = {
+      timestamp: 0,
+      heartRate: 0,
+      watts: 0,
+      targetWatts: 0,
+      averageWatts: 0,
+      servoPosition: 0
+    };    
+
+    for (let i = 0; i < 1990; i++) {
+      let newEvent: ChartEvent = JSON.parse(JSON.stringify(event));
+      newEvent.timestamp++;
+      newEvent.heartRate = 82;
+      events.push(newEvent);
+    }
+
+    return events;
+  }
+
+  getEvents(): ChartEvent[] {
+    const MAX_EVENTS: number = 2000;
+    const ITERATIONS: number = 16;
+
+    this.filterGeneration = this.filterGeneration++ % ITERATIONS;
     let events: ChartEvent[] = this.state.events.slice();
+    // if (events.length == 0)
+    //   return this.generateEvents();
+    if (events.length > MAX_EVENTS)
+      events = events.filter(this.filterEvents, this);
     events.push(this.current);
+    return events;
+  }
+
+  updateState() {  
     this.setState( {
-      events: events
+      events: this.getEvents()
     });
   }
 
@@ -99,7 +144,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
       "marginRight": 40,
       "marginLeft": 80,
       "autoMarginOffset": 20,
-      "mouseWheelZoomEnabled": true,
+      "mouseWheelZoomEnabled": false,
       "valueAxes": [{
         "id": "watts",
         "axisAlpha": 0,
@@ -113,18 +158,9 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
           "fontSize": 20
         }
       ],
-      "balloon": {
-        "borderThickness": 1,
-        "shadowAlpha": 0
-      },
       "graphs": [
         {
         "id": "g1",
-        "balloon":{
-          "drop": true,
-          "adjustBorderColor": false,
-          "color":"#ffffff"
-        },
         "bullet": "round",
         "bulletBorderAlpha": 1,
         "bulletColor": "#FFFFFF",
@@ -132,10 +168,9 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
         "hideBulletsCount": 50,
         "lineThickness": 2,
         "title": "red line",
-        "useLineColorForBulletBorder": true,
+        "useLineColorForBulletBorder": true,        
         "valueField": "watts",
         "valueAxis": "watts",
-        "balloonText": "<span style='font-size:18px;'>[[watts]]</span>"
         },
         {
           "valueField": "averageWatts",
@@ -152,16 +187,6 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
           "valueField": "heartRate"
         }
       ],
-      "chartCursor": {
-        "pan": true,
-        "valueLineEnabled": true,
-        "valueLineBalloonEnabled": true,
-        "cursorAlpha":1,
-        "cursorColor":"#258cbb",
-        "limitToGraph":"g1",
-        "valueLineAlpha":0.2,
-        "valueZoomable": true
-      },
       "valueScrollbar":{
         "oppositeAxis": false,
         "offset":50,
@@ -171,7 +196,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
       "categoryAxis": {
         "parseDates": false,
         "dashLength": 1,
-        "minorGridEnabled": true,
+        "minorGridEnabled": false,
         "labelsEnabled": false
       },
       "dataProvider": this.state.events
