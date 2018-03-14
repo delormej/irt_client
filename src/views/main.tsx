@@ -40,10 +40,11 @@ interface MainState {
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
-  private ant: AntObjects = this.initAnt();
+  private ant: AntObjects;
 
   constructor(props) {
     super(props);
+    this.initAnt();
     let page: string = this.getCurrentPage(this.ant.fec.getChannelStatus());
     
     this.state = {
@@ -57,10 +58,10 @@ export default class Main extends React.Component<MainProps, MainState> {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  initAnt(): AntObjects {
+  initAnt(): void {
     antlib.init();
     let bp: AntProfile = new AntBikePower();
-    return {
+    this.ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
       bp: bp,
