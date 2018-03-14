@@ -197,7 +197,8 @@ const AntBikePower = function() {
                 updateChannelStatus(antlib.STATUS_ASSIGNED_CHANNEL);
                 break;
             default: // eventId
-                console.log('Unrecognized event.', eventId);
+                //console.log('Unrecognized event.', eventId);
+                // events 2 & 9 often get reported.
                 break;                
         }
     }

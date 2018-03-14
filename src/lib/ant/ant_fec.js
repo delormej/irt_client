@@ -388,7 +388,7 @@ const AntFec = function() {
                 updateChannelStatus(antlib.STATUS_ASSIGNED_CHANNEL);
                 break;
             default: // eventId
-                console.log('Unrecognized event.', eventId);
+                //console.log('Unrecognized event.', eventId);
                 break;                
         }
     }

@@ -109,7 +109,7 @@ export abstract class DeviceProfile extends EventEmitter {
                 this.updateChannelStatus(ChannelStatus.STATUS_ASSIGNED_CHANNEL);
                 break;
             default: // eventId
-                console.log('Unrecognized event.', eventId);
+                //console.log('Unrecognized event.', eventId);
                 break;                                    
         }
     }
