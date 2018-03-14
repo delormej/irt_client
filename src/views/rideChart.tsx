@@ -27,7 +27,7 @@ interface RideChartState {
 export default class RideChart extends React.Component<RideChartProps, RideChartState> {
   private current: ChartEvent;
   private timer: NodeJS.Timer;
-  private filterGeneration: number;
+  private filterGeneration: number = 0;
 
   constructor(props) {
     super(props);
