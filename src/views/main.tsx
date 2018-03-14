@@ -4,7 +4,7 @@ import * as antlib from '../lib/ant/antlib.js';
 import * as AntFec from '../lib/ant/ant_fec.js';
 import * as AntBikePower from '../lib/ant/ant_bp.js';
 import HeartRateMonitor from '../lib/ant/ts/heartRateMonitor';
-import * as PowerAverager from '../lib/ant/powerAverager.js';
+import PowerAverager from '../lib/ant/ts/powerAverager';
 import * as AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Header from './header';
 import Ride from './ride';
