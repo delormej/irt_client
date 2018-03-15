@@ -87,11 +87,9 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
 
   filterEvents(element: any, index: number, array: Array<any>): boolean{
     const BATCH_SIZE: number = 250;
-    const ITERATIONS: number = 16;
-
-    this.filterGeneration = this.filterGeneration++ % ITERATIONS;
     let start: number = (BATCH_SIZE / 2) * this.filterGeneration;
     let end: number = start + BATCH_SIZE;
+    console.log("filtering:", start, end, this.filterGeneration);
 
     if (index > start && index <= end)
       return (index % 2 == 0);
@@ -122,13 +120,16 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
   }
 
   getEvents(): ChartEvent[] {
-    const MAX_EVENTS: number = 2000;
+    const MAX_EVENTS: number = 2250;
+    const ITERATIONS: number = 16;
 
     let events: ChartEvent[] = this.state.events.slice();
     // if (events.length == 0)
     //   return this.generateEvents();
-    if (events.length > MAX_EVENTS) 
+    if (events.length > MAX_EVENTS)  {
       events = events.filter(this.filterEvents, this);
+      this.filterGeneration = (this.filterGeneration + 1) % ITERATIONS;
+    }
     events.push(this.current);
     return events;
   }
