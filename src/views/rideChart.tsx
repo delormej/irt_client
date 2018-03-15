@@ -120,7 +120,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
   }
 
   getEvents(): ChartEvent[] {
-    const MAX_EVENTS: number = 2000;
+    const MAX_EVENTS: number = 2250;
     const ITERATIONS: number = 16;
 
     let events: ChartEvent[] = this.state.events.slice();
