@@ -7,7 +7,7 @@
     "name": "Jason De Lorme",
     "url": "http://www.insideride.com"
   },
-  "version": "2.5.8",
+  "version": "2.6.0",
   "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/react": "^16.0.40",
     "asar": "^0.14.2",
+    "azure-storage": "^2.8.1",
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",
     "electron-compile": "^6.4.2",
