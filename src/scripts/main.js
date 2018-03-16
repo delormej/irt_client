@@ -10,8 +10,6 @@ window.onload = function(){
     document.getElementById('app'));
 
   document.getElementById("closeBtn").addEventListener("click", function (e) {
-      var window = remote.getCurrentWindow();
-      //window.close();
       upload();
   }); 
 }
@@ -36,31 +34,40 @@ function upload() {
       if (error)
         console.log(error.message);
       console.log('File uploaded:',  result);
+      var window = remote.getCurrentWindow();
+      //window.close();      
     }
   );
 }
 
 function getLogFilename() {
   var name = "Device-" + new Date().toISOString().replace(/:|\.|-/g,'') + '.txt';
+  return name;
 }
 
 function getLocalFilename() {
   var fs = require('fs');
+  const fileRegEx = /Device\d+\.\w{3}/i;
   var lastStat = null;
+  var newest = "";
 
-  var files = fs.readdirSync("Device*.txt");
+  var files = fs.readdirSync(".");
   files.forEach(function (file) {
-    var stat = fs.statSync(file);
-    if (lastStat == null) {
-      lastStat = stat;
-    }
-    else {
-      if (stat.atime > lastStat.atime)
-        stat = lastStat;
+    if (fileRegEx.test(file)) {
+      var stat = fs.statSync(file);
+      if (lastStat == null) {
+        lastStat = stat;
+        newest = file;
+      }
+      else {
+        if (stat.atime > lastStat.atime)
+          lastStat = stat;
+          newest = file;
+      }
     }
   });
 
   if (lastStat != null)
-    return lastStat.name;
+    return newest;
   return "";
 }
