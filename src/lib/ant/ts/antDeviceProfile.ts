@@ -99,6 +99,8 @@ export abstract class DeviceProfile extends EventEmitter {
             case antlib.EVENT_RX_BROADCAST:
             case antlib.EVENT_RX_FLAG_BROADCAST:
                 this.ensureDeviceTracking();
+                if (timestamp == undefined)
+                    timestamp = antlib.getTimestamp();
                 this.onMessage(this.getMessageId(), timestamp);
                 break;
             case antlib.EVENT_RX_FAIL_GO_TO_SEARCH:

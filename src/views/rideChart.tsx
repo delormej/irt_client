@@ -85,16 +85,21 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     clearTimeout(this.timer);
   }
 
-  filterEvents(element: any, index: number, array: Array<any>): boolean{
+  filterEvents(element: any, index: number, array: Array<ChartEvent>): boolean{
     const BATCH_SIZE: number = 250;
     let start: number = (BATCH_SIZE / 2) * this.filterGeneration;
     let end: number = start + BATCH_SIZE;
-    console.log("filtering:", start, end, this.filterGeneration);
-
-    if (index > start && index <= end)
-      return (index % 2 == 0);
+    let filter: boolean;
+    if (index > start && index <= end) {
+      filter = (index % 2 == 0);
+    }
     else
-      return true;
+      filter = true;
+
+    if (!filter)
+      console.log("filtered out:", index, array[index].timestamp, start, end, this.filterGeneration);
+    
+    return filter;
   }
 
   // DEBUG ONLY
@@ -109,10 +114,11 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
       servoPosition: 0
     };    
 
-    for (let i = 0; i < 1990; i++) {
+    for (let i = 0; i < 2240; i++) {
       let newEvent: ChartEvent = JSON.parse(JSON.stringify(event));
-      newEvent.timestamp++;
+      newEvent.timestamp = i * 0.001;
       newEvent.heartRate = 82;
+      newEvent.watts = i % 512;
       events.push(newEvent);
     }
 
@@ -122,15 +128,16 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
   getEvents(): ChartEvent[] {
     const MAX_EVENTS: number = 2250;
     const ITERATIONS: number = 16;
-
     let events: ChartEvent[] = this.state.events.slice();
-    // if (events.length == 0)
+    events.push(this.current);
+    // DEBUG ONLY
+    // if (this.state.events == null || this.state.events.length == 0)
     //   return this.generateEvents();
-    if (events.length > MAX_EVENTS)  {
+    // END DEBUG
+    if (this.state.events.length > MAX_EVENTS)  {
       events = events.filter(this.filterEvents, this);
       this.filterGeneration = (this.filterGeneration + 1) % ITERATIONS;
-    }
-    events.push(this.current);
+    } 
     return events;
   }
 
@@ -197,10 +204,12 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
       },
       "categoryField": "timestamp",
       "categoryAxis": {
-        "parseDates": false,
+        "parseDates": true,
         "dashLength": 1,
         "minorGridEnabled": false,
-        "labelsEnabled": false
+        "labelsEnabled": true,
+        "autoGridCount": true,
+        "minPeriod": "ss"
       },
       "dataProvider": this.state.events
     };
