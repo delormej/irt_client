@@ -28,6 +28,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
   private current: ChartEvent;
   private timer: NodeJS.Timer;
   private filterGeneration: number = 0;
+  private getting: boolean = false;
 
   constructor(props) {
     super(props);
@@ -102,6 +103,12 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     return filter;
   }
 
+  sortByTimestamp(eventA: ChartEvent, eventB: ChartEvent) {
+    if (eventA.timestamp > eventB.timestamp) return 1;
+    if (eventA.timestamp == eventB.timestamp) return 0;
+    if (eventA.timestamp < eventB.timestamp) return -1;
+  }
+
   // DEBUG ONLY
   generateEvents(): ChartEvent[] {
     let events: ChartEvent[] = new Array<ChartEvent>();
@@ -126,6 +133,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
   }
 
   getEvents(): ChartEvent[] {
+    this.getting = true;
     const MAX_EVENTS: number = 2250;
     const ITERATIONS: number = 16;
     let events: ChartEvent[] = this.state.events.slice();
@@ -137,14 +145,25 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     if (this.state.events.length > MAX_EVENTS)  {
       events = events.filter(this.filterEvents, this);
       this.filterGeneration = (this.filterGeneration + 1) % ITERATIONS;
+      //console.log(JSON.stringify(events));
     } 
     return events;
   }
 
   updateState() {  
+    if (this.getting)
+      return;
     this.setState( {
       events: this.getEvents()
     });
+    console.log("Event len: ", this.state.events.length);
+    this.getting = false;
+  }
+
+  labelFunction(valueText, serialDataItem, categoryAxis) {
+    var seconds = serialDataItem.dataContext.timestamp;
+    var minutes = (seconds / 60).toFixed(0);
+    return minutes;
   }
 
   render() {
@@ -204,12 +223,12 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
       },
       "categoryField": "timestamp",
       "categoryAxis": {
-        "parseDates": true,
+        "parseDates": false,
         "dashLength": 1,
         "minorGridEnabled": false,
         "labelsEnabled": true,
         "autoGridCount": true,
-        "minPeriod": "ss"
+        "labelFunction": this.labelFunction
       },
       "dataProvider": this.state.events
     };
