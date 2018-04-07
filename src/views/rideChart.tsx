@@ -72,8 +72,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     this.props.hrm.on('heartRate', this.onHeartRate);
     this.props.fec.on('irtExtraInfo', this.onIrtExtraInfo);
 
-    const TIMEOUT_MS = 1000;
-    this.timer = setInterval(this.updateState, TIMEOUT_MS);
+    this.startStateUpdates();
   }
 
   componentWillUnmount() {
@@ -124,14 +123,25 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     const ITERATIONS: number = 16;
 
     let events: ChartEvent[] = this.state.events.slice();
-    // if (events.length == 0)
-    //   return this.generateEvents();
+    if (events.length == 0)
+      return this.generateEvents();
     if (events.length > MAX_EVENTS)  {
+      this.pauseStateUpdates();
       events = events.filter(this.filterEvents, this);
       this.filterGeneration = (this.filterGeneration + 1) % ITERATIONS;
+      this.startStateUpdates();
     }
     events.push(this.current);
     return events;
+  }
+
+  pauseStateUpdates() : void {
+    clearInterval(this.timer);
+  }
+
+  startStateUpdates() : void {
+    const TIMEOUT_MS = 1000;
+    this.timer = setInterval(this.updateState, TIMEOUT_MS);
   }
 
   updateState() {  
