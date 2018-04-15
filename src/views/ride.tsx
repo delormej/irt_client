@@ -12,6 +12,8 @@ import HeartRate from './heartRate';
 import RideChart from './rideChart';
 import { AntObjects } from './main';
 import { hocAntMessage } from '../containers/hocAntMessage';
+import { hocChartEvents } from '../containers/hocChartEvent';
+import DebugEvents from './debugEvents';
 
 const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
 const SpeedMphFromAnt = hocAntMessage(['generalFEData'])(SpeedMph);
@@ -23,6 +25,8 @@ const ResistanceLevelFromAnt = hocAntMessage(['generalSettings'])(ResistanceLeve
 const ElapsedTimeFromAnt = hocAntMessage(['generalFEData'])(ElapsedTime);
 const TargetPowerFromAnt = hocAntMessage(['irtExtraInfo'])(TargetPower);
 const DistanceTravelledFromAnt = hocAntMessage(['generalFEData'])(DistanceTravelled);
+//const RideChartFromEvents = hocChartEvents()(RideChart);
+const RideChartFromEvents = hocChartEvents()(DebugEvents);
 
 interface RideProps {
     ant: AntObjects;
@@ -50,7 +54,7 @@ export default class Ride extends React.Component<RideProps> {
               <AveragePowerFromAnt ant={this.props.ant.bp} bpAverager={this.props.ant.bpAverager} 
                 averageSeconds={this.props.averageSeconds} />
               <ResistanceLevelFromAnt ant={this.props.ant.fec} resistanceLevel={0} />
-              <RideChart bp={this.props.ant.bp} hrm={this.props.ant.hrm} fec={this.props.ant.fec} 
+              <RideChartFromEvents bp={this.props.ant.bp} hrm={this.props.ant.hrm} fec={this.props.ant.fec} 
                 bpAverager={this.props.ant.bpAverager} averageSeconds={this.props.averageSeconds} />
             </div>
         );      

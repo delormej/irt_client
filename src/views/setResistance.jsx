@@ -1,4 +1,5 @@
 import InputHelper from '../lib/ant/ts/inputHelpers';
+import React from 'react';
 
 function ResistanceOptions(props) {
     let source = props.source;
