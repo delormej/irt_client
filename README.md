@@ -56,3 +56,9 @@ Make sure that git is in your path, i.e. "c:\program files\git\bin\"
     tried using this, but got an err:
         Not allowed to load local resource
         http://blog.scottlogic.com/2017/06/06/typescript-electron-webpack.html
+
+# Update 11/1/2018
+ when trying to build on OSX, had all sorts of errors.  Needed to downgrade node to 8.8.1
+ also needed to *upgrade* node-gyp: 
+ [sudo] npm explore npm -g -- npm install node-gyp@latest
+ as per this: https://github.com/nodejs/node-gyp/wiki/Updating-npm's-bundled-node-gyp
