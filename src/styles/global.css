@@ -13,7 +13,7 @@ body {
     */
     display: grid;
     grid-template-rows: 150px;
-    grid-template-columns: repeat(8, 225px);  /* ensure this == .ride.grid-template-columms */
+    grid-template-columns: repeat(8, 200px);  /* ensure this == .ride.grid-template-columms */
 }
 
 .logo {
