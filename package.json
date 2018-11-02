@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/react": "^16.0.40",
     "asar": "^0.14.2",
-    "azure-storage": "^2.8.1",
+    "azure-storage": "^2.10.2",
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",
     "electron-compile": "^6.4.2",
