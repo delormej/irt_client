@@ -31,8 +31,6 @@ const AntFec = function() {
     const IRT_EXTRA_INFO_PAGE =	0xF1;   // Manufacturer specific page sending servo position, etc...
     const IRT_SETTINGS_PAGE	= 0xF2;   // Manufacturer specific page sending device specific settings.
     const IRT_SETTINGS_POWER_ADJUST_PAGE = 0xF3;   // Manufacturer specific page sending power adjust specific settings.
-    
-
     const IRT_SPECIFIC_PAGE = 0xF0;         // IRT (Manufacturers) specific page.
     const IRT_SET_SERVO_COMMAND = 0x61;
     const IRT_SET_DFU_COMMAND = 0x64;
@@ -704,6 +702,23 @@ const AntFec = function() {
             transmitBuffer[7] = 0x7F;
 
         console.log('Sending IRT Power Adjust Settings.');
+        antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);   
+    }
+
+    function setMagnetGapOffset(forceOffset) {
+        // Force offset, value is representated as value * 100
+        var value = forceOffset * 100;
+
+        transmitBuffer[0] = IRT_SPECIFIC_PAGE;
+        transmitBuffer[1] = IRT_MSG_SUBPAGE_GAP_OFFSET;
+        transmitBuffer[2] = value & 0xFF;  //LSB
+        transmitBuffer[3] = value >> 8;    //MSB
+        transmitBuffer[4] = 0xFF;
+        transmitBuffer[5] = 0xFF;
+        transmitBuffer[6] = 0xFF;
+        transmitBuffer[7] = 0xFF;
+
+        console.log('Sending IRT Magnet Gap Offset.');
         antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);   
     }
 

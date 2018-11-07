@@ -16,13 +16,27 @@ window.onload = function(){
   }); 
 }
 
+function closeWindow() {
+  var window = remote.getCurrentWindow();
+  window.close();
+}
+
+function onUploadComplete(error, result, response) {
+  if (error)
+    console.log('Upload error:', error.message);
+  else
+    console.log('File uploaded:',  result);
+  
+  closeWindow();
+}
+
 function upload() {
   // Docs on how to use Azure node sdk here: https://azure.github.io/azure-storage-node/
   var azure = require('azure-storage');
   // This is the blog that I used to figure out how to create a SAS: https://buildazure.com/2017/05/23/azure-cli-2-0-generate-sas-token-for-blob-in-azure-storage/
   // Note that blog lists how to create SAS for a specific blob (File), switch to "container":
   // az storage container generate-sas --account-name irt8413 --account-key xxx --name rides --permissions w --expiry 2020-01-01
-    var sas = "se=2020-01-01&sp=w&sv=2017-07-29&sr=c&sig=/czaS/1tXZbewLOjC27a5VIapkOaO4iqbxkiZ0B/kLU%3D";
+  var sas = "se=2020-01-01&sp=w&sv=2017-07-29&sr=c&sig=/czaS/1tXZbewLOjC27a5VIapkOaO4iqbxkiZ0B/kLU%3D";
   var url = "https://irt8413.blob.core.windows.net/";
   var containerName = "rides";
   var uploadFileName = getLogFilename();
@@ -35,15 +49,7 @@ function upload() {
   var blobService = azure.createBlobService(connectionString);
 
   blobService.createBlockBlobFromLocalFile(containerName, uploadFileName, localFileName, 
-    function(error, result, response)  
-    {
-      if (error)
-        console.log(error.message);
-      console.log('File uploaded:',  result);
-      var window = remote.getCurrentWindow();
-      window.close();      
-    }
-  );
+    onUploadComplete);
 }
 
 function getLogFilename() {
