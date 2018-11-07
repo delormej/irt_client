@@ -94,13 +94,13 @@ export default class Main extends React.Component<MainProps, MainState> {
   onChannelStatus(deviceKey, status, deviceId) {
     this.setState( {
       [deviceKey]: status
-    })
+    } as any)
   }
 
   handleChange(name, value) {
       this.setState({
         [name]: value
-    });
+    } as any);
   }
 
   navigate(page) {

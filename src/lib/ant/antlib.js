@@ -254,20 +254,25 @@ function libPath() {
     else 
     {
         // MacOSX impementation:
-        var remote = require('remote');
-        var app = remote.require('app');
-
+        var app = require('electron').remote.app;
+/*
+./src/lib/ant/libant.dylib
+./src/lib/ant/antlib.js
+*/
         var base = path.join(
             path.parse(app.getAppPath()).dir,
             '..', '..');
 
+        console.log("path is: ", app.getAppPath());
+        console.log("base path is: ", base);
         if (base.endsWith('.app')) {
             // If *installed* on a Mac, it's deployed into [AppName].app/Content/Resources/...
-            lib = path.join(base, 'libANT');
+            lib = path.join(app.getAppPath(), './src/lib/ant/libANT');
+            console.log("Trying with path: ", lib);
         }
-        else {
+        else { 
             // In development mode, just find the library.
-            lib = 'libANT';
+            lib = './src/lib/ant/libANT';
         }
     }    
 

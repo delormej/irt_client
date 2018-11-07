@@ -10,7 +10,9 @@ window.onload = function(){
     document.getElementById('app'));
 
   document.getElementById("closeBtn").addEventListener("click", function (e) {
-      upload();
+      //upload();
+      var window = remote.getCurrentWindow();
+      window.close();      
   }); 
 }
 
@@ -39,6 +41,10 @@ function upload() {
   var containerName = "rides";
   var uploadFileName = getLogFilename();
   var localFileName =  getLocalFilename();
+  if (localFileName == null || localFileName == "") {
+    console.log("Unable to find local log file.")
+    return;
+  }
   var connectionString = "BlobEndpoint=" + url + ";SharedAccessSignature=" + sas;
   var blobService = azure.createBlobService(connectionString);
 
@@ -72,7 +78,7 @@ function getLocalFilename() {
       }
     }
   });
-
+  console.log("filename", lastStat, newest);
   if (lastStat != null)
     return newest;
   return "";

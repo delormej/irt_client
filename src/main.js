@@ -48,7 +48,7 @@ function createWindow() {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -60,9 +60,9 @@ function createWindow() {
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform != 'darwin') {
+  //if (process.platform != 'darwin') {
     app.quit();
-  }
+  //}
 });
 
 app.on('ready', () => {
