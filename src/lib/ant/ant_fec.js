@@ -37,6 +37,9 @@ const AntFec = function() {
     const IRT_TOGGLE_BG_SCAN = 0x65;
     const IRT_BLINK_LED = 0x66;
 
+    const SET_PARAMETER_COMMAND = 0x67;
+    const IRT_MSG_SUBPAGE_GAP_OFFSET = 32;
+
 
     // Enum of device status.
     const FEStateEnum = {
@@ -710,15 +713,15 @@ const AntFec = function() {
         var value = forceOffset * 100;
 
         transmitBuffer[0] = IRT_SPECIFIC_PAGE;
-        transmitBuffer[1] = IRT_MSG_SUBPAGE_GAP_OFFSET;
-        transmitBuffer[2] = value & 0xFF;  //LSB
-        transmitBuffer[3] = value >> 8;    //MSB
-        transmitBuffer[4] = 0xFF;
+        transmitBuffer[1] = SET_PARAMETER_COMMAND;
+        transmitBuffer[2] = IRT_MSG_SUBPAGE_GAP_OFFSET;
+        transmitBuffer[3] = value & 0xFF;  //LSB
+        transmitBuffer[4] = value >> 8;    //MSB
         transmitBuffer[5] = 0xFF;
         transmitBuffer[6] = 0xFF;
         transmitBuffer[7] = 0xFF;
 
-        console.log('Sending IRT Magnet Gap Offset.');
+        console.log('Sending IRT Magnet Gap Offset.', transmitBuffer);
         antlib.sendAcknowledgedData(fecChannelId, transmitBuffer);   
     }
 
@@ -782,6 +785,7 @@ const AntFec = function() {
     AntFec.prototype.getChannelStatus = getChannelStatus;
     AntFec.prototype.getDeviceId = getDeviceId;
     AntFec.prototype.requestLastCommand = requestLastCommand;
+    AntFec.prototype.setMagnetGapOffset = setMagnetGapOffset;
 };
 
 util.inherits(AntFec, EventEmitter);

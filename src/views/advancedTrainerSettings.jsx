@@ -3,10 +3,12 @@
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
 import SetResistance from '../views/setResistance';
+import SetGapOffset  from '../views/setGapOffset';
 
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
         super(props);
+        
         this.fec = props.fec;
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
@@ -14,6 +16,8 @@ export default class AdvancedTrainerSettings extends React.Component {
         this.onCommandStatus = this.onCommandStatus.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSetResistance = this.handleSetResistance.bind(this);
+        this.handleSetGapOffset = this.handleSetGapOffset.bind(this);
+
         this.state = {
             deviceId: props.deviceId,
             rawSettings: undefined,
@@ -25,7 +29,8 @@ export default class AdvancedTrainerSettings extends React.Component {
             resistance: 0,
             grade: 0,
             target: 0,
-            servo: 0
+            servo: 0,
+            gapOffset: 0
         };        
     }
 
@@ -47,7 +52,7 @@ export default class AdvancedTrainerSettings extends React.Component {
     onIrtExtraInfo(data, timestamp) {
         this.setState( {
             servo: data.servoPosition,
-            flywheelRevs: data.flywheelRevs,
+            gapOffset: data.flywheelRevs,
             target: data.target,
             powerMeterConnected: data.powerMeterConnected
         });
@@ -133,6 +138,10 @@ export default class AdvancedTrainerSettings extends React.Component {
         });
     }
 
+    handleSetGapOffset(forceOffset) {
+        this.fec.setMagnetGapOffset(forceOffset);
+    }
+
     onRefresh() {
         this.fec.getSettings();
         this.fec.requestLastCommand();
@@ -173,6 +182,8 @@ export default class AdvancedTrainerSettings extends React.Component {
                     onChange={this.handleInputChange}/>
                 <button onClick={() => this.onSave()}>Save</button>
                 <button onClick={() => this.onRefresh()}>Refresh</button>
+                <SetGapOffset gapOffset={this.state.gapOffset} 
+                    onSetGapOffset={this.handleSetGapOffset} />
                 <SetResistance servo={this.state.servo} grade={this.state.grade} 
                     target={this.state.target} resistance={this.state.resistance}
                     onSetResistance={this.handleSetResistance} />
