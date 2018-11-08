@@ -168,9 +168,10 @@ export default class AdvancedTrainerSettings extends React.Component {
                 <input name="servoOffset" type="textbox" 
                     value={this.state.servoOffset} 
                     onChange={this.handleInputChange}/>
-                <div className="label">Drag</div>
+                { /* Hacking this for right now because it's not rendering in SetGapOffset Component */ }
+                <div className="label">Gap Offset</div>
                 <input name="drag" type="textbox" 
-                    value={this.state.drag} 
+                    value={this.state.gapOffset} 
                     onChange={this.handleInputChange}/>                    
                 <div className="label">Rolling Resistance</div>
                 <input name="rr" type="textbox" 
