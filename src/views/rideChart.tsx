@@ -164,7 +164,7 @@ export default class RideChart extends React.Component<RideChartProps, RideChart
     this.setState( {
       events: this.getEvents()
     });
-    console.log("Event len: ", this.state.events.length);
+    //console.log("Event len: ", this.state.events.length);
     this.getting = false;
   }
 
