@@ -1,0 +1,173 @@
+{
+    "intervals": [
+        {   "name": "stability",
+            "steps": [
+                {
+                    "duration": 240,
+                    "target": 120
+                },
+                {
+                    "duration": 30,
+                    "target": 175
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 175
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 250
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 250
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 260
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 260
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 300
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 300
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },
+                {
+                    "duration": 30,
+                    "target": 285
+                },
+                {
+                    "duration": 30,
+                    "target": 140
+                },                
+                {
+                    "duration": 30,
+                    "target": 285
+                },
+                {
+                    "duration": 180,
+                    "target": 140
+                },             
+                {
+                    "duration": 20,
+                    "target": 300
+                },
+                {
+                    "duration": 20,
+                    "target": 290
+                },
+                {
+                    "duration": 20,
+                    "target": 280
+                },                
+                {
+                    "duration": 60,
+                    "target": 140
+                },              
+                {
+                    "duration": 20,
+                    "target": 280
+                },
+                {
+                    "duration": 20,
+                    "target": 290
+                },
+                {
+                    "duration": 20,
+                    "target": 300
+                },             
+                {
+                    "duration": 60,
+                    "target": 140
+                },
+                {
+                    "duration": 240,
+                    "target": 190
+                },
+                {
+                    "duration": 60,
+                    "target": 140
+                }
+            ]
+        }
+    ],
+    "workout":
+    {
+        "segments": [
+            {
+                "sequence": 1,
+                "description": "No smoothing, agressive adjustment.",
+                "interval": "stability",
+                "repeat": 1,
+                "smoothSteps": 0,
+                "averageSeconds": 1, 
+                "adjustSeconds": 1
+            },
+            {
+                "sequence": 2,
+                "description": "No smoothing, relaxed adjustment.",
+                "interval": "stability",
+                "repeat": 1,                
+                "smoothSteps": 0,
+                "averageSeconds": 3, 
+                "adjustSeconds": 5
+            },
+            {
+                "sequence": 3,
+                "description": "Smoothing, agressive adjustment.",
+                "interval": "stability",
+                "repeat": 1,                
+                "smoothSteps": 5,
+                "averageSeconds": 1, 
+                "adjustSeconds": 1
+            },
+            {
+                "sequence": 4,
+                "description": "Smoothing, relaxed adjustment.",
+                "interval": "stability",
+                "repeat": 1,                
+                "smoothSteps": 5,
+                "averageSeconds": 3, 
+                "adjustSeconds": 5
+            }            
+        ]
+    }
+}

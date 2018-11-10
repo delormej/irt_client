@@ -4,6 +4,7 @@ import AntDevicesConnectedStatus from './deviceConnectedStatus';
 import TargetPowerStatus from './targetPowerStatus';
 import { EventEmitter } from 'events';
 import { hocAntMessage } from '../containers/hocAntMessage';
+import * as WorkoutController from '../lib/workout/workoutController.js';
 
 const DevicesConnectedFromAnt = hocAntMessage(['specificTrainerData', 'irtExtraInfo'])(AntDevicesConnectedStatus);
 const TargetPowerStatusFromAnt = hocAntMessage(['specificTrainerData'])(TargetPowerStatus);
@@ -57,10 +58,18 @@ export default class Header extends React.Component<HeaderProps> {
     super(props);
   }    
   
+  executeWorkout() : void
+  {
+    let workout: WorkoutController;
+    workout = new WorkoutController(this.props.fec, 0);
+    workout.Execute('src/lib/workout/stability-test.json');    
+  }
+
   render(): JSX.Element {
     return (
         <div className="header">
-            <img className="logo" src="./images/logo.png" />
+            <img className="logo" src="./images/logo.png" 
+              onClick={() => this.executeWorkout()}/>
             <VersionInfo />
             <Status type={this.props.status.type} message={this.props.status.message} />
             <TargetPowerStatusFromAnt ant={this.props.fec} targetPowerLimits={0} />
