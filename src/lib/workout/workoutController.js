@@ -81,7 +81,7 @@ const WorkoutController = function(fec, powerMeterId) {
 
     function executeSegment(segment) {
         var interval = getInterval(segment.interval);   
-        //console.log(interval, getTotalDuration(interval.steps));
+        console.log("Total duration per interval:", getTotalDuration(interval.steps));
         stepController.exec(0.25, setFecSettings, segment);
         executeSteps(interval.steps);
     }
