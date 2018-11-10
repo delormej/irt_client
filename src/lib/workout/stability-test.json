@@ -24,34 +24,26 @@
                 },
                 {
                     "duration": 30,
-                    "target": 250
-                },
-                {
-                    "duration": 30,
-                    "target": 140
+                    "target": 230
                 },
                 {
                     "duration": 30,
                     "target": 250
-                },
+                },                
                 {
-                    "duration": 30,
+                    "duration": 60,
                     "target": 140
                 },
                 {
                     "duration": 30,
-                    "target": 260
+                    "target": 230
                 },
                 {
                     "duration": 30,
-                    "target": 140
+                    "target": 250
                 },
                 {
-                    "duration": 30,
-                    "target": 260
-                },
-                {
-                    "duration": 30,
+                    "duration": 60,
                     "target": 140
                 },
                 {
@@ -65,14 +57,6 @@
                 {
                     "duration": 30,
                     "target": 300
-                },
-                {
-                    "duration": 30,
-                    "target": 140
-                },
-                {
-                    "duration": 30,
-                    "target": 285
                 },
                 {
                     "duration": 30,
@@ -80,51 +64,31 @@
                 },                
                 {
                     "duration": 30,
-                    "target": 285
+                    "target": 250
                 },
                 {
-                    "duration": 180,
-                    "target": 140
-                },             
-                {
-                    "duration": 20,
-                    "target": 300
-                },
-                {
-                    "duration": 20,
-                    "target": 290
-                },
-                {
-                    "duration": 20,
-                    "target": 280
+                    "duration": 30,
+                    "target": 230
                 },                
                 {
                     "duration": 60,
                     "target": 140
                 },              
                 {
-                    "duration": 20,
-                    "target": 280
+                    "duration": 30,
+                    "target": 250
                 },
                 {
-                    "duration": 20,
-                    "target": 290
+                    "duration": 30,
+                    "target": 230
                 },
                 {
-                    "duration": 20,
-                    "target": 300
-                },             
-                {
-                    "duration": 60,
+                    "duration": 30,
                     "target": 140
                 },
                 {
-                    "duration": 240,
+                    "duration": 120,
                     "target": 190
-                },
-                {
-                    "duration": 60,
-                    "target": 140
                 }
             ]
         }
