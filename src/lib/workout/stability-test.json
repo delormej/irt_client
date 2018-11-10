@@ -3,91 +3,101 @@
         {   "name": "stability",
             "steps": [
                 {
-                    "duration": 240,
+                    "type": "setTarget", "duration": 240,
                     "target": 120
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 175
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 140
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 175
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 140
                 },
                 {
-                    "duration": 30,
+                    "duration": 80,
+                    "type": "rampTarget", 
+                    "startTarget": 160,
+                    "endTarget": 240
+                },
+                {
+                    "type": "setTarget", "duration": 60,
+                    "target": 140
+                },
+                {
+                    "type": "setTarget", "duration": 30,
                     "target": 230
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 250
                 },                
                 {
-                    "duration": 60,
+                    "type": "setTarget", "duration": 60,
                     "target": 140
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 230
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 250
                 },
                 {
-                    "duration": 60,
+                    "type": "setTarget", "duration": 60,
                     "target": 140
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 300
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 140
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 300
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 140
                 },                
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 250
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 230
                 },                
                 {
-                    "duration": 60,
+                    "type": "setTarget", "duration": 60,
                     "target": 140
                 },              
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 250
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 230
                 },
                 {
-                    "duration": 30,
+                    "type": "setTarget", "duration": 30,
                     "target": 140
                 },
                 {
-                    "duration": 120,
+                    "type": "setTarget", "duration": 120,
                     "target": 190
                 }
             ]

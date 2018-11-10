@@ -73,9 +73,29 @@ const WorkoutController = function(fec, powerMeterId) {
         return match;
     }
 
+    function executeRamp(step) {
+        // var range = step.endTarget - step.startTarget;
+        // var stepWatts = Math.round(range / step.duration);
+        // var stepDuration = 1;
+        // if (stepWatts < 1.0) {
+        //     stepDuration = 1 / stepWatts;
+        //     stepWatts = 1;
+        // } 
+        // else {
+        //     stepWatts = Math.round(stepWatts);
+        // }
+        // simple 1 watt per second
+        var i;
+        for (i = 0; i < step.duration; i++)
+            stepController.exec(1, setTarget, step.startTarget + i);       
+    }
+
     function executeSteps(steps) {
         steps.forEach( function(step) {
-            stepController.exec(step.duration, setTarget, step.target);       
+            if (step.type === "setTarget")
+                stepController.exec(step.duration, setTarget, step.target);       
+            else if (step.type === "rampTarget")
+                executeRamp(step);
         });
     }
 
