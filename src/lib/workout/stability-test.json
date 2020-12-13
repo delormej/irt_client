@@ -106,33 +106,7 @@
     "workout":
     {
         "segments": [
-            {
-                "sequence": 1,
-                "description": "No smoothing, agressive adjustment.",
-                "interval": "stability",
-                "repeat": 1,
-                "smoothSteps": 0,
-                "averageSeconds": 1, 
-                "adjustSeconds": 1
-            },
-            {
-                "sequence": 2,
-                "description": "No smoothing, relaxed adjustment.",
-                "interval": "stability",
-                "repeat": 1,                
-                "smoothSteps": 0,
-                "averageSeconds": 3, 
-                "adjustSeconds": 5
-            },
-            {
-                "sequence": 3,
-                "description": "Smoothing, agressive adjustment.",
-                "interval": "stability",
-                "repeat": 1,                
-                "smoothSteps": 5,
-                "averageSeconds": 1, 
-                "adjustSeconds": 1
-            },
+            
             {
                 "sequence": 4,
                 "description": "Smoothing, relaxed adjustment.",

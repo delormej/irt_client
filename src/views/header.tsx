@@ -60,9 +60,11 @@ export default class Header extends React.Component<HeaderProps> {
   
   executeWorkout() : void
   {
+    console.log("Executing workout.");
     let workout: WorkoutController;
     workout = new WorkoutController(this.props.fec, 0);
-    workout.Execute('src/lib/workout/stability-test.json');    
+    // workout.Execute('src/lib/workout/stability-test.json');    
+    workout.Execute('src/lib/workout/smallmagnet-test.json');    
   }
 
   render(): JSX.Element {

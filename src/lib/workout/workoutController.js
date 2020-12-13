@@ -13,6 +13,7 @@ const WorkoutController = function(fec, powerMeterId) {
     };
 
     StepController.prototype.exec = function() {
+        console.log('queueing step: ' + arguments);
         this.queue.push(arguments); /* duration, callback, args */
         this.process();
     };
@@ -24,9 +25,10 @@ const WorkoutController = function(fec, powerMeterId) {
         this.ready = false;
         var step = this.queue.shift();
         this.send.apply(this, step);
+        
         setTimeout(function () {
-        self.ready = true;
-        self.process();
+            self.ready = true;
+            self.process();
         }, step[0] * 1000);
     };
     
@@ -35,11 +37,17 @@ const WorkoutController = function(fec, powerMeterId) {
         var contents = fs.readFileSync(filename);
         var jsonContent = JSON.parse(contents);
         workoutObj = jsonContent;
+        console.log("Loaded workout from " + filename);
     }
 
     function setTarget(watts) {
         console.log("Setting target to: ", watts);
         fec.setTargetPower(watts);
+    }
+
+    function setPosition(position) {
+        console.log("Setting servo position to: ", position);
+        fec.setServoPosition(position);
     }
 
     function setFecSettings(segment) {
@@ -94,6 +102,8 @@ const WorkoutController = function(fec, powerMeterId) {
         steps.forEach( function(step) {
             if (step.type === "setTarget")
                 stepController.exec(step.duration, setTarget, step.target);       
+            else if (step.type === "setPosition")
+                stepController.exec(step.duration, setPosition, step.target);                       
             else if (step.type === "rampTarget")
                 executeRamp(step);
         });
