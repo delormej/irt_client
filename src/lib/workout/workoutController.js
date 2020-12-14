@@ -19,8 +19,8 @@ const WorkoutController = function(fec, powerMeterId) {
     };
     
     StepController.prototype.process = function() {
-        if (this.queue.length === 0) return;
-        if (!this.ready) return;
+        if (this.queue.length === 0 || !this.ready) return;
+
         var self = this;
         this.ready = false;
         var step = this.queue.shift();
@@ -112,8 +112,11 @@ const WorkoutController = function(fec, powerMeterId) {
     function executeSegment(segment) {
         var interval = getInterval(segment.interval);   
         console.log("Total duration per interval:", getTotalDuration(interval.steps));
-        stepController.exec(0.25, setFecSettings, segment);
-        executeSteps(interval.steps);
+
+        for (i = 0; i < segment.repeat; i++) {
+            stepController.exec(0.25, setFecSettings, segment);
+            executeSteps(interval.steps);
+        }
     }
 
     function executeWorkout(file) {
