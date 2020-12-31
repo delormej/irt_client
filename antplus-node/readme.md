@@ -8,6 +8,10 @@ cd node_modules/usb
 node-gyp rebuild
 
 ## Allow pi user to read/write to usb
-Write this to a file in /usr/ 
-SUBSYSTEM=="usb"
+As super user:
+
+echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="0fcf", GROUP="plugdev", MODE="0660"' > /lib/udev/rules.d/50-usb-ant.rules
+
+sudo udevadm control --reload ; sudo udevadm triggerls -l
+
 
