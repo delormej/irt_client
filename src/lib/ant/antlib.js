@@ -5,8 +5,8 @@
  * Interop to native C library for talking to ANT USB device. 
  */
 
-const ref = require('ref');
-const ffi = require('ffi');
+// const ref = require('ref');
+// const ffi = require('ffi');
 const process2 = require('process');
 
 const BIKE_POWER_DEVICE_TYPE = 0x0B;
@@ -83,7 +83,7 @@ const responseBuffer = new Buffer(MESG_MAX_SIZE_VALUE);
 const channelConfigs = new Array(8);
 
 // Native library definition.
-const antlib = ffi.Library(libPath(), {
+const antlib = null; /* ffi.Library(libPath(), {
     'ANT_LibVersion': ['string', [] ],
     'ANT_Init': ['bool', ['uchar', 'ulong', 'uchar', 'uchar'] ],
     'ANT_AssignResponseFunction': ['void', [ 'pointer', 'pointer' ] ],
@@ -109,7 +109,7 @@ const antlib = ffi.Library(libPath(), {
     'ANT_Nap': ['void', ['ulong'] ],
     'ANT_SetDebugLogDirectory': ['bool', ['string'] ],
     'ANT_Close': ['void', [] ]
-});
+}); */
 
 // Global variable indicates if the module has been initialized.
 var initialized = false;
@@ -120,7 +120,7 @@ var startTime = Date.now() / 1000;
 
 // Returns a string representing the ANT Library version.
 function antVersion() {
-    return antlib.ANT_LibVersion();    
+    // return antlib.ANT_LibVersion();    
 }
 
 // Sets the debug log directory.
@@ -287,175 +287,176 @@ function setNetworkKey() {
 }
 
 // Assign deviceResponse function to handle callbacks from ANT+ device (MCU).
-const responseCallback = ffi.Callback('bool', [ 'uchar', 'uchar' ], deviceResponse);
+const responseCallback = null; // ffi.Callback('bool', [ 'uchar', 'uchar' ], deviceResponse);
 
 // Callback for ANT channel events.
-const channelEventCallback = ffi.Callback('bool', [ 'uchar', 'uchar' ], channelEvent);
+const channelEventCallback = null; // ffi.Callback('bool', [ 'uchar', 'uchar' ], channelEvent);
 
 // Loads the native ANT library and Initializes the ANT+ network key. 
 function init() {    
-    // If init already called or in filemode, exit.
-    if (initialized || fileMode)
-        return; 
+    // // If init already called or in filemode, exit.
+    // if (initialized || fileMode)
+    //     return; 
     
-    var ver = antVersion();
-    console.log(ver);
+    // var ver = antVersion();
+    // console.log(ver);
     
-    let success = false;
-    let deviceNumberTries = 3;
-    do {
-        success = antlib.ANT_Init(deviceNumberTries, 
-            BAUD_RATE, PORT_TYPE_USB, FRAMER_TYPE_BASIC);
-    } while (deviceNumberTries-- > 0 && !success)
+    // let success = false;
+    // let deviceNumberTries = 3;
+    // do {
+    //     success = antlib.ANT_Init(deviceNumberTries, 
+    //         BAUD_RATE, PORT_TYPE_USB, FRAMER_TYPE_BASIC);
+    // } while (deviceNumberTries-- > 0 && !success)
     
-    if (!success) {
-        throw new Error('Unable to initialize ANT+, please check USB key is available and not in use by another application.');
-    }
-    console.log('ANT initialized.');
+    // if (!success) {
+    //     throw new Error('Unable to initialize ANT+, please check USB key is available and not in use by another application.');
+    // }
+    // console.log('ANT initialized.');
     
-    antlib.ANT_AssignResponseFunction(responseCallback, responseBuffer);    
+    // antlib.ANT_AssignResponseFunction(responseCallback, responseBuffer);    
     
-    // Seems prototypical to reset the system after an init.
-    if (antlib.ANT_ResetSystem()) {
-        antlib.ANT_Nap(500);       // ms to nap 
-    }
-    else {
-        throw new Error('Unable to do initialize ANT module.');
-    }
+    // // Seems prototypical to reset the system after an init.
+    // if (antlib.ANT_ResetSystem()) {
+    //     antlib.ANT_Nap(500);       // ms to nap 
+    // }
+    // else {
+    //     throw new Error('Unable to do initialize ANT module.');
+    // }
     
-    // Set the network key.
-    if (!setNetworkKey()) {
-       throw new Error('Unable to set ANT+ network key.'); 
-    }
+    // // Set the network key.
+    // if (!setNetworkKey()) {
+    //    throw new Error('Unable to set ANT+ network key.'); 
+    // }
     
     initialized = true;
 }
 
 function enableExtendedMessages(enable) {
-    const ENABLE_EXT_MSG = 0x01;
+    // const ENABLE_EXT_MSG = 0x01;
     
-    if (!antlib.ANT_RxExtMesgsEnable(enable))
-        throw new Error('Unable to enable extended messages.');    
+    // if (!antlib.ANT_RxExtMesgsEnable(enable))
+    //     throw new Error('Unable to enable extended messages.');    
 }
 
 function openBackgroundScanningChannel(config) {
-    const BG_SCANNING_CHANNEL_TYPE = 0x40;
-    const EXT_PARAM_ALWAYS_SEARCH = 0x01;
-    const WILDCARD_DEVICE_ID = 0;
-    const WILDCARD_DEVICE_TYPE = 0;
-    const TRANSMISSION_TYPE = 0;
-    const TIMEOUT_DISABLED = 0;
-    const CHANNEL_FREQUENCY = 57;
+    // const BG_SCANNING_CHANNEL_TYPE = 0x40;
+    // const EXT_PARAM_ALWAYS_SEARCH = 0x01;
+    // const WILDCARD_DEVICE_ID = 0;
+    // const WILDCARD_DEVICE_TYPE = 0;
+    // const TRANSMISSION_TYPE = 0;
+    // const TIMEOUT_DISABLED = 0;
+    // const CHANNEL_FREQUENCY = 57;
 
-    channelConfigs[BG_SCANNING_CHANNEL_ID] = config;
+    // channelConfigs[BG_SCANNING_CHANNEL_ID] = config;
 
-    if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) 
-        throw new Error('Unable to assign channel.');         
+    // if (!antlib.ANT_AssignChannelExt(BG_SCANNING_CHANNEL_ID, BG_SCANNING_CHANNEL_TYPE, ANT_NETWORK, EXT_PARAM_ALWAYS_SEARCH)) 
+    //     throw new Error('Unable to assign channel.');         
 
-    if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, WILDCARD_DEVICE_TYPE,
-            TRANSMISSION_TYPE))
-        throw new Error('Unable to set channel id.');
+    // if (!antlib.ANT_SetChannelId(BG_SCANNING_CHANNEL_ID, WILDCARD_DEVICE_ID, WILDCARD_DEVICE_TYPE,
+    //         TRANSMISSION_TYPE))
+    //     throw new Error('Unable to set channel id.');
 
-    enableExtendedMessages(true);
+    // enableExtendedMessages(true);
 
-    if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, SEARCH_TIMEOUT_INFINITE))
-        throw new Error("Unable to set low priority channel search timeout.");
+    // if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, SEARCH_TIMEOUT_INFINITE))
+    //     throw new Error("Unable to set low priority channel search timeout.");
 
-    if (!antlib.ANT_SetChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, TIMEOUT_DISABLED))
-        throw new Error("Unable to disable search timeout.");
+    // if (!antlib.ANT_SetChannelSearchTimeout(BG_SCANNING_CHANNEL_ID, TIMEOUT_DISABLED))
+    //     throw new Error("Unable to disable search timeout.");
 
-    antlib.ANT_AssignChannelEventFunction(BG_SCANNING_CHANNEL_ID, 
-        channelEventCallback, 
-        config.buffer);    
+    // antlib.ANT_AssignChannelEventFunction(BG_SCANNING_CHANNEL_ID, 
+    //     channelEventCallback, 
+    //     config.buffer);    
 
-    if (!antlib.ANT_SetChannelRFFreq(BG_SCANNING_CHANNEL_ID, CHANNEL_FREQUENCY)) 
-        throw new Error("Unable to set channel frequency.");    
+    // if (!antlib.ANT_SetChannelRFFreq(BG_SCANNING_CHANNEL_ID, CHANNEL_FREQUENCY)) 
+    //     throw new Error("Unable to set channel frequency.");    
 
-    if (!antlib.ANT_OpenChannel(BG_SCANNING_CHANNEL_ID))
-        throw new Error("Unable to open channel.");        
+    // if (!antlib.ANT_OpenChannel(BG_SCANNING_CHANNEL_ID))
+    //     throw new Error("Unable to open channel.");        
 }
 
 function openChannel(channelId, config) {
-    const HIGH_PRI_SEARCH_TIMEOUT = 2; 
-    const LOW_PRI_SEARCH_TIMEOUT = SEARCH_TIMEOUT_INFINITE; //10; // 10 == 25s
-    const ffiChannelCallback = ffi.Callback('bool', [ 'uchar', 'uchar' ], config.channelCallback);
-    // A copy of the ffi version of the callback is required to be stored, otherwise it will be garbage collected.
-    let channelConfig = {
-        ffiChannelCallback: ffiChannelCallback,
-        channelCallback: config.channelCallback, // only for legacy reasons, once FEC/BP are migrated, this can be removed.
-        channelIdCallback: config.channelIdCallback,
-    };
-    channelConfigs[channelId] = channelConfig;
-    if (!antlib.ANT_AssignChannel(channelId, config.channelType, ANT_NETWORK))
-        throw new Error('Unable to assign channel.');
-    antlib.ANT_AssignChannelEventFunction(channelId, ffiChannelCallback, config.buffer) 
-    if (!antlib.ANT_SetChannelId(channelId, 
-            config.deviceId, 
-            config.deviceType, 
-            config.transmissionType))
-        throw new Error('Unable to set channel id.');
-    if (!antlib.ANT_SetChannelRFFreq(channelId, config.frequency))
-        throw new Error('Unable to set channel frequency.');
-    if (!antlib.ANT_SetChannelPeriod(channelId, config.channelPeriod))
-        throw new Error('Unable to set channel period.');
-    if (!antlib.ANT_SetChannelSearchTimeout(channelId, HIGH_PRI_SEARCH_TIMEOUT))
-        throw new Error("Unable to disable search timeout.");
-    if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(channelId, LOW_PRI_SEARCH_TIMEOUT))
-        throw new Error("Unable to set low priority channel search timeout.");   
-    if (!antlib.ANT_OpenChannel(channelId))
-        throw new Error("Unable to open channel.");   
-    return channelId;
+    // const HIGH_PRI_SEARCH_TIMEOUT = 2; 
+    // const LOW_PRI_SEARCH_TIMEOUT = SEARCH_TIMEOUT_INFINITE; //10; // 10 == 25s
+    // const ffiChannelCallback = null; // ffi.Callback('bool', [ 'uchar', 'uchar' ], config.channelCallback);
+    // // A copy of the ffi version of the callback is required to be stored, otherwise it will be garbage collected.
+    // let channelConfig = {
+    //     ffiChannelCallback: ffiChannelCallback,
+    //     channelCallback: config.channelCallback, // only for legacy reasons, once FEC/BP are migrated, this can be removed.
+    //     channelIdCallback: config.channelIdCallback,
+    // };
+    // channelConfigs[channelId] = channelConfig;
+    // if (!antlib.ANT_AssignChannel(channelId, config.channelType, ANT_NETWORK))
+    //     throw new Error('Unable to assign channel.');
+    // antlib.ANT_AssignChannelEventFunction(channelId, ffiChannelCallback, config.buffer) 
+    // if (!antlib.ANT_SetChannelId(channelId, 
+    //         config.deviceId, 
+    //         config.deviceType, 
+    //         config.transmissionType))
+    //     throw new Error('Unable to set channel id.');
+    // if (!antlib.ANT_SetChannelRFFreq(channelId, config.frequency))
+    //     throw new Error('Unable to set channel frequency.');
+    // if (!antlib.ANT_SetChannelPeriod(channelId, config.channelPeriod))
+    //     throw new Error('Unable to set channel period.');
+    // if (!antlib.ANT_SetChannelSearchTimeout(channelId, HIGH_PRI_SEARCH_TIMEOUT))
+    //     throw new Error("Unable to disable search timeout.");
+    // if (!antlib.ANT_SetLowPriorityChannelSearchTimeout(channelId, LOW_PRI_SEARCH_TIMEOUT))
+    //     throw new Error("Unable to set low priority channel search timeout.");   
+    // if (!antlib.ANT_OpenChannel(channelId))
+    //     throw new Error("Unable to open channel.");   
+    // return channelId;
+    return 0;
 }
 
 // Closes the ANT channel.
 function closeChannel(channelId) {
-    antlib.ANT_CloseChannel(channelId);
-    if (!antlib.ANT_UnAssignChannel(channelId))
-        throw new Error("Unable to unassign channel: " + channelId);
+    // antlib.ANT_CloseChannel(channelId);
+    // if (!antlib.ANT_UnAssignChannel(channelId))
+    //     throw new Error("Unable to unassign channel: " + channelId);
 }
 
 // This message is sent to the device to request a specific information message from the device.
 function requestMessage(channelId, messageId) {
-    return antlib.ANT_RequestMessage(channelId, messageId);
+    // return antlib.ANT_RequestMessage(channelId, messageId);
 }
 
 // Requests channel details; device number, device type id, trans type. 
 function requestChannelId(channelId) {
-    requestMessage(channelId, MESG_CHANNEL_ID_ID);
+    // requestMessage(channelId, MESG_CHANNEL_ID_ID);
 }
 
 // Sends acknowledged data on the ANT channel. 
 function sendAcknowledgedData(channelId, buffer) {
-    return antlib.ANT_SendAcknowledgedData(channelId, buffer);
+    // return antlib.ANT_SendAcknowledgedData(channelId, buffer);
 }
 
 // Sends broadcast data on the ANT channel.
 function sendBroadcastData(channelId, buffer) {
-    return antlib.ANT_SendBroadcastData(channelId, buffer);
+    // return antlib.ANT_SendBroadcastData(channelId, buffer);
 }
 
 // Sets an exclusion list of devices when openning a channel.
 function setDeviceExclusionList(channelId, devices) {
     // max exclusions of 4.
-    for (var index = 0; index < devices.length && index < 4; 
-            index++) {
-        antlib.ANT_AddChannelID(channelId, 
-            devices[index].deviceNumber,
-            devices[index].deviceTypeId,
-            devices[index].transmissionType,
-            index);
-    }
-    /*exclude == 1, include == 0*/
-    return antlib.ANT_ConfigList(channelId, index, 1);
+    // for (var index = 0; index < devices.length && index < 4; 
+    //         index++) {
+    //     antlib.ANT_AddChannelID(channelId, 
+    //         devices[index].deviceNumber,
+    //         devices[index].deviceTypeId,
+    //         devices[index].transmissionType,
+    //         index);
+    // }
+    // /*exclude == 1, include == 0*/
+    // return antlib.ANT_ConfigList(channelId, index, 1);
 }
 
 // Configures channel search to be low priority.
 function setLowPrioirtySearch(channelId) {
-    const timeout = 24; // 60 seconds; 
-    // Lengthens low prioirty search.
-    antlib.ANT_SetLowPriorityChannelSearchTimeout(channelId, timeout);
-    // Disables high priority search.
-    antlib.ANT_SetChannelSearchTimeout(channelId, 0);
+    // const timeout = 24; // 60 seconds; 
+    // // Lengthens low prioirty search.
+    // antlib.ANT_SetLowPriorityChannelSearchTimeout(channelId, timeout);
+    // // Disables high priority search.
+    // antlib.ANT_SetChannelSearchTimeout(channelId, 0);
 }
 
 // Closes the ANT module and releases resources.
@@ -469,10 +470,10 @@ function close() {
         }
     }
     
-    antlib.ANT_Close.async(function(err, ret) {
-        console.log('closed.');
-        process2.exit();
-    });         
+    // antlib.ANT_Close.async(function(err, ret) {
+    //     console.log('closed.');
+    //     process2.exit();
+    // });         
 }
 
 // Returns a string from 2 byte revision.
