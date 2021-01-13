@@ -35,6 +35,7 @@ export default class Settings extends React.Component {
         this.bp = props.ant.bp;
         this.hrm = props.ant.hrm;
         this.bgScanner = props.ant.bgScanner;
+        this.stick = props.stick;
     }
 
     componentDidMount() {
@@ -159,14 +160,14 @@ export default class Settings extends React.Component {
                     {this.state.showAdvanced && <AdvancedPowerMeterSettings 
                         fec={this.fec} onChange={this.props.onChange} /> }
                 </div>
-                <DeviceSettings ant={this.props.ant}>
-                    <HeartRateConnected deviceId={this.hrm.getDeviceId()}
-                        hrm={this.hrm}
+                {/* <DeviceSettings ant={this.props.ant}> */}
+                    <HeartRateConnected deviceId={0/*this.hrm.getDeviceId()*/}
+                        stick={this.stick}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} />                
-                </DeviceSettings>
+                {/* </DeviceSettings> */}
             </div>
         );
     }

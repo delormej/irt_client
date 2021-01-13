@@ -7,7 +7,7 @@ export default class HeartRateMonitor extends Ant.DeviceProfile {
 
     constructor(stick: GarminStick3) {
         super();
-        this.hrSensor = new HeartRateSensor(stick);
+        // this.hrSensor = new HeartRateSensor(stick);
       }
 
     protected updateChannelConfig(config: Ant.ChannelConfig) {

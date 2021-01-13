@@ -42,11 +42,12 @@ interface MainState {
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
   private ant: AntObjects;
+  private stick: GarminStick3;
 
   constructor(props) {
     super(props);
     this.initAnt();
-    let page: string = this.getCurrentPage(this.ant.fec.getChannelStatus());
+    let page: string = this.getCurrentPage(0 /*this.ant.fec.getChannelStatus()*/);
     
     this.state = {
       status: { "type": "info", "message": "" },
@@ -60,11 +61,9 @@ export default class Main extends React.Component<MainProps, MainState> {
   }
 
   initAnt(): void {
-    // antlib.init();
-    var stick = new GarminStick3();
-    if (!stick.open()) {
-      console.error("Stick not open!");
-    }
+    this.stick = new GarminStick3();
+
+    console.log("Present: ", this.stick.is_present());
 
     let bp: AntProfile = new AntBikePower();
     this.ant = {
@@ -72,7 +71,7 @@ export default class Main extends React.Component<MainProps, MainState> {
       fec: new AntFec(),
       bp: bp,
       bpAverager: new PowerAverager(bp),
-      hrm: new HeartRateMonitor(stick)
+      hrm: null// new HeartRateMonitor(this.stick)
     };
   }
 
@@ -86,15 +85,15 @@ export default class Main extends React.Component<MainProps, MainState> {
   }
 
   componentDidMount() {
-    this.ant.fec.on('channel_status', this.onChannelStatus.bind(this, 'fecDevice'));
-    this.ant.bp.on('channel_status', this.onChannelStatus.bind(this, 'bpDevice'));
-    this.ant.hrm.on('channel_status', this.onChannelStatus.bind(this, 'hrmDevice'));
+    // this.ant.fec.on('channel_status', this.onChannelStatus.bind(this, 'fecDevice'));
+    // this.ant.bp.on('channel_status', this.onChannelStatus.bind(this, 'bpDevice'));
+    // this.ant.hrm.on('channel_status', this.onChannelStatus.bind(this, 'hrmDevice'));
   }
 
   componentWillUnmount() {
-    this.ant.fec.removeAllListeners('channel_status');
-    this.ant.bp.removeAllListeners('channel_status');
-    this.ant.hrm.removeAllListeners('channel_status');
+    // this.ant.fec.removeAllListeners('channel_status');
+    // this.ant.bp.removeAllListeners('channel_status');
+    // this.ant.hrm.removeAllListeners('channel_status');
   }
 
   onChannelStatus(deviceKey, status, deviceId) {
@@ -128,11 +127,12 @@ export default class Main extends React.Component<MainProps, MainState> {
     else 
       return (
         <Settings firstLoad={this.firstLoad} 
-          fecConnected={this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
+          fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
           ftp={this.state.ftp}
           maxHeartRateBpm={this.state.maxHeartRateBpm}
           onChange={this.handleChange}
-          ant={this.ant} />
+          ant={this.ant}
+          stick={this.stick} />
       );
   }    
 
@@ -141,9 +141,9 @@ export default class Main extends React.Component<MainProps, MainState> {
       <div>
         <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
             fec={this.ant.fec}
-            fecConnected={this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
-            bpConnected={this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
-            hrmConnected={this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL}
+            fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+            bpConnected={false /*this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+            hrmConnected={false /*this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
             status={this.state.status} />
         {this.getCurrentPageElement()}
       </div>
