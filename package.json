@@ -7,7 +7,7 @@
     "name": "Jason De Lorme",
     "url": "http://www.insideride.com"
   },
-  "version": "2.6.9",
+  "version": "3.0.0",
   "main": "./src/main.js",
   "license": "MIT",
   "repository": "irt_client",
@@ -23,21 +23,21 @@
   "dependencies": {
     "@amcharts/amcharts3-react": "^3.0.0",
     "@types/react": "^16.0.40",
+    "ant-plus": "^0.1.24",
     "asar": "^0.14.2",
     "azure-storage": "^2.10.2",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.3.13",
     "babel-register": "^6.3.13",
-    "electron": "^11.1.1",
     "electron-compile": "^6.4.2",
     "electron-settings": "^3.1.4",
     "electron-squirrel-startup": "^1.0.0",
-    "node-gyp": "^7.1.2",
     "process": "^0.11.10",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
+    "@types/node": "^14.14.20",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "electron-forge": "^4.3.0",
     "electron-prebuilt-compile": "1.7.11",

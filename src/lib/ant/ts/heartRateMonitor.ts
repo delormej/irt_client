@@ -1,10 +1,14 @@
 import * as Ant from './antDeviceProfile';
+import { GarminStick3, HeartRateSensor } from 'ant-plus';
 
 export default class HeartRateMonitor extends Ant.DeviceProfile {
     private _lastHrm: number = 0;
-    constructor() {
+    private hrSensor: HeartRateSensor;
+
+    constructor(stick: GarminStick3) {
         super();
-    }
+        this.hrSensor = new HeartRateSensor(stick);
+      }
 
     protected updateChannelConfig(config: Ant.ChannelConfig) {
         config.channelType = 0x00;

@@ -2,7 +2,7 @@
 // High Order Component based on this: https://dev.to/danhomola/react-higher-order-components-in-typescript-made-simple 
 //
 import * as React from 'react';
-import * as EventEmitter from 'events';
+import { EventEmitter } from 'events';
 
 // State of the HOC you need to compute the InjectedProps
 interface State {

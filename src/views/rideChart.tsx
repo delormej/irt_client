@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import * as EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import * as AmCharts from "@amcharts/amcharts3-react";
 
 interface RideChartProps {

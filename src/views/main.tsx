@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import * as antlib from '../lib/ant/antlib.js';
 import * as AntFec from '../lib/ant/ant_fec.js';
 import * as AntBikePower from '../lib/ant/ant_bp.js';
@@ -10,6 +10,7 @@ import Header from './header';
 import Ride from './ride';
 import Settings from './settings.jsx';
 import * as ElectronSettings from 'electron-settings';
+import { GarminStick3 } from 'ant-plus';
 
 interface StatusMessage {
   type: string;
@@ -59,14 +60,19 @@ export default class Main extends React.Component<MainProps, MainState> {
   }
 
   initAnt(): void {
-    antlib.init();
+    // antlib.init();
+    var stick = new GarminStick3();
+    if (!stick.open()) {
+      console.error("Stick not open!");
+    }
+
     let bp: AntProfile = new AntBikePower();
     this.ant = {
       bgScanner: new AntBackgroundScanner(),
       fec: new AntFec(),
       bp: bp,
       bpAverager: new PowerAverager(bp),
-      hrm: new HeartRateMonitor()
+      hrm: new HeartRateMonitor(stick)
     };
   }
 
