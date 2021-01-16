@@ -21,6 +21,7 @@ interface AntProfile extends EventEmitter {
 }
 
 export interface AntObjects {
+    stick: GarminStick3;
     fec: FitnessEquipmentSensor; 
     bp: BicyclePowerSensor;
     bpAverager: Object;
@@ -40,7 +41,6 @@ interface MainState {
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
-  private stick: GarminStick3;
   private ant: AntObjects;
 
   constructor(props) {
@@ -66,27 +66,33 @@ export default class Main extends React.Component<MainProps, MainState> {
   onStartup(): void {
     console.log("stick startup");
 
-    this.ant = {
-      fec: new FitnessEquipmentSensor(this.stick),
-      bp: new BicyclePowerSensor(this.stick),
-      bpAverager: null, //new PowerAverager(bp),
-      hrm: new HeartRateSensor(this.stick)
-    };
+    this.ant.fec = new FitnessEquipmentSensor(this.ant.stick);
+    this.ant.bp = new BicyclePowerSensor(this.ant.stick);
+    this.ant.bpAverager = null; //new PowerAverager(bp),
+    this.ant.hrm = new HeartRateSensor(this.ant.stick);
 
     this.setState( {
       antInitialized: true
     });
   }
 
+  // rather than have initAnt here, why not just a separate class entirely to encapsulate
+  // both data and functions for ant interaction?
   initAnt(): void {
-    this.stick = new GarminStick3();
+    let ant = {
+      stick: new GarminStick3(),
+      fec: null,
+      bp: null,
+      bpAverager: null, //new PowerAverager(bp),
+      hrm: null
+    };
     
-    this.stick.on('startup', this.onStartup);
-    this.stick.on('read', (data) => { 
-      console.log("data", data) } 
-    );
+    ant.stick.on('startup', this.onStartup);
+    // ant.stick.on('read', (data) => { 
+    //   console.log("data", data) } 
+    // );
 
-    this.stick.openAsync( (err) => {
+    ant.stick.openAsync( (err) => {
       if (err) {
         console.log("Error trying to open Garmin stick:", err);
         return;
@@ -94,6 +100,8 @@ export default class Main extends React.Component<MainProps, MainState> {
 
       console.log("stick open");
     });
+
+    this.ant = ant;
   }
 
   getCurrentPage(channelStatus: number): string {
@@ -115,7 +123,7 @@ export default class Main extends React.Component<MainProps, MainState> {
     // this.ant.fec.removeAllListeners('channel_status');
     // this.ant.bp.removeAllListeners('channel_status');
     // this.ant.hrm.removeAllListeners('channel_status');
-    this.stick.close();
+    this.ant.stick.close();
   }
 
   onChannelStatus(deviceKey, status, deviceId) {
@@ -153,8 +161,7 @@ export default class Main extends React.Component<MainProps, MainState> {
           ftp={this.state.ftp}
           maxHeartRateBpm={this.state.maxHeartRateBpm}
           onChange={this.handleChange}
-          ant={this.ant}
-          stick={this.stick} />
+          ant={this.ant} />
       );
   }    
 

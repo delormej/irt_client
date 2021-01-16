@@ -4,6 +4,7 @@ import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
+import { HeartRateScanner } from 'ant-plus';
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -25,22 +26,32 @@ export default class AvailableDevices extends React.Component {
         this.selectedDeviceId = null;
         this.onConnectDevice = props.onConnectDevice;
         this.deviceType = props.deviceType;
-        this.bgScanner = props.bgScanner;
+
+        // this.bgScanner = props.bgScanner;
+        this.hrmScanner = new HeartRateScanner(this.props.ant.stick);
 
         this.onDeviceInfo = this.onDeviceInfo.bind(this);
     }
 
-    onDeviceInfo(deviceInfo) {
-        if (deviceInfo.deviceType == this.deviceType)
-            this.addOrUpdateAvailableDevice(deviceInfo);
+    onDeviceInfo(data) {
+        let deviceInfo = {
+            deviceId: data.DeviceID,
+            manufacturerId: data.ManId
+        };
+        console.log("found", deviceInfo.deviceId, deviceInfo.manufacturerId);
+        // console.log("Found", data.DeviceID, data.ManId);
+        this.addOrUpdateAvailableDevice(deviceInfo);
     }
 
     componentDidMount() {
         // this.bgScanner.on('deviceInfo', this.onDeviceInfo);
+        this.hrmScanner.on('hbData', this.onDeviceInfo);
+        this.hrmScanner.scan();
     }
 
     componentWillUnmount() {
         // this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
+        this.hrmScanner.detach();
     }
 
     addOrUpdateAvailableDevice(deviceInfo) {
@@ -50,7 +61,7 @@ export default class AvailableDevices extends React.Component {
             return value.deviceId == deviceInfo.deviceId;
         });
         if (element != null) {
-            if (deviceInfo.manufacturerId != 0) {
+            if (deviceInfo.manufacturerId) {
                 element.manufacturerId = deviceInfo.manufacturerId;
                 element.manufacturerName = 
                     antManufacturers.getAntManufacturerNameById(deviceInfo.manufacturerId);

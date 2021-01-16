@@ -40,7 +40,7 @@ export default class Settings extends React.Component {
         this.fec = null;// props.ant.fec;
         this.bp = null; // props.ant.bp;
         this.hrm = null; // props.ant.hrm;
-        this.stick = props.stick;
+        this.stick = props.ant.stick;
     }
 
     componentDidMount() {

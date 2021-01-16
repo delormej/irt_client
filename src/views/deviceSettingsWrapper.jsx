@@ -80,7 +80,7 @@ export default class DeviceSettings extends React.Component {
                         onDisconnectDevice={child.props.onDisconnectDevice} />);
             default:        
                 return ( /*bgScanner={this.props.ant.bgScanner}*/
-                    <AvailableDevices deviceType={deviceType}
+                    <AvailableDevices ant={this.props.ant} deviceType={deviceType}
                         onConnectDevice={child.props.onConnectDevice} />
                 );
         }
