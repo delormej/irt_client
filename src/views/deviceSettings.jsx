@@ -1,7 +1,6 @@
 'use babel';
 
 import React from 'react';
-import antlib from '../lib/ant/antlib.js';
 
 export default class DeviceSettings extends React.Component {
     constructor(props) {

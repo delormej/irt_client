@@ -28,22 +28,23 @@ export default class DeviceSettings extends React.Component {
     }
 
     getChannelStatus(ant, deviceType) {
-        let device = null;
-        switch (deviceType) {
-            case antlib.BIKE_POWER_DEVICE_TYPE:
-                device = ant.bp;
-                break;
-            case antlib.FEC_DEVICE_TYPE:
-                device = ant.fec;
-                break;
-            case antlib.HEART_RATE_DEVICE_TYPE:
-                device = ant.hrm;
-                break;
-            default:
-                throw new Error("Invalid device type.");
-        }
-        let channelStatus = device.getChannelStatus();
-        return channelStatus;
+        // let device = null;
+        // switch (deviceType) {
+        //     case antlib.BIKE_POWER_DEVICE_TYPE:
+        //         device = ant.bp;
+        //         break;
+        //     case antlib.FEC_DEVICE_TYPE:
+        //         device = ant.fec;
+        //         break;
+        //     case antlib.HEART_RATE_DEVICE_TYPE:
+        //         device = ant.hrm;
+        //         break;
+        //     default:
+        //         throw new Error("Invalid device type.");
+        // }
+        // let channelStatus = device.getChannelStatus();
+        // return channelStatus;
+        return 0;
     }
     
     getDeviceTypeFromElement(element) {
@@ -78,8 +79,8 @@ export default class DeviceSettings extends React.Component {
                     <CancelSearch deviceType={deviceType} 
                         onDisconnectDevice={child.props.onDisconnectDevice} />);
             default:        
-                return (
-                    <AvailableDevices bgScanner={this.props.ant.bgScanner} deviceType={deviceType}
+                return ( /*bgScanner={this.props.ant.bgScanner}*/
+                    <AvailableDevices deviceType={deviceType}
                         onConnectDevice={child.props.onConnectDevice} />
                 );
         }

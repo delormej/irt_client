@@ -36,11 +36,11 @@ export default class AvailableDevices extends React.Component {
     }
 
     componentDidMount() {
-        this.bgScanner.on('deviceInfo', this.onDeviceInfo);
+        // this.bgScanner.on('deviceInfo', this.onDeviceInfo);
     }
 
     componentWillUnmount() {
-        this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
+        // this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
     }
 
     addOrUpdateAvailableDevice(deviceInfo) {

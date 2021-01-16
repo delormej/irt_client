@@ -1,16 +1,15 @@
+/*
+  Top level component which contains global state including the ANT+ sensors and 
+  controls navigation by loading either the "Settings" or "Ride" components.
+*/
 import * as React from 'react';
 import { EventEmitter } from 'events';
-import * as antlib from '../lib/ant/antlib.js';
-import * as AntFec from '../lib/ant/ant_fec.js';
-import * as AntBikePower from '../lib/ant/ant_bp.js';
-import HeartRateMonitor from '../lib/ant/ts/heartRateMonitor';
 import PowerAverager from '../lib/ant/ts/powerAverager';
-import * as AntBackgroundScanner from '../lib/ant/ant_bg_scanner.js';
 import Header from './header';
 import Ride from './ride';
 import Settings from './settings.jsx';
 import * as ElectronSettings from 'electron-settings';
-import { GarminStick3 } from 'ant-plus';
+import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
 
 interface StatusMessage {
   type: string;
@@ -22,11 +21,10 @@ interface AntProfile extends EventEmitter {
 }
 
 export interface AntObjects {
-    bgScanner: EventEmitter;
-    fec: AntProfile; 
-    bp: AntProfile;
+    fec: FitnessEquipmentSensor; 
+    bp: BicyclePowerSensor;
     bpAverager: Object;
-    hrm: AntProfile;
+    hrm: HeartRateSensor;
 }
 
 interface MainProps {}
@@ -37,16 +35,17 @@ interface MainState {
   averageSeconds: number;
   ftp: number;
   maxHeartRateBpm: number;
+  antInitialized: boolean;
 }
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
-  private ant: AntObjects;
   private stick: GarminStick3;
+  private ant: AntObjects;
 
   constructor(props) {
     super(props);
-    this.initAnt();
+    
     let page: string = this.getCurrentPage(0 /*this.ant.fec.getChannelStatus()*/);
     
     this.state = {
@@ -54,32 +53,54 @@ export default class Main extends React.Component<MainProps, MainState> {
       currentPage: page,
       averageSeconds: ElectronSettings.get("averageSeconds", 10),
       ftp: ElectronSettings.get("ftp", undefined),
-      maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined)
+      maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined),
+      antInitialized: false
     }
 
     this.handleChange = this.handleChange.bind(this);
+    this.onStartup = this.onStartup.bind(this);
+
+    this.initAnt();
+  }
+
+  onStartup(): void {
+    console.log("stick startup");
+
+    this.ant = {
+      fec: new FitnessEquipmentSensor(this.stick),
+      bp: new BicyclePowerSensor(this.stick),
+      bpAverager: null, //new PowerAverager(bp),
+      hrm: new HeartRateSensor(this.stick)
+    };
+
+    this.setState( {
+      antInitialized: true
+    });
   }
 
   initAnt(): void {
     this.stick = new GarminStick3();
+    
+    this.stick.on('startup', this.onStartup);
+    this.stick.on('read', (data) => { 
+      console.log("data", data) } 
+    );
 
-    console.log("Present: ", this.stick.is_present());
+    this.stick.openAsync( (err) => {
+      if (err) {
+        console.log("Error trying to open Garmin stick:", err);
+        return;
+      }
 
-    let bp: AntProfile = new AntBikePower();
-    this.ant = {
-      bgScanner: new AntBackgroundScanner(),
-      fec: new AntFec(),
-      bp: bp,
-      bpAverager: new PowerAverager(bp),
-      hrm: null// new HeartRateMonitor(this.stick)
-    };
+      console.log("stick open");
+    });
   }
 
   getCurrentPage(channelStatus: number): string {
     let page: string;
-    if (channelStatus == antlib.STATUS_TRACKING_CHANNEL)
-      page = "ride";
-    else 
+    // if (channelStatus == antlib.STATUS_TRACKING_CHANNEL)
+    //   page = "ride";
+    // else 
       page = "settings";
     return page;  
   }
@@ -94,6 +115,7 @@ export default class Main extends React.Component<MainProps, MainState> {
     // this.ant.fec.removeAllListeners('channel_status');
     // this.ant.bp.removeAllListeners('channel_status');
     // this.ant.hrm.removeAllListeners('channel_status');
+    this.stick.close();
   }
 
   onChannelStatus(deviceKey, status, deviceId) {
@@ -137,18 +159,23 @@ export default class Main extends React.Component<MainProps, MainState> {
   }    
 
   render(): JSX.Element {
-    let children = (
-      <div>
-        <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
-            fec={this.ant.fec}
-            fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
-            bpConnected={false /*this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
-            hrmConnected={false /*this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
-            status={this.state.status} />
-        {this.getCurrentPageElement()}
-      </div>
-    );  
-    this.firstLoad = false;
-    return children;
+    if (!this.state.antInitialized) {
+      return <div>Initializing ANT...</div>;
+    } 
+    else {
+      let children = (
+        <div>
+          <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
+              fec={this.ant.fec}
+              fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+              bpConnected={false /*this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+              hrmConnected={false /*this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+              status={this.state.status} />
+          { this.getCurrentPageElement() }
+        </div>
+      );  
+      this.firstLoad = false;
+      return children;
+    }
   }
 }
