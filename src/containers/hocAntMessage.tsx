@@ -24,7 +24,7 @@ export const hocAntMessage = (messages: string[]) =>
         type ResultProps = TOriginalProps & ExternalProps;
         const result = class HocAntMessage extends React.Component<ResultProps, State> {
             // Define how HOC is shown in ReactDevTools
-            static displayName = `hocAntMessage(${Component.displayName})`;
+            static displayName = `hocAntMessage(${Component.name})`;
 
             constructor(props: ResultProps) {
                 super(props);
@@ -37,11 +37,6 @@ export const hocAntMessage = (messages: string[]) =>
             }
         
             componentDidMount() {
-                // this.props.ant.on('hbdata', 
-                //     (data) => {
-                //         this.setState( { message: 'hbData', data: data } );
-                //     });
-                //);
                 messages.forEach(message => {
                     this.props.ant.on(message, 
                         this.onMessage.bind(this, message));    
@@ -59,7 +54,6 @@ export const hocAntMessage = (messages: string[]) =>
                     message: message,
                     data: data
                 });
-                console.log('message', data);
             }
 
             render(): JSX.Element {

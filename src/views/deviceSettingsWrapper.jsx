@@ -29,7 +29,7 @@ export default class DeviceSettings extends React.Component {
     }
     
     getDeviceTypeFromElement(element) {
-        let name = element.type.name;
+        let name = element.type.displayName;
         console.log('getDeviceTypeFromElement', name);
         return antlib.HEART_RATE_DEVICE_TYPE; 
 
