@@ -21,9 +21,9 @@ export default class HeartRateConnected extends HeartRate {
                 <div className="deviceTitle">Heart Rate Monitor</div>
                 <button onClick={() => this.props.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)}>Disconnect</button>
                 <div className="heartRateSettings">
-                    <div className="label">Device ID: {this.props.deviceId}</div>
+                    <div className="label">Device ID: {this.props.DeviceID}</div>
                     <div className="label">Heart Rate:</div>
-                    <div className="heartRateBpm">{this.state.heartRateBpm}</div>
+                    <div className="heartRateBpm">{this.props.ComputedHeartRate}</div>
                     <div className="label">Maximum Heart Rate</div>
                     <input type="textbox" name="maxHeartRateBpm" 
                         value={this.props.maxHeartRateBpm}

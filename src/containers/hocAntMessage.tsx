@@ -37,11 +37,15 @@ export const hocAntMessage = (messages: string[]) =>
             }
         
             componentDidMount() {
+                // this.props.ant.on('hbdata', 
+                //     (data) => {
+                //         this.setState( { message: 'hbData', data: data } );
+                //     });
+                //);
                 messages.forEach(message => {
                     this.props.ant.on(message, 
                         this.onMessage.bind(this, message));    
                 });
-                
             }
         
             componentWillUnmount() {
@@ -55,6 +59,7 @@ export const hocAntMessage = (messages: string[]) =>
                     message: message,
                     data: data
                 });
+                console.log('message', data);
             }
 
             render(): JSX.Element {

@@ -15,12 +15,11 @@ import AdvancedPowerMeterSettings from '../views/advancedPowerMeterSettings.jsx'
 import ElectronSettings from 'electron-settings';
 import HeartRateConnected from '../views/heartRateConnected.jsx';
 import DeviceSettings from '../views/deviceSettingsWrapper';
-// import AvailableDevices from './availableDevices';
+import { hocAntMessage } from '../containers/hocAntMessage';
+import antlib from '../lib/ant/antlib.js';
+import { AntContext } from '../lib/ant/ts/ant';
 
-// const ANT_BG_CHANNEL_ID = 0;
-const ANT_FEC_CHANNEL_ID = 1;
-const ANT_BP_CHANNEL_ID = 2;
-const ANT_HRM_CHANNEL_ID = 3;
+const WrappedHeartRateConnected = hocAntMessage(['hbData'])(HeartRateConnected);
 
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
@@ -34,13 +33,10 @@ function ToggleAdvancedTrainerSettings(props) {
 export default class Settings extends React.Component {
     constructor(props) {
         super(props);
+        this.ant = props.ant;
         this.state = {
-            showAdvanced: false
+            showAdvanced: false,
         }
-        this.fec = null;// props.ant.fec;
-        this.bp = null; // props.ant.bp;
-        this.hrm = null; // props.ant.hrm;
-        this.stick = props.ant.stick;
     }
 
     componentDidMount() {
@@ -92,44 +88,15 @@ export default class Settings extends React.Component {
 
     onConnectDevice(deviceType, deviceId) {
         console.log("Attempting to connect to: ", deviceId);
-        // if (!deviceId)
-        //     throw new Error("Invalid device ID, cannot connect.");
+        if (!deviceId)
+            throw new Error("Invalid device ID, cannot connect.");
         
-        // if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
-        //     if (this.bp.getChannelStatus() != antlib.STATUS_TRACKING_CHANNEL)
-        //         this.bp.openChannel(deviceId);
-        //     else 
-        //         throw new Error("Bike Power channel already assigned.");
-        // }
-        // else if (deviceType == antlib.FEC_DEVICE_TYPE) {
-        //     let channelStatus = this.fec.getChannelStatus();
-        //     if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
-        //         this.fec.openChannel(deviceId);
-        //     else 
-        //         throw new Error("Trainer (FE-C) channel already assigned.");            
-        // }
-        // else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
-        //     let channelStatus = this.hrm.getChannelStatus();
-        //     if (channelStatus != antlib.STATUS_TRACKING_CHANNEL)
-        //         this.hrm.openChannel(ANT_HRM_CHANNEL_ID, deviceId);
-        //     else 
-        //         throw new Error("Heart Rate Monitor channel already assigned.");            
-        // }
+        this.ant.connectDevice(deviceType, deviceId);
     }
 
     onDisconnectDevice(deviceType) {
-        // if (deviceType == antlib.BIKE_POWER_DEVICE_TYPE) {
-        //     this.bp.closeChannel();
-        // }
-        // else if (deviceType == antlib.FEC_DEVICE_TYPE) {
-        //     this.setState( {
-        //         showAdvanced: false
-        //     });
-        //     this.fec.closeChannel();
-        // }
-        // else if (deviceType == antlib.HEART_RATE_DEVICE_TYPE) {
-        //     this.hrm.closeChannel();
-        // }
+        console.log("Attempting to disconnect device.");
+        this.ant.disconnectDevice(deviceType);
     }
     
     onShowAdvanced() {
@@ -141,6 +108,7 @@ export default class Settings extends React.Component {
     render() {
         return (
             <div className="settings">
+                <div>Connected? {this.props.hrmConnected ? "true" : "false" }</div>
                 {/* <DeviceSettings ant={this.props.ant}>
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.fec.getDeviceId()}
@@ -163,13 +131,13 @@ export default class Settings extends React.Component {
                     {this.state.showAdvanced && <AdvancedPowerMeterSettings 
                         fec={this.fec} onChange={this.props.onChange} /> }
                 </div> */}
-                <DeviceSettings ant={this.props.ant}>
-                    <HeartRateConnected deviceId={0/*this.hrm.getDeviceId()*/}
-                        stick={this.stick}
+                <DeviceSettings ant={this.props.ant} {...this.props}>
+                    <WrappedHeartRateConnected 
+                        ant={this.props.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
-                        onChange={this.props.onChange} />                
+                        onChange={this.props.onChange} /> 
                 </DeviceSettings>
             </div>
         );

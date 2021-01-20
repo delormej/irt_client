@@ -10,6 +10,7 @@ import DeviceType from '../scripts/deviceType.js';
 import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AvailableDevices from './availableDevices';
+import { connect } from 'tls';
 
 function CancelSearch(props) {
     let className = "cancel " +
@@ -26,37 +27,20 @@ export default class DeviceSettings extends React.Component {
     constructor(props) {
         super(props);
     }
-
-    getChannelStatus(ant, deviceType) {
-        // let device = null;
-        // switch (deviceType) {
-        //     case antlib.BIKE_POWER_DEVICE_TYPE:
-        //         device = ant.bp;
-        //         break;
-        //     case antlib.FEC_DEVICE_TYPE:
-        //         device = ant.fec;
-        //         break;
-        //     case antlib.HEART_RATE_DEVICE_TYPE:
-        //         device = ant.hrm;
-        //         break;
-        //     default:
-        //         throw new Error("Invalid device type.");
-        // }
-        // let channelStatus = device.getChannelStatus();
-        // return channelStatus;
-        return 0;
-    }
     
     getDeviceTypeFromElement(element) {
         let name = element.type.name;
+        console.log('getDeviceTypeFromElement', name);
+        return antlib.HEART_RATE_DEVICE_TYPE; 
+
         if (name === "TrainerSettings")
             return antlib.FEC_DEVICE_TYPE;
         else if (name === "PowerMeterSettings")
             return antlib.BIKE_POWER_DEVICE_TYPE;
-        else if (name === "HeartRateConnected")
+        else if (name === "WrappedHeartRateConnected")
             return antlib.HEART_RATE_DEVICE_TYPE;
         else
-            throw new Error("Invalid element, can't determine device type.");
+            throw new Error("Invalid element, can't determine device type: " + name);
     }
     
     getChildElement(element) {
@@ -66,24 +50,42 @@ export default class DeviceSettings extends React.Component {
             return element;
     }
 
+    isDeviceConnected(deviceType) {
+        switch (deviceType) {
+            case antlib.HEART_RATE_DEVICE_TYPE:
+                return this.props.hrmConnected;
+            case antlib.FEC_DEVICE_TYPE:
+                return this.props.fecConnected;
+            case antlib.BIKE_POWER_DEVICE_TYPE:
+                return this.props.bpConnected;
+            default:
+                return false;
+        }
+    }
+
     render() 
     {
         let child = this.getChildElement(this.props.children);
         let deviceType = this.getDeviceTypeFromElement(child);
-        let channelStatus = this.getChannelStatus(this.props.ant, deviceType);
-        switch (channelStatus) {
-            case antlib.STATUS_TRACKING_CHANNEL:
-                return this.props.children;
-            case antlib.STATUS_SEARCHING_CHANNEL:
-                return (
+        let connected = this.isDeviceConnected(deviceType);
+
+        console.log('Connected: ', connected);
+
+        if (connected) {
+            return this.props.children;
+        }
+        else {
+            return (
+                <AvailableDevices ant={this.props.ant} deviceType={deviceType}
+                    onConnectDevice={child.props.onConnectDevice} />
+            );
+        }
+
+        /* Searching is not a state that is currently tracked by the ant-plus node library.
+                        return (
                     <CancelSearch deviceType={deviceType} 
                         onDisconnectDevice={child.props.onDisconnectDevice} />);
-            default:        
-                return ( /*bgScanner={this.props.ant.bgScanner}*/
-                    <AvailableDevices ant={this.props.ant} deviceType={deviceType}
-                        onConnectDevice={child.props.onConnectDevice} />
-                );
-        }
+        */
     }    
 }
 

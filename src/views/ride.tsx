@@ -10,7 +10,7 @@ import Cadence from './cadence';
 import ResistanceLevel from './resistanceLevel';
 import HeartRate from './heartRate';
 import RideChart from './rideChart';
-import { AntObjects } from './main';
+import { AntObjects } from '../lib/ant/ts/ant';
 import { hocAntMessage } from '../containers/hocAntMessage';
 
 const powerMessages = ['standardPowerOnly', 'ctfMainPage'];

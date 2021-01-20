@@ -3,29 +3,16 @@
   controls navigation by loading either the "Settings" or "Ride" components.
 */
 import * as React from 'react';
-import { EventEmitter } from 'events';
 import PowerAverager from '../lib/ant/ts/powerAverager';
 import Header from './header';
 import Ride from './ride';
 import Settings from './settings.jsx';
 import * as ElectronSettings from 'electron-settings';
-import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
+import { AntContext, DeviceType, DeviceInfo } from '../lib/ant/ts/ant';
 
 interface StatusMessage {
   type: string;
   message: string;
-}
-
-interface AntProfile extends EventEmitter {
-  getChannelStatus(): number;
-}
-
-export interface AntObjects {
-    stick: GarminStick3;
-    fec: FitnessEquipmentSensor; 
-    bp: BicyclePowerSensor;
-    bpAverager: Object;
-    hrm: HeartRateSensor;
 }
 
 interface MainProps {}
@@ -37,14 +24,18 @@ interface MainState {
   ftp: number;
   maxHeartRateBpm: number;
   antInitialized: boolean;
+  fecConnected: boolean;
+  bpConnected: boolean;
+  hrmConnected: boolean;
 }
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
-  private ant: AntObjects;
+  private ant: AntContext;
 
   constructor(props) {
     super(props);
+    console.log('main.tsx ctor called');
     
     let page: string = this.getCurrentPage(0 /*this.ant.fec.getChannelStatus()*/);
     
@@ -54,54 +45,44 @@ export default class Main extends React.Component<MainProps, MainState> {
       averageSeconds: ElectronSettings.get("averageSeconds", 10),
       ftp: ElectronSettings.get("ftp", undefined),
       maxHeartRateBpm: ElectronSettings.get("maxHeartRateBpm", undefined),
-      antInitialized: false
+      antInitialized: false,
+      fecConnected: false,
+      bpConnected: false,
+      hrmConnected: false      
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.onStartup = this.onStartup.bind(this);
+    this.onDeviceConnected =this.onDeviceConnected.bind(this);
+    this.onDeviceDisconnected =this.onDeviceDisconnected.bind(this);
 
-    this.initAnt();
+    this.ant = new AntContext();
   }
 
   onStartup(): void {
     console.log("stick startup");
-
-    this.ant.fec = new FitnessEquipmentSensor(this.ant.stick);
-    this.ant.bp = new BicyclePowerSensor(this.ant.stick);
-    this.ant.bpAverager = null; //new PowerAverager(bp),
-    this.ant.hrm = new HeartRateSensor(this.ant.stick);
 
     this.setState( {
       antInitialized: true
     });
   }
 
-  // rather than have initAnt here, why not just a separate class entirely to encapsulate
-  // both data and functions for ant interaction?
-  initAnt(): void {
-    let ant = {
-      stick: new GarminStick3(),
-      fec: null,
-      bp: null,
-      bpAverager: null, //new PowerAverager(bp),
-      hrm: null
-    };
-    
-    ant.stick.on('startup', this.onStartup);
-    // ant.stick.on('read', (data) => { 
-    //   console.log("data", data) } 
-    // );
+  onDeviceConnected(deviceType): void {
+    if (deviceType === DeviceType.HEART_RATE_DEVICE_TYPE) {
+      this.setState( {
+        hrmConnected: true
+      });
+      console.log('hrm connected to main.tsx');
+    }
+  }
 
-    ant.stick.openAsync( (err) => {
-      if (err) {
-        console.log("Error trying to open Garmin stick:", err);
-        return;
-      }
-
-      console.log("stick open");
-    });
-
-    this.ant = ant;
+  onDeviceDisconnected(deviceType): void {
+    if (deviceType === DeviceType.HEART_RATE_DEVICE_TYPE) {
+      this.setState( {
+        hrmConnected: false
+      });
+      console.log('hrm disconnected from main.tsx');
+    }
   }
 
   getCurrentPage(channelStatus: number): string {
@@ -114,15 +95,16 @@ export default class Main extends React.Component<MainProps, MainState> {
   }
 
   componentDidMount() {
-    // this.ant.fec.on('channel_status', this.onChannelStatus.bind(this, 'fecDevice'));
-    // this.ant.bp.on('channel_status', this.onChannelStatus.bind(this, 'bpDevice'));
-    // this.ant.hrm.on('channel_status', this.onChannelStatus.bind(this, 'hrmDevice'));
+    this.ant.on('initialized', this.onStartup);
+    this.ant.on('deviceConnected', this.onDeviceConnected);
+    this.ant.on('deviceDisconnected', this.onDeviceDisconnected);
   }
 
   componentWillUnmount() {
-    // this.ant.fec.removeAllListeners('channel_status');
-    // this.ant.bp.removeAllListeners('channel_status');
-    // this.ant.hrm.removeAllListeners('channel_status');
+    this.ant.removeAllListeners('initialized');
+    this.ant.removeAllListeners('deviceConnected');
+    this.ant.removeAllListeners('deviceDisconnected'); 
+    
     this.ant.stick.close();
   }
 
@@ -156,8 +138,8 @@ export default class Main extends React.Component<MainProps, MainState> {
       );
     else 
       return (
-        <Settings firstLoad={this.firstLoad} 
-          fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
+        <Settings {...this.state}
+          firstLoad={this.firstLoad} 
           ftp={this.state.ftp}
           maxHeartRateBpm={this.state.maxHeartRateBpm}
           onChange={this.handleChange}
@@ -173,10 +155,8 @@ export default class Main extends React.Component<MainProps, MainState> {
       let children = (
         <div>
           <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
+              {...this.state}
               fec={this.ant.fec}
-              fecConnected={false /*this.ant.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
-              bpConnected={false /*this.ant.bp.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
-              hrmConnected={false /*this.ant.hrm.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL*/}
               status={this.state.status} />
           { this.getCurrentPageElement() }
         </div>

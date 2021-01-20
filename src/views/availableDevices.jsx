@@ -27,7 +27,6 @@ export default class AvailableDevices extends React.Component {
         this.onConnectDevice = props.onConnectDevice;
         this.deviceType = props.deviceType;
 
-        // this.bgScanner = props.bgScanner;
         this.hrmScanner = new HeartRateScanner(this.props.ant.stick);
 
         this.onDeviceInfo = this.onDeviceInfo.bind(this);
@@ -38,20 +37,17 @@ export default class AvailableDevices extends React.Component {
             deviceId: data.DeviceID,
             manufacturerId: data.ManId
         };
+
         console.log("found", deviceInfo.deviceId, deviceInfo.manufacturerId);
-        // console.log("Found", data.DeviceID, data.ManId);
         this.addOrUpdateAvailableDevice(deviceInfo);
     }
 
     componentDidMount() {
-        // this.bgScanner.on('deviceInfo', this.onDeviceInfo);
         this.hrmScanner.on('hbData', this.onDeviceInfo);
         this.hrmScanner.scan();
     }
 
     componentWillUnmount() {
-        // this.bgScanner.removeListener('deviceInfo', this.onDeviceInfo);
-        this.hrmScanner.detach();
     }
 
     addOrUpdateAvailableDevice(deviceInfo) {
@@ -78,6 +74,7 @@ export default class AvailableDevices extends React.Component {
     }
 
     onSelectDevice(deviceId) {
+        this.hrmScanner.detach();
         this.selectedDeviceId = deviceId;
         this.onConnectDevice(this.deviceType, this.selectedDeviceId);
     }
