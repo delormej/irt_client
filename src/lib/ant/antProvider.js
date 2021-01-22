@@ -2,10 +2,10 @@ import React from "react";
 import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
 import { DeviceType, DeviceChannel } from './ts/ant';
 
-export const AntContext = React.createContext();
+const AntContext = React.createContext();
 
 // This context provider is passed to any component requiring the context
-export class AntProvider extends React.Component {
+class AntProvider extends React.Component {
   
   constructor(props) {
     super(props);
@@ -124,3 +124,5 @@ export class AntProvider extends React.Component {
     );
   }
 }
+
+export { AntContext, AntProvider };

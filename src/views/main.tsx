@@ -96,11 +96,6 @@ export default class Main extends React.Component<MainProps, MainState> {
           <Header page={this.state.currentPage} onClick={(page) => this.navigate(page)}
               {...this.state}
               status={this.state.status} 
-              // TODO: these can be fetched from context, REMOVE from here.
-              fec={this.context.ant.fec}
-              fecConnected={this.context.fecConnected}
-              bpConnected={this.context.bpConnected}
-              hrmConnected={this.context.hrmConnected}        
           />
           { this.getCurrentPageElement() }
         </div>

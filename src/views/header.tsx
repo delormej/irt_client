@@ -4,6 +4,7 @@ import AntDevicesConnectedStatus from './deviceConnectedStatus';
 import TargetPowerStatus from './targetPowerStatus';
 import { EventEmitter } from 'events';
 import { hocAntMessage } from '../containers/hocAntMessage';
+import { AntContext } from '../lib/ant/antProvider';
 
 const DevicesConnectedFromAnt = hocAntMessage(['specificTrainerData', 'irtExtraInfo'])(AntDevicesConnectedStatus);
 const TargetPowerStatusFromAnt = hocAntMessage(['specificTrainerData'])(TargetPowerStatus);
@@ -24,8 +25,7 @@ function Menu(props): JSX.Element {
     return (
       <div className="menu">
         <a href="#" className="menuLink" onClick={() => props.onClick(navigatePage)}>{linkLabel}</a>
-        <DevicesConnectedFromAnt ant={props.ant} fecConnected={props.fecConnected} 
-          bpConnected={props.bpConnected} hrmConnected={props.hrmConnected} />
+        <DevicesConnectedFromAnt ant={props.ant} />
       </div>
     );
 }
@@ -46,13 +46,10 @@ interface HeaderProps {
   status: {message: string, type: string};
   page: string;
   onClick: { (page: string): void };
-  fec: EventEmitter;
-  fecConnected: boolean;
-  bpConnected: boolean;
-  hrmConnected: boolean;
 }
 
 export default class Header extends React.Component<HeaderProps> {
+  static contextType = AntContext;
   constructor(props) {
     super(props);
   }    
@@ -63,11 +60,8 @@ export default class Header extends React.Component<HeaderProps> {
             <img className="logo" src="./images/logo.png" />
             <VersionInfo />
             <Status type={this.props.status.type} message={this.props.status.message} />
-            <TargetPowerStatusFromAnt ant={this.props.fec} targetPowerLimits={0} />
-            <Menu page={this.props.page} onClick={this.props.onClick} ant={this.props.fec}
-                fecConnected={this.props.fecConnected}
-                bpConnected={this.props.bpConnected}
-                hrmConnected={this.props.hrmConnected} />;
+            <TargetPowerStatusFromAnt ant={this.context.ant.fec} targetPowerLimits={0} />
+            <Menu page={this.props.page} onClick={this.props.onClick} ant={this.context.ant.fec} />;
         </div>
     );
   }

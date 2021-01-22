@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AntContext } from '../lib/ant/antProvider';
 
 interface CapabilitiesState {
     virtualSpeed: boolean;
@@ -17,6 +18,7 @@ interface ConnectedStatusProps {
 }
 
 export default class AntDevicesConnectedStatus extends React.Component<ConnectedStatusProps> {
+    static contextType = AntContext;
     feState: number = 0;
     powerMeterConnected: boolean = false;
     constructor(props) {
@@ -31,9 +33,9 @@ export default class AntDevicesConnectedStatus extends React.Component<Connected
 
         return (
             <React.Fragment>
-                <FecConnectedStatus isConnected={this.props.fecConnected} feState={this.feState} />
-                <BpConnectedStatus isConnected={this.props.bpConnected} powerMeterConnected={this.powerMeterConnected} />
-                <DeviceConnectedStatus deviceType="hrm" isConnected={this.props.hrmConnected} />
+                <FecConnectedStatus isConnected={this.context.fecConnected} feState={this.feState} />
+                <BpConnectedStatus isConnected={this.context.bpConnected} powerMeterConnected={this.powerMeterConnected} />
+                <DeviceConnectedStatus deviceType="hrm" isConnected={this.context.hrmConnected} />
             </React.Fragment>
         );
     }
