@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Main from '../views/main';
+import { AntProvider } from '../lib/ant/antProvider';
 import ErrorBoundry from '../views/errorBoundry.jsx';
 
 const remote = require('electron').remote;
 
 window.onload = function(){
-  ReactDOM.render(<ErrorBoundry><Main /></ErrorBoundry>, 
+  ReactDOM.render(
+    <ErrorBoundry>
+      <AntProvider>
+        <Main />
+      </AntProvider>
+    </ErrorBoundry>, 
     document.getElementById('app'));
 
   document.getElementById("closeBtn").addEventListener("click", function (e) {
