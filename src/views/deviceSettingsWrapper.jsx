@@ -11,6 +11,7 @@ import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import AvailableDevices from './availableDevices';
 import { connect } from 'tls';
+import { AntContext } from '../lib/ant/antProvider';
 
 function CancelSearch(props) {
     let className = "cancel " +
@@ -24,6 +25,7 @@ function CancelSearch(props) {
 }
 
 export default class DeviceSettings extends React.Component {
+    
     constructor(props) {
         super(props);
     }

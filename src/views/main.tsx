@@ -5,9 +5,9 @@
 import * as React from 'react';
 import Header from './header';
 import Ride from './ride';
-import Settings from './settings.jsx';
+import Settings from './settings';
 import * as ElectronSettings from 'electron-settings';
-import { AntProvider, AntContext } from '../lib/ant/antProvider';
+import { AntContext } from '../lib/ant/antProvider';
 
 interface StatusMessage {
   type: string;
@@ -26,7 +26,7 @@ interface MainState {
 
 export default class Main extends React.Component<MainProps, MainState> {
   private firstLoad: boolean = true;
-  // context!: React.ContextType<typeof AntProvider>;
+  
   static contextType = AntContext;
 
   constructor(props) {
@@ -77,12 +77,11 @@ export default class Main extends React.Component<MainProps, MainState> {
       );
     else 
       return (
-        <div>empty</div>
-        // <Settings {...this.state}
-        //   firstLoad={this.firstLoad} 
-        //   ftp={this.state.ftp}
-        //   maxHeartRateBpm={this.state.maxHeartRateBpm}
-        //   onChange={this.handleChange} />
+        <Settings {...this.state}
+          firstLoad={this.firstLoad} 
+          ftp={this.state.ftp}
+          maxHeartRateBpm={this.state.maxHeartRateBpm}
+          onChange={this.handleChange} />          
       );
   }    
 

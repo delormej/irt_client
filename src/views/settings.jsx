@@ -5,7 +5,6 @@
     The settings page also hosts a control that allow the user to issue commands to 
     configure the FeC device.
 */
-'use babel';
 
 import React from 'react';
 import TrainerSettings from '../views/trainerSettings.jsx';
@@ -17,7 +16,7 @@ import HeartRateConnected from '../views/heartRateConnected.jsx';
 import DeviceSettings from '../views/deviceSettingsWrapper';
 import { hocAntMessage } from '../containers/hocAntMessage';
 import antlib from '../lib/ant/antlib.js';
-import { AntContext } from '../lib/ant/ts/ant';
+import { AntContext } from '../lib/ant/antProvider';
 
 const WrappedHeartRateConnected = hocAntMessage(['hbData'])(HeartRateConnected);
 
@@ -31,6 +30,7 @@ function ToggleAdvancedTrainerSettings(props) {
 }
 
 export default class Settings extends React.Component {
+
     constructor(props) {
         super(props);
         this.ant = props.ant;
@@ -85,19 +85,6 @@ export default class Settings extends React.Component {
         ElectronSettings.set("maxHeartRateBpm", this.props.maxHeartRateBpm);
         ElectronSettings.set("ftp", this.props.ftp);
     }
-
-    onConnectDevice(deviceType, deviceId) {
-        console.log("Attempting to connect to: ", deviceId);
-        if (!deviceId)
-            throw new Error("Invalid device ID, cannot connect.");
-        
-        this.ant.connectDevice(deviceType, deviceId);
-    }
-
-    onDisconnectDevice(deviceType) {
-        console.log("Attempting to disconnect device.");
-        this.ant.disconnectDevice(deviceType);
-    }
     
     onShowAdvanced() {
         this.setState( {
@@ -107,8 +94,10 @@ export default class Settings extends React.Component {
 
     render() {
         return (
+            <AntContext.Consumer>
+            { context => (
             <div className="settings">
-                <div>Connected? {this.props.hrmConnected ? "true" : "false" }</div>
+                <div>Connected? {context.hrmConnected ? "true" : "false" }</div>
                 {/* <DeviceSettings ant={this.props.ant}>
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.fec.getDeviceId()}
@@ -131,15 +120,16 @@ export default class Settings extends React.Component {
                     {this.state.showAdvanced && <AdvancedPowerMeterSettings 
                         fec={this.fec} onChange={this.props.onChange} /> }
                 </div> */}
-                <DeviceSettings ant={this.props.ant} {...this.props}>
+                <DeviceSettings ant={context.ant} {...this.props}>
                     <WrappedHeartRateConnected 
-                        ant={this.props.ant.hrm}
+                        ant={context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
-                        onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
+                        onConnectDevice={(deviceType, deviceId) => context.connectDevice(deviceType, deviceId)}
+                        onDisconnectDevice={() => context.disconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} /> 
                 </DeviceSettings>
             </div>
+            )}</AntContext.Consumer>
         );
     }
 }  
