@@ -94,10 +94,8 @@ export default class Settings extends React.Component {
 
     render() {
         return (
-            <AntContext.Consumer>
-            { context => (
             <div className="settings">
-                <div>Connected? {context.hrmConnected ? "true" : "false" }</div>
+                <div>Connected? {this.context.hrmConnected ? "true" : "false" }</div>
                 {/* <DeviceSettings ant={this.props.ant}>
                     <TrainerSettings fec={this.fec} 
                         deviceId={this.fec.getDeviceId()}
@@ -122,14 +120,15 @@ export default class Settings extends React.Component {
                 </div> */}
                 <DeviceSettings {...this.props}>
                     <WrappedHeartRateConnected
-                        ant={context.ant.hrm}
+                        ant={this.context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
-                        onConnectDevice={(deviceType, deviceId) => context.connectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => context.disconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
+                        onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
+                        onDisconnectDevice={() => this.context.disconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} /> 
                 </DeviceSettings>
             </div>
-            )}</AntContext.Consumer>
         );
     }
 }  
+
+Settings.contextType = AntContext;
