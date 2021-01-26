@@ -53,13 +53,14 @@ export default class DeviceSettings extends React.Component {
     }
 
     isDeviceConnected(deviceType) {
+        console.log('isDeviceConnected?', deviceType);
         switch (deviceType) {
             case antlib.HEART_RATE_DEVICE_TYPE:
-                return this.props.hrmConnected;
+                return this.context.hrmConnected;
             case antlib.FEC_DEVICE_TYPE:
-                return this.props.fecConnected;
+                return this.context.fecConnected;
             case antlib.BIKE_POWER_DEVICE_TYPE:
-                return this.props.bpConnected;
+                return this.context.bpConnected;
             default:
                 return false;
         }
@@ -91,3 +92,4 @@ export default class DeviceSettings extends React.Component {
     }    
 }
 
+DeviceSettings.contextType = AntContext;

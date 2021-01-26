@@ -16,6 +16,7 @@ export default class VersionInfo extends React.Component {
                 Node.js: {Process.versions.node}<br/>
                 Chromium: {Process.versions.chrome}<br/>
                 Electron: {Process.versions.electron}<br/>  
+                React: {React.version}<br/>
             </div>
         );
     }
