@@ -120,8 +120,8 @@ export default class Settings extends React.Component {
                     {this.state.showAdvanced && <AdvancedPowerMeterSettings 
                         fec={this.fec} onChange={this.props.onChange} /> }
                 </div> */}
-                <DeviceSettings ant={context.ant} {...this.props}>
-                    <WrappedHeartRateConnected 
+                <DeviceSettings {...this.props}>
+                    <WrappedHeartRateConnected
                         ant={context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => context.connectDevice(deviceType, deviceId)}

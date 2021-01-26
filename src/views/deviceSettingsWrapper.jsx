@@ -1,7 +1,5 @@
 'use babel';
 
-import DeviceType from '../scripts/deviceType.js';
-
 //
 // TODO: filename should be changed to deviceSettings.jsx when we remove the 
 // deviceSettings inheritance currently being used.
@@ -12,6 +10,7 @@ import antlib from '../lib/ant/antlib.js';
 import AvailableDevices from './availableDevices';
 import { connect } from 'tls';
 import { AntContext } from '../lib/ant/antProvider';
+import DeviceType from '../scripts/deviceType.js';
 
 function CancelSearch(props) {
     let className = "cancel " +
@@ -79,7 +78,7 @@ export default class DeviceSettings extends React.Component {
         }
         else {
             return (
-                <AvailableDevices ant={this.props.ant} deviceType={deviceType}
+                <AvailableDevices deviceType={deviceType}
                     onConnectDevice={child.props.onConnectDevice} />
             );
         }

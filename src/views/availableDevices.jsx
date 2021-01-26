@@ -2,9 +2,9 @@
 
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
-import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import { HeartRateScanner } from 'ant-plus';
+import { AntContext } from '../lib/ant/antProvider';
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -18,17 +18,16 @@ function AvailableDevice(props) {
 }
 
 export default class AvailableDevices extends React.Component {
+
     constructor(props) {
         super(props);
+
         this.state = {
             availableDevices: []
         };
         this.selectedDeviceId = null;
         this.onConnectDevice = props.onConnectDevice;
         this.deviceType = props.deviceType;
-
-        this.hrmScanner = new HeartRateScanner(this.props.ant.stick);
-
         this.onDeviceInfo = this.onDeviceInfo.bind(this);
     }
 
@@ -43,6 +42,7 @@ export default class AvailableDevices extends React.Component {
     }
 
     componentDidMount() {
+        this.hrmScanner = new HeartRateScanner(this.context.ant.stick);
         this.hrmScanner.on('hbData', this.onDeviceInfo);
         this.hrmScanner.scan();
     }
@@ -96,3 +96,5 @@ export default class AvailableDevices extends React.Component {
         );      
     }
 }
+
+AvailableDevices.contextType = AntContext;
