@@ -7,15 +7,40 @@ import { HeartRateScanner, FitnessEquipmentScanner, BicyclePowerScanner } from '
 import { AntContext } from '../lib/ant/antProvider';
 import { DeviceType } from '../lib/ant/ts/ant';
 
-function AvailableDevice(props) {
-    let deviceInfo = props.deviceInfo;
-    return (
-        <div className="deviceInfo" 
-            onClick={() => props.onClick(deviceInfo.deviceId)}>
-            {deviceInfo.manufacturerName}: {deviceInfo.deviceId}<br/>
-            <button>Connect</button>
-        </div>
-    );
+export class AvailableDevice extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.onClick = this.onClick.bind(this);
+
+        this.state = {
+            deviceId: props.deviceInfo.deviceId,
+            manufacturerName: props.deviceInfo.manufacturerName,
+            selected: false
+        };
+    }
+
+    onClick() {
+        const selected = !this.state.selected;
+        this.setState({
+            selected: selected
+        });
+        
+        if (selected) {
+            this.props.onClick(this.state.deviceId);
+        }
+    }
+
+    render() {
+        return (
+            <div className="deviceInfo" 
+                onClick={this.onClick}>
+                {this.state.manufacturerName}: {this.state.deviceId}<br/>
+                <button>{this.state.selected ? "Deselect" : "Select"}</button>
+            </div>
+        );
+    }
 }
 
 export default class AvailableDevices extends React.Component {
