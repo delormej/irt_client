@@ -132,8 +132,8 @@ export default class Settings extends React.Component {
                 <DeviceSettings {...this.props}>
                     <WrappedTrainerSettings 
                         ant={this.context.ant.fec}
-                        onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />           
+                        onConnectDevice={(deviceType, deviceId) => this.onSelectFec(deviceId)}
+                        onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />                    
                     { /*<ToggleAdvancedTrainerSettings 
                             showAdvanced={this.state.showAdvanced} 
                             onShowAdvanced={() => this.onShowAdvanced()} /> */ }
@@ -143,7 +143,7 @@ export default class Settings extends React.Component {
                         <WrappedPowerMeterSettings
                             ftp={this.props.ftp}
                             onChange={this.props.onChange} 
-                            onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
+                            onConnectDevice={(deviceType, deviceId) => this.onSelectBp(deviceId)}
                             onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE)} />
                     </DeviceSettings>
                     {/*this.state.showAdvanced && <AdvancedPowerMeterSettings 
@@ -153,7 +153,7 @@ export default class Settings extends React.Component {
                     <WrappedHeartRateConnected
                         ant={this.context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
-                        onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
+                        onConnectDevice={(deviceType, deviceId) => this.onSelectHrm(deviceId)}
                         onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} /> 
                 </DeviceSettings>
