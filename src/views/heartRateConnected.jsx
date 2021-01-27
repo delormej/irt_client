@@ -3,8 +3,9 @@
 import React from 'react';
 import HeartRate from '../views/heartRate';
 import antlib from '../lib/ant/antlib.js';
+import DeviceSettings from './deviceSettings';
 
-export default class HeartRateConnected extends HeartRate {
+export default class HeartRateConnected extends DeviceSettings {
     constructor(props) {
         super(props);
         this.handleInputChange = this.handleInputChange.bind(this);

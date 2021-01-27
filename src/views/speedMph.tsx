@@ -2,7 +2,7 @@ import * as React from 'react';
 import RideDataComponent from  './rideDataComponent';
 
 export interface SpeedProps {
-    speedMps: number;
+    RealSpeed: number;
 }
 
 export class SpeedMph extends React.Component<SpeedProps> {
@@ -20,7 +20,7 @@ export class SpeedMph extends React.Component<SpeedProps> {
     render(): JSX.Element {
         return (
             <RideDataComponent class="speed" label="MPH"
-                value={this.calculateMphAndFormat(this.props.speedMps)} />
+                value={this.calculateMphAndFormat(this.props.RealSpeed)} />
           );      
     }
 }  

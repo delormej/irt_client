@@ -69,11 +69,10 @@ export default class Main extends React.Component<MainProps, MainState> {
   getCurrentPageElement(): JSX.Element {
     if (this.state.currentPage === "ride") 
       return (
-        <div>Ride</div>
-        // <Ride ant={this.ant} 
-        //   averageSeconds={this.state.averageSeconds}
-        //   ftp={this.state.ftp}
-        //   maxHeartRateBpm={this.state.maxHeartRateBpm} /> 
+        <Ride 
+          averageSeconds={this.state.averageSeconds}
+          ftp={this.state.ftp}
+          maxHeartRateBpm={this.state.maxHeartRateBpm} /> 
       );
     else 
       return (
