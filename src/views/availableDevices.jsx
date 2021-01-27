@@ -3,7 +3,7 @@
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import deviceType from '../scripts/deviceType.js';
-import { HeartRateScanner, FitnessEquipmentScanner } from 'ant-plus';
+import { HeartRateScanner, FitnessEquipmentScanner, BicyclePowerSensor, BicyclePowerScanner } from 'ant-plus';
 import { AntContext } from '../lib/ant/antProvider';
 import { DeviceType } from '../lib/ant/ts/ant';
 
@@ -47,7 +47,8 @@ export default class AvailableDevices extends React.Component {
         switch (this.deviceType)
         {
             case DeviceType.BIKE_POWER_DEVICE_TYPE:
-                //
+                this.scanner = new BicyclePowerScanner(this.context.ant.stick);
+                this.scanner.on('powerData', this.onDeviceInfo);
                 break;
             case DeviceType.FEC_DEVICE_TYPE:
                 this.scanner = new FitnessEquipmentScanner(this.context.ant.stick);

@@ -11,9 +11,6 @@ const INVALID_POWER_METER = 65535;
 export default class PowerMeterSettings extends DeviceSettings {
     constructor(props) {
         super(props);
-        this.state = {
-            deviceId: props.deviceId
-        }
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
@@ -29,7 +26,7 @@ export default class PowerMeterSettings extends DeviceSettings {
                 <div className="deviceTitle">Configure Power Meter</div>
                 <button onClick={this.props.onDisconnectDevice}>Disconnect</button>
                 <div className="powerMeterSettings">
-                    <div className="label">Device ID: {this.state.deviceId}</div>
+                    <div className="label">Device ID: {this.state.DeviceID}</div>
                     <div className="label">Functional Threshold Power</div>
                     <input type="textbox" name="ftp" 
                         value={this.props.ftp}

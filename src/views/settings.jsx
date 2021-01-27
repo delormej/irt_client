@@ -15,11 +15,12 @@ import ElectronSettings from 'electron-settings';
 import HeartRateConnected from '../views/heartRateConnected.jsx';
 import DeviceSettings from '../views/deviceSettingsWrapper';
 import { hocAntMessage } from '../containers/hocAntMessage';
-import antlib from '../lib/ant/antlib.js';
 import { AntContext } from '../lib/ant/antProvider';
+import { DeviceType } from '../lib/ant/ts/ant';
 
 const WrappedHeartRateConnected = hocAntMessage(['hbData'])(HeartRateConnected);
 const WrappedTrainerSettings = hocAntMessage(['fitnessData'])(TrainerSettings);
+const WrappedPowerMeterSettings = hocAntMessage(['powerData'])(PowerMeterSettings);
 
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
@@ -100,30 +101,28 @@ export default class Settings extends React.Component {
                     <WrappedTrainerSettings 
                         ant={this.context.ant.fec}
                         onConnectDevice={(deviceType, deviceId) => this.connectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />           
+                        onDisconnectDevice={() => this.onDisconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />           
                     { /*<ToggleAdvancedTrainerSettings 
                             showAdvanced={this.state.showAdvanced} 
                             onShowAdvanced={() => this.onShowAdvanced()} /> */ }
                 </DeviceSettings>
-                {/*
                 <div className="powerMeter">
-                    <DeviceSettings ant={this.props.ant}>
-                        <PowerMeterSettings
-                            deviceId={this.bp.getDeviceId()} 
+                    <DeviceSettings {...this.props}>
+                        <WrappedPowerMeterSettings
                             ftp={this.props.ftp}
                             onChange={this.props.onChange} 
-                            onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
-                            onDisconnectDevice={() => this.onDisconnectDevice(antlib.BIKE_POWER_DEVICE_TYPE)} />
+                            onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
+                            onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE)} />
                     </DeviceSettings>
-                    {this.state.showAdvanced && <AdvancedPowerMeterSettings 
-                        fec={this.fec} onChange={this.props.onChange} /> }
-                </div> */}
+                    {/*this.state.showAdvanced && <AdvancedPowerMeterSettings 
+                        fec={this.fec} onChange={this.props.onChange} /> */}
+                </div>
                 <DeviceSettings {...this.props}>
                     <WrappedHeartRateConnected
                         ant={this.context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}
                         onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.context.disconnectDevice(antlib.HEART_RATE_DEVICE_TYPE)} 
+                        onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.HEART_RATE_DEVICE_TYPE)} 
                         onChange={this.props.onChange} /> 
                 </DeviceSettings>
             </div>

@@ -39,7 +39,7 @@ export default class DeviceSettings extends React.Component {
 
         if (name === "hocAntMessage(TrainerSettings)")
             return antlib.FEC_DEVICE_TYPE;
-        else if (name === "PowerMeterSettings")
+        else if (name === "hocAntMessage(PowerMeterSettings)")
             return antlib.BIKE_POWER_DEVICE_TYPE;
         else if (name === "hocAntMessage(HeartRateConnected)")
             return antlib.HEART_RATE_DEVICE_TYPE;
