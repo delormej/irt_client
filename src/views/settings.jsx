@@ -38,7 +38,14 @@ export default class Settings extends React.Component {
 
         this.state = {
             showAdvanced: false,
+            hrmDeviceId: 0,
+            bpDeviceId: 0,
+            fecDeviceId: 0
         }
+
+        this.onSelectBp = this.onSelectBp.bind(this);
+        this.onSelectFec = this.onSelectFec.bind(this);
+        this.onSelectHrm = this.onSelectHrm.bind(this);
     }
 
     componentDidMount() {
@@ -48,6 +55,24 @@ export default class Settings extends React.Component {
 
     componentWillUnmount() {
         this.saveSettings();
+    }
+
+    onSelectHrm(deviceId) {
+        this.setState( {
+            hrmDeviceId: deviceId
+        });
+    }
+
+    onSelectFec(deviceId) {
+        this.setState( {
+            fecDeviceId: deviceId
+        });
+    }
+
+    onSelectBp(deviceId) {
+        this.setState( {
+            bpDeviceId: deviceId
+        });
     }
 
     tryLastConnections() {
@@ -97,11 +122,18 @@ export default class Settings extends React.Component {
     render() {
         return (
             <div className="settings">
+                <div>
+                    <strong>Selected Devices:</strong> <hr/>
+                    HRM: {this.state.hrmDeviceId}<br/>
+                    BP: {this.state.bpDeviceId}<br/>
+                    FEC: {this.state.fecDeviceId}<br/>
+                    <button>Connect</button>
+                </div>
                 <DeviceSettings {...this.props}>
                     <WrappedTrainerSettings 
                         ant={this.context.ant.fec}
-                        onConnectDevice={(deviceType, deviceId) => this.connectDevice(deviceType, deviceId)}
-                        onDisconnectDevice={() => this.onDisconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />           
+                        onConnectDevice={(deviceType, deviceId) => this.context.connectDevice(deviceType, deviceId)}
+                        onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />           
                     { /*<ToggleAdvancedTrainerSettings 
                             showAdvanced={this.state.showAdvanced} 
                             onShowAdvanced={() => this.onShowAdvanced()} /> */ }
