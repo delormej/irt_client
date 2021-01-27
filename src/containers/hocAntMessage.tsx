@@ -17,10 +17,7 @@ interface ExternalProps {
 
 
 export const hocAntMessage = (messages: string[]) =>
-    <TOriginalProps extends {}>(
-        Component: (React.ComponentClass<TOriginalProps>
-            | React.StatelessComponent<TOriginalProps>)
-    ) => {
+    <TOriginalProps extends object>(Component: React.ComponentType<TOriginalProps>) => {
         type ResultProps = TOriginalProps & ExternalProps;
         const result = class HocAntMessage extends React.Component<ResultProps, State> {
             // Define how HOC is shown in ReactDevTools
