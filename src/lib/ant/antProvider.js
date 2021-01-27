@@ -88,6 +88,21 @@ class AntProvider extends React.Component {
     // console.log("data", data);
   }
   
+  connectAll(fecDeviceId, bpDeviceId, hrmDeviceId) {
+    if (this.ant.stick.isScanning()) {
+      this.ant.stick.detach_all();
+    }
+    if (fecDeviceId > 0) {
+      this.connectDevice(DeviceType.FEC_DEVICE_TYPE, fecDeviceId);
+    }
+    if (bpDeviceId > 0) {
+        this.connectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
+    }
+    if (hrmDeviceId > 0) {
+        this.connectDevice(DeviceType.HEART_RATE_DEVICE_TYPE, hrmDeviceId);
+    }    
+  }
+
   connectDevice(deviceType, deviceId) {
     switch (deviceType) {
       case DeviceType.HEART_RATE_DEVICE_TYPE:
@@ -115,6 +130,7 @@ class AntProvider extends React.Component {
           fecConnected: this.state.fecConnected,
           bpConnected: this.state.bpConnected,
           hrmConnected: this.state.hrmConnected,
+          connectAll: this.connectAll,
           connectDevice: this.connectDevice,
           disconnectDevice: this.disconnectDevice
         }}

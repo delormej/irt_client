@@ -3,7 +3,7 @@
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import deviceType from '../scripts/deviceType.js';
-import { HeartRateScanner, FitnessEquipmentScanner, BicyclePowerSensor, BicyclePowerScanner } from 'ant-plus';
+import { HeartRateScanner, FitnessEquipmentScanner, BicyclePowerScanner } from 'ant-plus';
 import { AntContext } from '../lib/ant/antProvider';
 import { DeviceType } from '../lib/ant/ts/ant';
 

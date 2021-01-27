@@ -46,6 +46,7 @@ export default class Settings extends React.Component {
         this.onSelectBp = this.onSelectBp.bind(this);
         this.onSelectFec = this.onSelectFec.bind(this);
         this.onSelectHrm = this.onSelectHrm.bind(this);
+        this.onConnect = this.onConnect.bind(this);
     }
 
     componentDidMount() {
@@ -73,6 +74,19 @@ export default class Settings extends React.Component {
         this.setState( {
             bpDeviceId: deviceId
         });
+    }
+
+    onConnect() {
+        if (this.state.fecDeviceId === 0 &&
+            this.state.bpDeviceId === 0 &&
+            this.state.hrmDeviceId === 0) {
+                console.log('nothing to connect to');
+                return;
+        }
+
+        this.context.connectAll(this.state.fecDeviceId, 
+            this.state.bpDeviceId,
+            this.state.hrmDeviceId);
     }
 
     tryLastConnections() {
@@ -127,7 +141,7 @@ export default class Settings extends React.Component {
                     HRM: {this.state.hrmDeviceId}<br/>
                     BP: {this.state.bpDeviceId}<br/>
                     FEC: {this.state.fecDeviceId}<br/>
-                    <button>Connect</button>
+                    <button onClick={this.onConnect}>Connect</button>
                 </div>
                 <DeviceSettings {...this.props}>
                     <WrappedTrainerSettings 
