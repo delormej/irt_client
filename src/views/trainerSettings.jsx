@@ -4,18 +4,17 @@ import React from 'react';
 import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import BatteryStatus from './batteryStatus';
+import { AntContext } from '../lib/ant/antProvider';
 
 export default class TrainerSettings extends React.Component {
     constructor(props) {
         super(props);
-        this.fec = props.fec;
+
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.onUserConfig = this.onUserConfig.bind(this);
         this.onDisconnectDevice = props.onDisconnectDevice;
-        this.onManufacturerInfo = this.onManufacturerInfo.bind(this);
-        this.onProductInfo = this.onProductInfo.bind(this);
+        
         this.state = {
-            deviceId: props.deviceId,
+            deviceId: 0,
             swRevision: '',
             serial: '',
             riderWeightKg: undefined,
@@ -24,43 +23,26 @@ export default class TrainerSettings extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('userConfig', this.onUserConfig);
-        this.fec.on('manufacturerInfo', this.onManufacturerInfo);
-        this.fec.on('productInfo', this.onProductInfo);
-        this.fec.getUserConfiguration();
+        this.fec = this.context.ant.fec;
+        // this.fec.getUserConfiguration();
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('userConfig', this.onUserConfig);  
-        this.fec.removeListener('manufacturerInfo', this.onManufacturerInfo);
-        this.fec.removeListener('productInfo', this.onProductInfo);
+
     }    
 
-    onManufacturerInfo(data, timestamp) {
-    }
-
-    onProductInfo(data, timestamp) {
-        this.setState( {
-            swRevision: data.swRevision,
-            serial: data.serial
-        });
-    }
-
-    onUserConfig(data, timestamp) {
-        this.setState( {
-            riderWeightKg: data.userWeightKg.toFixed(1),
-            bikeWeightKg: data.bikeWeightKg.toFixed(1)
-        });
-    }
-
     onIdentify() {
-        this.fec.blinkLed();
+        throw 'not implemented';
+        // TODO: this needs to be implemented in custom IrtFitnessEquipmentSensor.
+        // this.fec.blinkLed();
     }
 
     onSave() {
-        console.log("Sending settings to FE-C...");
-        this.fec.setUserConfiguration(this.state.riderWeightKg, 
-                this.state.bikeWeightKg, null, null);
+        throw 'not implemented!';
+        // TODO: Validate the parameters to this method.
+        // console.log("Sending settings to FE-C...");
+        // this.fec.setUserConfiguration(this.state.riderWeightKg, 
+        //     this.state.bikeWeightKg, null, null);
     }
     
     handleInputChange(event) {
@@ -81,9 +63,9 @@ export default class TrainerSettings extends React.Component {
                 <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button><br/>
                 <button onClick={() => this.onIdentify()}>Identify</button><br/>
                 <div>
-                    Device ID: {this.state.deviceId}<br/>
-                    Firmware v{this.state.swRevision}<br/>
-                    Serial No: {this.state.serial}<br/>
+                    Device ID: {this.state.DeviceID}<br/>
+                    Firmware v{this.state.SwVersion}<br/>
+                    Serial No: {this.state.SerialNumber}<br/>
                     <BatteryStatus ant={this.fec} />
                 </div>                        
                 <div className="advancedTrainerSettings">
@@ -101,3 +83,5 @@ export default class TrainerSettings extends React.Component {
         )
     }
 }
+
+TrainerSettings.contextType = AntContext;

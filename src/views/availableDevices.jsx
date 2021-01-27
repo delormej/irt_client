@@ -3,8 +3,9 @@
 import React from 'react';
 import antManufacturers from '../lib/ant/ant_manufacturers.js';
 import deviceType from '../scripts/deviceType.js';
-import { HeartRateScanner } from 'ant-plus';
+import { HeartRateScanner, FitnessEquipmentScanner } from 'ant-plus';
 import { AntContext } from '../lib/ant/antProvider';
+import { DeviceType } from '../lib/ant/ts/ant';
 
 function AvailableDevice(props) {
     let deviceInfo = props.deviceInfo;
@@ -42,9 +43,31 @@ export default class AvailableDevices extends React.Component {
     }
 
     componentDidMount() {
-        this.hrmScanner = new HeartRateScanner(this.context.ant.stick);
-        this.hrmScanner.on('hbData', this.onDeviceInfo);
-        this.hrmScanner.scan();
+
+        switch (this.deviceType)
+        {
+            case DeviceType.BIKE_POWER_DEVICE_TYPE:
+                //
+                break;
+            case DeviceType.FEC_DEVICE_TYPE:
+                this.scanner = new FitnessEquipmentScanner(this.context.ant.stick);
+                this.scanner.on('fitnessData', this.onDeviceInfo);
+                break;
+            case DeviceType.HEART_RATE_DEVICE_TYPE:
+                this.scanner = new HeartRateScanner(this.context.ant.stick);
+                this.scanner.on('hbData', this.onDeviceInfo);
+                break;
+            default:
+                throw 'Unrecognized deviceType';
+        }
+
+        if (this.scanner) {
+            this.scanner.scan();
+            console.log('scanner opened', this.deviceType);
+        } 
+        else {
+            console.log('No scanner.');
+        }
     }
 
     componentWillUnmount() {
@@ -74,7 +97,7 @@ export default class AvailableDevices extends React.Component {
     }
 
     onSelectDevice(deviceId) {
-        this.hrmScanner.detach();
+        // this.scanner.detach();
         this.selectedDeviceId = deviceId;
         this.onConnectDevice(this.deviceType, this.selectedDeviceId);
     }

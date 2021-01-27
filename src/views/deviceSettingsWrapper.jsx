@@ -30,15 +30,18 @@ export default class DeviceSettings extends React.Component {
     }
     
     getDeviceTypeFromElement(element) {
+        // pity that ?? null coalescing operator isn't available until Node 14+.
         let name = element.type.displayName;
-        console.log('getDeviceTypeFromElement', name);
-        return antlib.HEART_RATE_DEVICE_TYPE; 
+        if (!name)
+            name = element.type.name;
 
-        if (name === "TrainerSettings")
+        console.log('getDeviceTypeFromElement', name);
+
+        if (name === "hocAntMessage(TrainerSettings)")
             return antlib.FEC_DEVICE_TYPE;
         else if (name === "PowerMeterSettings")
             return antlib.BIKE_POWER_DEVICE_TYPE;
-        else if (name === "WrappedHeartRateConnected")
+        else if (name === "hocAntMessage(HeartRateConnected)")
             return antlib.HEART_RATE_DEVICE_TYPE;
         else
             throw new Error("Invalid element, can't determine device type: " + name);

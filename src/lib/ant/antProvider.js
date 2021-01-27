@@ -91,7 +91,7 @@ class AntProvider extends React.Component {
   connectDevice(deviceType, deviceId) {
     switch (deviceType) {
       case DeviceType.HEART_RATE_DEVICE_TYPE:
-        this.ant.hrm.attach(DeviceChannel.ANT_BP_CHANNEL_ID, deviceId);
+        this.ant.hrm.attach(DeviceChannel.ANT_HRM_CHANNEL_ID, deviceId);
         break;
       default:
         console.log("ERROR: connectDevice, invalid deviceType!");

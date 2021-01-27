@@ -19,6 +19,7 @@ import antlib from '../lib/ant/antlib.js';
 import { AntContext } from '../lib/ant/antProvider';
 
 const WrappedHeartRateConnected = hocAntMessage(['hbData'])(HeartRateConnected);
+const WrappedTrainerSettings = hocAntMessage(['fitnessData'])(TrainerSettings);
 
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
@@ -95,17 +96,16 @@ export default class Settings extends React.Component {
     render() {
         return (
             <div className="settings">
-                <div>Connected? {this.context.hrmConnected ? "true" : "false" }</div>
-                {/* <DeviceSettings ant={this.props.ant}>
-                    <TrainerSettings fec={this.fec} 
-                        deviceId={this.fec.getDeviceId()}
-                        onConnectDevice={(deviceType, deviceId) => this.onConnectDevice(deviceType, deviceId)}
+                <DeviceSettings {...this.props}>
+                    <WrappedTrainerSettings 
+                        ant={this.context.ant.fec}
+                        onConnectDevice={(deviceType, deviceId) => this.connectDevice(deviceType, deviceId)}
                         onDisconnectDevice={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}  />           
-                    <ToggleAdvancedTrainerSettings 
+                    { /*<ToggleAdvancedTrainerSettings 
                             showAdvanced={this.state.showAdvanced} 
-                            onShowAdvanced={() => this.onShowAdvanced()}
-                            fec={this.fec}  />                            
+                            onShowAdvanced={() => this.onShowAdvanced()} /> */ }
                 </DeviceSettings>
+                {/*
                 <div className="powerMeter">
                     <DeviceSettings ant={this.props.ant}>
                         <PowerMeterSettings
