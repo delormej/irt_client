@@ -2,7 +2,7 @@ import * as React from 'react';
 import RideDataComponent from './rideDataComponent';
 
 interface DistanceTravelledProps {
-    distanceTravelled: number;
+    Distance: number;
 }
 
 export default class DistanceTravelled extends React.Component<DistanceTravelledProps> {
@@ -12,7 +12,7 @@ export default class DistanceTravelled extends React.Component<DistanceTravelled
 
     render(): JSX.Element {
         const METERS_TO_MILES = 0.000621371;
-        let meters: number = this.props.distanceTravelled;
+        let meters: number = this.props.Distance;
         let miles: string = (meters * METERS_TO_MILES).toFixed(2);   
         return (
             <RideDataComponent class="distance" label="MILES"

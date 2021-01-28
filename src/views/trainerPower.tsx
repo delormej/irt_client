@@ -2,7 +2,7 @@ import * as React from 'react';
 import RideDataComponent from './rideDataComponent';
 
 interface TrainerPowerProps {
-    instantPower: string;
+    InstantaneousPower: string;
 }
 
 export default class TrainerPower extends React.Component<TrainerPowerProps> {
@@ -13,7 +13,7 @@ export default class TrainerPower extends React.Component<TrainerPowerProps> {
     render(): JSX.Element {
         return (
             <RideDataComponent class="trainerPower" label="TRAINER"
-                    value={this.props.instantPower} />
+                    value={this.props.InstantaneousPower} />
           );
     }
 }  

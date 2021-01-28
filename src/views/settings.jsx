@@ -155,6 +155,7 @@ export default class Settings extends React.Component {
                 <div className="powerMeter">
                     <DeviceSettings {...this.props}>
                         <WrappedPowerMeterSettings
+                            ant={this.context.ant.bp}
                             ftp={this.props.ftp}
                             onChange={this.props.onChange} 
                             onConnectDevice={(deviceType, deviceId) => this.onSelectBp(deviceId)}

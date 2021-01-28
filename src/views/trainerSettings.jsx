@@ -66,7 +66,7 @@ export default class TrainerSettings extends React.Component {
                     Device ID: {this.state.DeviceID}<br/>
                     Firmware v{this.state.SwVersion}<br/>
                     Serial No: {this.state.SerialNumber}<br/>
-                    <BatteryStatus ant={this.fec} />
+                    {/*<BatteryStatus ant={this.fec} /> */}
                 </div>                        
                 <div className="advancedTrainerSettings">
                     <div className="label">Rider Weight (kg)</div>

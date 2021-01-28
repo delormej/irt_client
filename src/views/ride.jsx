@@ -13,17 +13,25 @@ import RideChart from './rideChart';
 import { hocAntMessage } from '../containers/hocAntMessage';
 import { AntContext } from '../lib/ant/antProvider';
 
-const HeartRateFromAnt = hocAntMessage(['hbData'])(HeartRate); 
-const powerMessages = ['standardPowerOnly', 'ctfMainPage'];
-const SpeedMphFromAnt = hocAntMessage(['generalFEData'])(SpeedMph);
-const PowerMeterFromAnt = hocAntMessage(powerMessages)(PowerMeter);
+const HrmData = ['hbData'];
+const FecData = ['fitnessData'];
+const BpData = ['powerData'];
+
+const HeartRateFromAnt = hocAntMessage(HrmData)(HeartRate); 
+const SpeedMphFromAnt = hocAntMessage(FecData)(SpeedMph);
+/*const DistanceTravelledFromAnt = hocAntMessage(FecData)(DistanceTravelled);
+const ElapsedTimeFromAnt = hocAntMessage(FecData)(ElapsedTime);
+const TrainerPowerFromAnt = hocAntMessage(FecData)(TrainerPower);
+const PowerMeterFromAnt = hocAntMessage(BpData)(PowerMeter);
+
+
 const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
 const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
-const TrainerPowerFromAnt = hocAntMessage(['specificTrainerData'])(TrainerPower);
+
 const ResistanceLevelFromAnt = hocAntMessage(['generalSettings'])(ResistanceLevel);
-const ElapsedTimeFromAnt = hocAntMessage(['generalFEData'])(ElapsedTime);
+
 const TargetPowerFromAnt = hocAntMessage(['irtExtraInfo'])(TargetPower);
-const DistanceTravelledFromAnt = hocAntMessage(['generalFEData'])(DistanceTravelled);
+*/
 
 export default class Ride extends React.Component {
 
@@ -36,8 +44,8 @@ export default class Ride extends React.Component {
             <div className="ride">
               <SpeedMphFromAnt ant={this.context.ant.fec} RealSpeed={0} />
               <HeartRateFromAnt ant={this.context.ant.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
-              {/* <DistanceTravelledFromAnt ant={this.context.ant.fec} distanceTravelled={0} />
-              <ElapsedTimeFromAnt ant={this.context.ant.fec} elapsedTime={0} />
+              {/*<DistanceTravelledFromAnt ant={this.context.ant.fec} Distance={0} />
+              <ElapsedTimeFromAnt ant={this.context.ant.fec} ElapsedTime={0} />
               <TrainerPowerFromAnt ant={this.context.ant.fec} />
               <PowerMeterFromAnt ant={this.context.ant.bp} ftp={this.props.ftp} instantPower={0} instantCadence={0} />
               <TargetPowerFromAnt ant={this.context.ant.fec} target="0" />

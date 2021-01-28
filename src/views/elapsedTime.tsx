@@ -3,7 +3,7 @@ import RideDataComponent from './rideDataComponent';
 import * as util from 'util';
 
 interface ElapsedTimeProps {
-    elapsedTime: number;
+    ElapsedTime: number;
 }
 
 export default class ElapsedTime extends React.Component<ElapsedTimeProps> {
@@ -25,7 +25,7 @@ export default class ElapsedTime extends React.Component<ElapsedTimeProps> {
     render(): JSX.Element {
         return (
             <RideDataComponent class="duration" label="DURATION"
-                value={this.formatTime(this.props.elapsedTime)} />
+                value={this.formatTime(this.props.ElapsedTime)} />
         );
     }
 }    

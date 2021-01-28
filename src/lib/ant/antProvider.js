@@ -19,6 +19,7 @@ class AntProvider extends React.Component {
 
     this.onStartup = this.onStartup.bind(this);
     this.onRead = this.onRead.bind(this);
+    this.setConnected = this.setConnected.bind(this);
     this.onDeviceConnected = this.onDeviceConnected.bind(this);
     this.onDeviceDisconnected = this.onDeviceDisconnected.bind(this);
 
@@ -53,28 +54,44 @@ class AntProvider extends React.Component {
     this.ant.hrm.on('detached', () => { this.onDeviceDisconnected(DeviceType.HEART_RATE_DEVICE_TYPE) });
     this.ant.bp.on('detached', () => { this.onDeviceDisconnected(DeviceType.BIKE_POWER_DEVICE_TYPE) });
     this.ant.fec.on('detached', () => { this.onDeviceDisconnected(DeviceType.FEC_DEVICE_TYPE) });
+    this.ant.fec.on('fitnessData', (data) => {
+      console.log(data.RealSpeed, data.ElapsedTime, data.WheelTicks);
+    })
 
     this.setState( { 
       antInitialized: true
     })
   }
 
-  onDeviceConnected(deviceType) {
-    if (deviceType === DeviceType.HEART_RATE_DEVICE_TYPE) {
-      this.setState( {
-        hrmConnected: true
-      });
-      console.log('hrm connected to main.tsx');
+  setConnected(deviceType, connected) {
+    switch (deviceType) {
+      case DeviceType.HEART_RATE_DEVICE_TYPE:
+        this.setState( {
+          hrmConnected: connected
+        });
+        break;
+      case DeviceType.FEC_DEVICE_TYPE:
+        this.setState( {
+          fecConnected: connected
+        });
+        break;
+      case DeviceType.BIKE_POWER_DEVICE_TYPE:
+        this.setState( {
+          bpConnected: connected
+        });
+        break;
+      default:
+        throw 'unrecognized deviceType';
     }
+  }
+  
+  onDeviceConnected(deviceType) {
+    this.setConnected(deviceType, true);
   }
 
   onDeviceDisconnected(deviceType) {
-    if (deviceType === DeviceType.HEART_RATE_DEVICE_TYPE) {
-      this.setState( {
-        hrmConnected: false
-      });
-      console.log('hrm disconnected from main.tsx');
-    }
+    this.setConnected(deviceType, false);
+    console.log('disconnected', deviceType);
   }
 
   componentDidMount() {
@@ -108,6 +125,12 @@ class AntProvider extends React.Component {
       case DeviceType.HEART_RATE_DEVICE_TYPE:
         this.ant.hrm.attach(DeviceChannel.ANT_HRM_CHANNEL_ID, deviceId);
         break;
+      case DeviceType.FEC_DEVICE_TYPE:
+        this.ant.fec.attach(DeviceChannel.ANT_FEC_CHANNEL_ID, deviceId);
+        break;
+      case DeviceType.BIKE_POWER_DEVICE_TYPE:
+        this.ant.bp.attach(DeviceChannel.ANT_BP_CHANNEL_ID, deviceId);
+        break;
       default:
         console.log("ERROR: connectDevice, invalid deviceType!");
     }
@@ -115,10 +138,22 @@ class AntProvider extends React.Component {
   }
 
   disconnectDevice(deviceType) {
-    if (deviceType === DeviceType.HEART_RATE_DEVICE_TYPE) {
-      console.log('disconnecting hrm.');
-      this.ant.hrm.detach();
+    let sensor = null;
+    switch (deviceType) {
+      case DeviceType.HEART_RATE_DEVICE_TYPE:
+        sensor = this.ant.hrm;
+        break;
+      case DeviceType.FEC_DEVICE_TYPE:
+        sensor = this.ant.fec;
+        break;
+      case DeviceType.BIKE_POWER_DEVICE_TYPE:
+        sensor = this.ant.bp;
+        break;
+      default:
+        throw 'invalid device, cannot disconnect';
     }
+    if (sensor)
+      sensor.detach();
   }
 
   render() {

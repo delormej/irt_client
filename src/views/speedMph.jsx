@@ -1,23 +1,20 @@
 import * as React from 'react';
 import RideDataComponent from  './rideDataComponent';
 
-export interface SpeedProps {
-    RealSpeed: number;
-}
-
-export class SpeedMph extends React.Component<SpeedProps> {
-    constructor(props: SpeedProps) {
+export class SpeedMph extends React.Component {
+    constructor(props) {
       super(props);
     }
 
-    calculateMphAndFormat(mps: number): string {
+    calculateMphAndFormat(mps) {
         const MPS_TO_MPH = 2.23694;
         if (isNaN(mps))
             mps = 0;
+        console.log('calculated speed', mps);
         return (mps * MPS_TO_MPH).toFixed(1);
     }
 
-    render(): JSX.Element {
+    render() {
         return (
             <RideDataComponent class="speed" label="MPH"
                 value={this.calculateMphAndFormat(this.props.RealSpeed)} />
