@@ -18,9 +18,38 @@ import { hocAntMessage } from '../containers/hocAntMessage';
 import { AntContext } from '../lib/ant/antProvider';
 import { DeviceType } from '../lib/ant/ts/ant';
 
-const WrappedHeartRateConnected = hocAntMessage(['hbData'])(HeartRateConnected);
-const WrappedTrainerSettings = hocAntMessage(['fitnessData'])(TrainerSettings);
-const WrappedPowerMeterSettings = hocAntMessage(['powerData'])(PowerMeterSettings);
+const WrappedHeartRateConnected = hocAntMessage(HeartRateConnected, 'hbData');
+const WrappedTrainerSettings = hocAntMessage(TrainerSettings, 'fitnessData');
+const WrappedPowerMeterSettings = hocAntMessage(PowerMeterSettings, 'powerData');
+
+// function hocAntMessage(WrappedComponent, message) {
+//     class HocAntMessage extends React.Component {
+//         constructor(props) {
+//             super(props);
+//             this.state = {
+//                 message: message
+//             };
+//             this.onData = this.onData.bind(this);
+//         }
+
+//         onData(data) {
+//             this.setState( { ...data, } );
+//         }
+
+//         render() {
+//             // const { ant, ...passThroughProps } = this.props;
+//             console.log('wrapping message:', message);
+//             return (
+//                 <WrappedComponent  />
+//             );
+//         }
+//     }
+
+//     HocAntMessage.displayName = `hocAntMessage(${WrappedComponent.name})`;
+
+//     return HocAntMessage;
+// }
+
 
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
