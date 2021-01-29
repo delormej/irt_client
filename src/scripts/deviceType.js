@@ -1,17 +1,16 @@
-
-import antlib from '../lib/ant/antlib.js';
+const { DeviceType } = require("../lib/ant/ts/ant");
 
 function getDeviceTypeName(deviceTypeId) {
     let name = "";
     switch (deviceTypeId)
     {
-        case antlib.BIKE_POWER_DEVICE_TYPE:
+        case DeviceType.BIKE_POWER_DEVICE_TYPE:
             name = "Power Meter";
             break;
-        case antlib.FEC_DEVICE_TYPE:
+        case DeviceType.FEC_DEVICE_TYPE:
             name = "Trainer (FE-C)";
             break;
-        case antlib.HEART_RATE_DEVICE_TYPE:
+        case DeviceType.HEART_RATE_DEVICE_TYPE:
             name = "Heart Rate Monitor";
             break;
         default:
@@ -25,13 +24,13 @@ function getDeviceClassName(deviceTypeId) {
     let name = "";
     switch (deviceTypeId)
     {
-        case antlib.BIKE_POWER_DEVICE_TYPE:
+        case DeviceType.BIKE_POWER_DEVICE_TYPE:
             name = "powerMeter";
             break;
-        case antlib.FEC_DEVICE_TYPE:
+        case DeviceType.FEC_DEVICE_TYPE:
             name = "trainer";
             break;
-        case antlib.HEART_RATE_DEVICE_TYPE:
+        case DeviceType.HEART_RATE_DEVICE_TYPE:
             name = "heartRate";
             break;
         default:

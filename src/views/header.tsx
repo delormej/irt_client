@@ -62,7 +62,7 @@ export default class Header extends React.Component<HeaderProps> {
             <VersionInfo />
             <Status type={this.props.status.type} message={this.props.status.message} />
             {/* <TargetPowerStatusFromAnt ant={this.context.ant.fec} targetPowerLimits={0} /> */}
-            <Menu page={this.props.page} onClick={this.props.onClick} ant={this.context.ant.fec} />;
+            <Menu page={this.props.page} onClick={this.props.onClick} />;
         </div>
     );
   }

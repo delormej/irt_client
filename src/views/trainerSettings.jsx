@@ -1,10 +1,10 @@
 'use babel';
 
 import React from 'react';
-import antlib from '../lib/ant/antlib.js';
 import deviceType from '../scripts/deviceType.js';
 import BatteryStatus from './batteryStatus';
 import { AntContext } from '../lib/ant/antProvider';
+import { DeviceType } from '../lib/ant/ts/ant';
 
 export default class TrainerSettings extends React.Component {
     constructor(props) {
@@ -14,16 +14,13 @@ export default class TrainerSettings extends React.Component {
         this.onDisconnectDevice = props.onDisconnectDevice;
         
         this.state = {
-            deviceId: 0,
-            swRevision: '',
-            serial: '',
             riderWeightKg: undefined,
             bikeWeightKg: undefined
         };
     }
 
     componentDidMount() {
-        this.fec = this.context.ant.fec;
+        // this.fec = this.context.ant.fec;
         // this.fec.getUserConfiguration();
     }
 
@@ -56,17 +53,19 @@ export default class TrainerSettings extends React.Component {
 
     render() {
         let className = "trainerSettings " + 
-            deviceType.getDeviceClassName(antlib.FEC_DEVICE_TYPE);
+            deviceType.getDeviceClassName(DeviceType.FEC_DEVICE_TYPE);
         return (
             <div className={className}>
                 <div className="deviceTitle">Configure Trainer</div>
-                <button onClick={() => this.onDisconnectDevice(antlib.FEC_DEVICE_TYPE)}>Disconnect</button><br/>
+                <button onClick={() => this.onDisconnectDevice(DeviceType.FEC_DEVICE_TYPE)}>Disconnect</button><br/>
                 <button onClick={() => this.onIdentify()}>Identify</button><br/>
                 <div>
-                    Device ID: {this.state.DeviceID}<br/>
-                    Firmware v{this.state.SwVersion}<br/>
-                    Serial No: {this.state.SerialNumber}<br/>
-                    {/*<BatteryStatus ant={this.fec} /> */}
+                    Device ID: {this.props.DeviceID}<br/>
+                    Firmware v{this.props.SwVersion}<br/>
+                    Serial No: {this.props.SerialNumber}<br/>
+                    {/*<BatteryStatus ant={this.fec} /> */}<br/>
+                    DistanceTravelled: { this.props.Distance }<br/>
+                    Resistance: { this.props.Resistance }<br/>
                 </div>                        
                 <div className="advancedTrainerSettings">
                     <div className="label">Rider Weight (kg)</div>
