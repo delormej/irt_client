@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": "irt_client",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron-forge start --inspect-electron",
     "prestart": "npm run build",
     "postinstall": "./node_modules/.bin/electron-rebuild",
     "build": "tsc --project ./src/tsconfig.json",

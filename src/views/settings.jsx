@@ -172,7 +172,8 @@ export default class Settings extends React.Component {
                     FEC: {this.state.fecDeviceId}<br/>
                     <button onClick={this.onConnect}>Connect</button>
                 </div>
-                <DeviceSettings {...this.props}>
+                <DeviceSettings {...this.props} 
+                        availableDevices={this.context.state.fecDevicesAvailable}>
                     <WrappedTrainerSettings 
                         ant={this.context.ant.fec}
                         onConnectDevice={(deviceType, deviceId) => this.onSelectFec(deviceId)}
@@ -182,7 +183,8 @@ export default class Settings extends React.Component {
                             onShowAdvanced={() => this.onShowAdvanced()} /> */ }
                 </DeviceSettings>
                 <div className="powerMeter">
-                    <DeviceSettings {...this.props}>
+                    <DeviceSettings {...this.props}
+                            availableDevices={this.context.state.bpDevicesAvailable}>
                         <WrappedPowerMeterSettings
                             ant={this.context.ant.bp}
                             ftp={this.props.ftp}
@@ -193,7 +195,8 @@ export default class Settings extends React.Component {
                     {/*this.state.showAdvanced && <AdvancedPowerMeterSettings 
                         fec={this.fec} onChange={this.props.onChange} /> */}
                 </div>
-                <DeviceSettings {...this.props}>
+                <DeviceSettings {...this.props}
+                        availableDevices={this.context.state.hrmDevicesAvailable}>
                     <WrappedHeartRateConnected
                         ant={this.context.ant.hrm}
                         maxHeartRateBpm={this.props.maxHeartRateBpm}

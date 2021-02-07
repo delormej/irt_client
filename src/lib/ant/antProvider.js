@@ -1,6 +1,8 @@
 import React from "react";
 import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
 import { DeviceType, DeviceChannel } from './ts/ant';
+import antManufacturers from '../lib/ant/ant_manufacturers.js';
+import { ScannerService } from "./scannerService";
 
 const AntContext = React.createContext();
 
@@ -14,7 +16,10 @@ class AntProvider extends React.Component {
       antInitialized: false,
       fecConnected: false,
       bpConnected: false,
-      hrmConnected: false
+      hrmConnected: false,
+      fecDevicesAvailable: [],
+      bpDevicesAvailable: [],
+      hrmDevicesAvailable: []      
     }
 
     this.onStartup = this.onStartup.bind(this);
@@ -22,7 +27,9 @@ class AntProvider extends React.Component {
     this.setConnected = this.setConnected.bind(this);
     this.onDeviceConnected = this.onDeviceConnected.bind(this);
     this.onDeviceDisconnected = this.onDeviceDisconnected.bind(this);
+    this.onDeviceAvailable = this.onDeviceAvailable.bind(this);
 
+    this.scanner = null;
     this.stick = new GarminStick3();
     this.stick.on('startup', this.onStartup);
     this.stick.on('read', this.onRead);
@@ -54,13 +61,57 @@ class AntProvider extends React.Component {
     this.ant.hrm.on('detached', () => { this.onDeviceDisconnected(DeviceType.HEART_RATE_DEVICE_TYPE) });
     this.ant.bp.on('detached', () => { this.onDeviceDisconnected(DeviceType.BIKE_POWER_DEVICE_TYPE) });
     this.ant.fec.on('detached', () => { this.onDeviceDisconnected(DeviceType.FEC_DEVICE_TYPE) });
-    this.ant.fec.on('fitnessData', (data) => {
-      console.log(data.RealSpeed, data.ElapsedTime, data.WheelTicks);
-    })
+
+    this.scanner = new ScannerService(stick);
+    this.scanner.on('deviceInfo', this.onDeviceAvailable);
+    this.scanner.start();
 
     this.setState( { 
       antInitialized: true
     })
+  }
+
+  onDeviceAvailable(deviceInfo) {
+    let key = "";
+    switch (deviceInfo.deviceType) {
+      case DeviceType.HEART_RATE_DEVICE_TYPE:
+        key = 'hrmDevicesAvailable';
+        break;
+      case DeviceType.FEC_DEVICE_TYPE:
+        key = 'fecDevicesAvailable';
+        break;
+      case DeviceType.BIKE_POWER_DEVICE_TYPE:
+        key = 'bpDevicesAvailable';
+        break;
+      default:
+        throw 'unrecognized deviceType';
+    }    
+
+    let availableDevices = this.state[key];
+ 
+    if (addOrUpdateAvailableDevice(availableDevices))
+      this.setState({ [key]: availableDevices });
+  }
+
+  addOrUpdateAvailableDevice(availableDevices) {
+    let dirty = false;
+    var element = availableDevices.find(function(value) {
+        return value.deviceId == deviceInfo.deviceId;
+    });
+    if (element != null) {
+        if (deviceInfo.manufacturerId) {
+            element.manufacturerId = deviceInfo.manufacturerId;
+            element.manufacturerName = 
+                antManufacturers.getAntManufacturerNameById(deviceInfo.manufacturerId);
+        }
+        element.timestamp = deviceInfo.timestamp;
+        dirty = true;
+    }
+    else {
+        availableDevices.push(deviceInfo);
+        dirty = true;
+    }     
+    return dirty;
   }
 
   setConnected(deviceType, connected) {
@@ -98,6 +149,9 @@ class AntProvider extends React.Component {
   }
 
   componentWillUnmount() {    
+    this.ant.hrm.detach_all();
+    this.ant.bp.detach_all();
+    this.ant.fec.detach_all();
     this.ant.stick.close();
   }
 
@@ -107,6 +161,7 @@ class AntProvider extends React.Component {
   
   connectAll(fecDeviceId, bpDeviceId, hrmDeviceId) {
     if (this.ant.stick.isScanning()) {
+      this.scanner.stop();
       this.ant.stick.detach_all();
     }
     if (fecDeviceId > 0) {
@@ -121,20 +176,25 @@ class AntProvider extends React.Component {
   }
 
   connectDevice(deviceType, deviceId) {
-    switch (deviceType) {
-      case DeviceType.HEART_RATE_DEVICE_TYPE:
-        this.ant.hrm.attach(DeviceChannel.ANT_HRM_CHANNEL_ID, deviceId);
-        break;
-      case DeviceType.FEC_DEVICE_TYPE:
-        this.ant.fec.attach(DeviceChannel.ANT_FEC_CHANNEL_ID, deviceId);
-        break;
-      case DeviceType.BIKE_POWER_DEVICE_TYPE:
-        this.ant.bp.attach(DeviceChannel.ANT_BP_CHANNEL_ID, deviceId);
-        break;
-      default:
-        console.log("ERROR: connectDevice, invalid deviceType!");
+    try {
+      switch (deviceType) {
+        case DeviceType.HEART_RATE_DEVICE_TYPE:
+          this.ant.hrm.attach(DeviceChannel.ANT_HRM_CHANNEL_ID, deviceId);
+          break;
+        case DeviceType.FEC_DEVICE_TYPE:
+          this.ant.fec.attach(DeviceChannel.ANT_FEC_CHANNEL_ID, deviceId);
+          break;
+        case DeviceType.BIKE_POWER_DEVICE_TYPE:
+          this.ant.bp.attach(DeviceChannel.ANT_BP_CHANNEL_ID, deviceId);
+          break;
+        default:
+          console.log("ERROR: connectDevice, invalid deviceType!");
+      }
+      console.log("connected to: " + deviceId);
     }
-    console.log("connected to: " + deviceId);
+    catch (e) {
+      console.log('error trying to connect:', e);
+    }
   }
 
   disconnectDevice(deviceType) {

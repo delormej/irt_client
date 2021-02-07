@@ -66,7 +66,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  createLoadingScreen();
+  // createLoadingScreen();
   createWindow();
   preventShutdown();
 });
