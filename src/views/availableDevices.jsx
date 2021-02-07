@@ -49,7 +49,6 @@ export default class AvailableDevices extends React.Component {
         this.selectedDeviceId = null;
         this.onConnectDevice = props.onConnectDevice;
         this.deviceType = props.deviceType;
-        this.onDeviceInfo = this.onDeviceInfo.bind(this);
     }
 
     componentDidMount() {

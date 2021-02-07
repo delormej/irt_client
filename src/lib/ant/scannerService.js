@@ -1,9 +1,11 @@
 import { EventEmitter } from 'events';
 import { HeartRateScanner, FitnessEquipmentScanner, BicyclePowerScanner } from 'ant-plus';
-import { DeviceType } from '../lib/ant/ts/ant';
+import { DeviceType } from './ts/ant';
 
 export class ScannerService extends EventEmitter {
     constructor(stick) {
+        super();
+
         this.onDeviceInfo = this.onDeviceInfo.bind(this);
         
         this.bpScanner = new BicyclePowerScanner(stick);
@@ -11,8 +13,9 @@ export class ScannerService extends EventEmitter {
         this.hrmScanner = new HeartRateScanner(stick);
     }
 
-    onDeviceInfo(data) {
+    onDeviceInfo(deviceType, data) {
         let deviceInfo = {
+            deviceType: deviceType,
             deviceId: data.DeviceID,
             manufacturerId: data.ManId
         };

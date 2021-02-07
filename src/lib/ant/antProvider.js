@@ -1,7 +1,7 @@
 import React from "react";
 import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
 import { DeviceType, DeviceChannel } from './ts/ant';
-import antManufacturers from '../lib/ant/ant_manufacturers.js';
+import antManufacturers from './ant_manufacturers';
 import { ScannerService } from "./scannerService";
 
 const AntContext = React.createContext();
@@ -28,6 +28,7 @@ class AntProvider extends React.Component {
     this.onDeviceConnected = this.onDeviceConnected.bind(this);
     this.onDeviceDisconnected = this.onDeviceDisconnected.bind(this);
     this.onDeviceAvailable = this.onDeviceAvailable.bind(this);
+    this.addOrUpdateAvailableDevice = this.addOrUpdateAvailableDevice.bind(this);
 
     this.scanner = null;
     this.stick = new GarminStick3();
@@ -62,7 +63,7 @@ class AntProvider extends React.Component {
     this.ant.bp.on('detached', () => { this.onDeviceDisconnected(DeviceType.BIKE_POWER_DEVICE_TYPE) });
     this.ant.fec.on('detached', () => { this.onDeviceDisconnected(DeviceType.FEC_DEVICE_TYPE) });
 
-    this.scanner = new ScannerService(stick);
+    this.scanner = new ScannerService(this.ant.stick);
     this.scanner.on('deviceInfo', this.onDeviceAvailable);
     this.scanner.start();
 
@@ -84,16 +85,16 @@ class AntProvider extends React.Component {
         key = 'bpDevicesAvailable';
         break;
       default:
-        throw 'unrecognized deviceType';
+        console.log('unrecognized deviceType', deviceInfo.deviceType);
     }    
 
     let availableDevices = this.state[key];
  
-    if (addOrUpdateAvailableDevice(availableDevices))
+    if (this.addOrUpdateAvailableDevice(availableDevices, deviceInfo))
       this.setState({ [key]: availableDevices });
   }
 
-  addOrUpdateAvailableDevice(availableDevices) {
+  addOrUpdateAvailableDevice(availableDevices, deviceInfo) {
     let dirty = false;
     var element = availableDevices.find(function(value) {
         return value.deviceId == deviceInfo.deviceId;
@@ -149,9 +150,6 @@ class AntProvider extends React.Component {
   }
 
   componentWillUnmount() {    
-    this.ant.hrm.detach_all();
-    this.ant.bp.detach_all();
-    this.ant.fec.detach_all();
     this.ant.stick.close();
   }
 
@@ -161,7 +159,7 @@ class AntProvider extends React.Component {
   
   connectAll(fecDeviceId, bpDeviceId, hrmDeviceId) {
     if (this.ant.stick.isScanning()) {
-      this.scanner.stop();
+      // this.scanner.stop();
       this.ant.stick.detach_all();
     }
     if (fecDeviceId > 0) {
@@ -227,7 +225,10 @@ class AntProvider extends React.Component {
           hrmConnected: this.state.hrmConnected,
           connectAll: this.connectAll,
           connectDevice: this.connectDevice,
-          disconnectDevice: this.disconnectDevice
+          disconnectDevice: this.disconnectDevice,
+          fecDevicesAvailable: this.state.fecDevicesAvailable,
+          bpDevicesAvailable: this.state.bpDevicesAvailable,
+          hrmDevicesAvailable: this.state.hrmDevicesAvailable              
         }}
       >
         {this.props.children}

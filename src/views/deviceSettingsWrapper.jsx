@@ -82,7 +82,8 @@ export default class DeviceSettings extends React.Component {
         else {
             return (
                 <AvailableDevices deviceType={deviceType}
-                    onConnectDevice={child.props.onConnectDevice} />
+                    onConnectDevice={child.props.onConnectDevice}
+                    availableDevices={this.props.availableDevices} />
             );
         }
 
