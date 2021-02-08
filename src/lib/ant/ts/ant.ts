@@ -13,14 +13,6 @@ export enum DeviceChannel {
   ANT_HRM_CHANNEL_ID = 3
 }
 
-export interface AntObjects {
-    stick: GarminStick3;
-    fec: FitnessEquipmentSensor; 
-    bp: BicyclePowerSensor;
-    bpAverager: Object;
-    hrm: HeartRateSensor;
-}
-
 export interface DeviceInfo {
     deviceId: number;
     deviceType: number;

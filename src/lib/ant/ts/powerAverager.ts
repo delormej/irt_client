@@ -1,6 +1,4 @@
-import { DeviceProfile } from "./antDeviceProfile";
 import { EventEmitter } from "events";
-import PowerAverage from "../../../views/averagePower";
 
 interface PowerEvent {
     eventCount: number;
