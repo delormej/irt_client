@@ -29,6 +29,8 @@ class AntProvider extends React.Component {
     this.onDeviceDisconnected = this.onDeviceDisconnected.bind(this);
     this.onDeviceAvailable = this.onDeviceAvailable.bind(this);
     this.addOrUpdateAvailableDevice = this.addOrUpdateAvailableDevice.bind(this);
+    this.connectAll = this.connectAll.bind(this);
+    this.clearAvailableDevices = this.clearAvailableDevices.bind(this);
 
     this.scanner = null;
     this.stick = new GarminStick3();
@@ -115,6 +117,14 @@ class AntProvider extends React.Component {
     return dirty;
   }
 
+  clearAvailableDevices() {
+    this.setState( {
+      hrmDevicesAvailable: [],
+      bpDevicesAvailable: [],
+      fecDevicesAvailable: []
+    });
+  }
+
   setConnected(deviceType, connected) {
     switch (deviceType) {
       case DeviceType.HEART_RATE_DEVICE_TYPE:
@@ -161,6 +171,7 @@ class AntProvider extends React.Component {
     if (this.ant.stick.isScanning()) {
       // this.scanner.stop();
       this.ant.stick.detach_all();
+      this.clearAvailableDevices();
     }
     if (fecDeviceId > 0) {
       this.connectDevice(DeviceType.FEC_DEVICE_TYPE, fecDeviceId);
