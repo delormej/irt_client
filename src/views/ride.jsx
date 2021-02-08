@@ -13,25 +13,20 @@ import RideChart from './rideChart';
 import { hocAntMessage } from '../containers/hocAntMessage';
 import { AntContext } from '../lib/ant/antProvider';
 
-const HrmData = ['hbData'];
-const FecData = ['fitnessData'];
-const BpData = ['powerData'];
+const HrmData = 'hbData';
+const FecData = 'fitnessData';
+const BpData = 'powerData';
 
-const HeartRateFromAnt = hocAntMessage(HrmData)(HeartRate); 
-const SpeedMphFromAnt = hocAntMessage(FecData)(SpeedMph);
-/*const DistanceTravelledFromAnt = hocAntMessage(FecData)(DistanceTravelled);
-const ElapsedTimeFromAnt = hocAntMessage(FecData)(ElapsedTime);
-const TrainerPowerFromAnt = hocAntMessage(FecData)(TrainerPower);
-const PowerMeterFromAnt = hocAntMessage(BpData)(PowerMeter);
-
-
-const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower);
-const CadenceFromAnt = hocAntMessage(powerMessages)(Cadence);
-
-const ResistanceLevelFromAnt = hocAntMessage(['generalSettings'])(ResistanceLevel);
-
-const TargetPowerFromAnt = hocAntMessage(['irtExtraInfo'])(TargetPower);
-*/
+const HeartRateFromAnt = hocAntMessage(HeartRate, HrmData); 
+const SpeedMphFromAnt = hocAntMessage(SpeedMph, FecData);
+const DistanceTravelledFromAnt = hocAntMessage(DistanceTravelled, FecData);
+const ElapsedTimeFromAnt = hocAntMessage(ElapsedTime, FecData);
+const TrainerPowerFromAnt = hocAntMessage(TrainerPower, FecData);
+const PowerMeterFromAnt = hocAntMessage(PowerMeter, BpData);
+/* const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower); */
+const CadenceFromAnt = hocAntMessage(Cadence, BpData);
+const ResistanceLevelFromAnt = hocAntMessage(ResistanceLevel, FecData);
+const TargetPowerFromAnt = hocAntMessage(TargetPower, FecData);
 
 export default class Ride extends React.Component {
 
@@ -44,16 +39,16 @@ export default class Ride extends React.Component {
             <div className="ride">
               <SpeedMphFromAnt ant={this.context.ant.fec} RealSpeed={0} />
               <HeartRateFromAnt ant={this.context.ant.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
-              {/*<DistanceTravelledFromAnt ant={this.context.ant.fec} Distance={0} />
+              <DistanceTravelledFromAnt ant={this.context.ant.fec} Distance={0} />
               <ElapsedTimeFromAnt ant={this.context.ant.fec} ElapsedTime={0} />
               <TrainerPowerFromAnt ant={this.context.ant.fec} />
               <PowerMeterFromAnt ant={this.context.ant.bp} ftp={this.props.ftp} instantPower={0} instantCadence={0} />
               <TargetPowerFromAnt ant={this.context.ant.fec} target="0" />
               <CadenceFromAnt ant={this.context.ant.bp} />
-              <AveragePowerFromAnt ant={this.context.ant.bp} bpAverager={this.context.ant.bpAverager} 
-                averageSeconds={this.props.averageSeconds} />
+              {/*<AveragePowerFromAnt ant={this.context.ant.bp} bpAverager={this.context.ant.bpAverager} 
+                averageSeconds={this.props.averageSeconds} />*/}
               <ResistanceLevelFromAnt ant={this.context.ant.fec} resistanceLevel={0} />
-              <RideChart bp={this.context.ant.bp} hrm={this.context.ant.hrm} fec={this.context.ant.fec} 
+              {/*<RideChart bp={this.context.ant.bp} hrm={this.context.ant.hrm} fec={this.context.ant.fec} 
                 bpAverager={this.context.ant.bpAverager} averageSeconds={this.props.averageSeconds} /> */}
             </div>
         );      
