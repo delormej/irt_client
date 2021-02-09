@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Main from '../views/main';
 import { AntProvider } from '../lib/ant/antProvider';
+import { MockAntProvider } from '../lib/ant/mockAntProvider';
 import ErrorBoundry from '../views/errorBoundry.jsx';
 
 const remote = require('electron').remote;
@@ -9,9 +10,9 @@ const remote = require('electron').remote;
 window.onload = function(){
   ReactDOM.render(
     <ErrorBoundry>
-      <AntProvider>
+      <MockAntProvider>
         <Main />
-      </AntProvider>
+      </MockAntProvider>
     </ErrorBoundry>, 
     document.getElementById('app'));
 

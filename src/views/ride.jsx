@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SpeedMph, SpeedProps } from './speedMph';
+import { SpeedMph } from './speedMph';
 import PowerMeter from './powerMeter';
 import DistanceTravelled from './distanceTravelled';
 import ElapsedTime from './elapsedTime';
@@ -37,7 +37,7 @@ export default class Ride extends React.Component {
     render() {
         return (
             <div className="ride">
-              <SpeedMphFromAnt ant={this.context.ant.fec} RealSpeed={0} />
+              <SpeedMphFromAnt ant={this.context.ant.fec} />
               <HeartRateFromAnt ant={this.context.ant.hrm} maxHeartRateBpm={this.props.maxHeartRateBpm} />
               <DistanceTravelledFromAnt ant={this.context.ant.fec} Distance={0} />
               <ElapsedTimeFromAnt ant={this.context.ant.fec} ElapsedTime={0} />

@@ -4,6 +4,7 @@ import RideDataComponent from  './rideDataComponent';
 export class SpeedMph extends React.Component {
     constructor(props) {
       super(props);
+      this.calculateMphAndFormat = this.calculateMphAndFormat.bind(this);
     }
 
     calculateMphAndFormat(mps) {

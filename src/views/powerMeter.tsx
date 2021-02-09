@@ -4,8 +4,8 @@ import ColorStyle from '../lib/ant/ts/colorScale';
 
 export interface PowerMeterProps {
     message?: string;
-    instantPower: number;
-    instantCadence: number;
+    CalculatedPower?: number;
+    CalculatedCadence?: number;
     ftp: number;
 }
 
@@ -19,13 +19,13 @@ export default class PowerMeter extends React.Component<PowerMeterProps> {
     render(): JSX.Element {
         let power: string;
         this.usingCtf = (this.props.message === 'ctfMainPage');
-        if (this.props.instantPower == undefined)
+        if (this.props.CalculatedPower == undefined)
             power = "0";
         else 
-            power = this.props.instantPower.toString();
+            power = this.props.CalculatedPower.toString();
         return (
             <RideDataComponent class="bikePower" label="WATTS"
-                style={ColorStyle.getColorStyle(this.props.instantPower, this.props.ftp)}
+                style={ColorStyle.getColorStyle(this.props.CalculatedPower, this.props.ftp)}
                 value={power} />
             );      
     }
