@@ -51,7 +51,6 @@ class AntProvider extends React.Component {
     console.log("stick startup");
 
     this.ant = {
-      stick: this.stick,
       fec: new FitnessEquipmentSensor(this.stick),
       bp: new BicyclePowerSensor(this.stick),
       bpAverager: null, //new PowerAverager(bp),
@@ -160,7 +159,7 @@ class AntProvider extends React.Component {
   }
 
   componentWillUnmount() {    
-    this.ant.stick.close();
+    this.stick.close();
   }
 
   onRead(data) {
@@ -168,9 +167,9 @@ class AntProvider extends React.Component {
   }
   
   connectAll(fecDeviceId, bpDeviceId, hrmDeviceId) {
-    if (this.ant.stick.isScanning()) {
+    if (this.stick.isScanning()) {
       // this.scanner.stop();
-      this.ant.stick.detach_all();
+      this.stick.detach_all();
       this.clearAvailableDevices();
     }
     if (fecDeviceId > 0) {
