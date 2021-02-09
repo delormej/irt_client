@@ -225,10 +225,16 @@ class AntProvider extends React.Component {
   }
 
   render() {
+    /* TODO:
+      - Rather than expose ant here, antProvider could catch all events and
+        re-emit them.  Investigate this, could clean up hocAntMessage() and
+        eliminate need to pass ant={x} to each control.  
+      - Could get messy though as we can't have multiple inheritance (extends EventEmitter)
+    */
     return (
       <AntContext.Provider
         value={{
-          ant: this.ant,
+          ant: this.ant, 
           antInitialized: this.state.antInitialized,
           fecConnected: this.state.fecConnected,
           bpConnected: this.state.bpConnected,
