@@ -1,5 +1,3 @@
-import { GarminStick3, BicyclePowerSensor, HeartRateSensor, FitnessEquipmentSensor } from 'ant-plus';
-
 export enum DeviceType {
   BIKE_POWER_DEVICE_TYPE = 0x0B,
   FEC_DEVICE_TYPE = 0x11,

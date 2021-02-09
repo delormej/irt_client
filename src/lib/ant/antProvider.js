@@ -32,7 +32,6 @@ class AntProvider extends React.Component {
     this.connectAll = this.connectAll.bind(this);
     this.clearAvailableDevices = this.clearAvailableDevices.bind(this);
 
-    this.scanner = null;
     this.stick = new GarminStick3();
     this.stick.on('startup', this.onStartup);
     this.stick.on('read', this.onRead);
@@ -44,6 +43,8 @@ class AntProvider extends React.Component {
       }
       console.log("stick open");
     });
+
+    this.scanner = new ScannerService(this.stick);
   }
 
   onStartup() {
@@ -65,7 +66,6 @@ class AntProvider extends React.Component {
     this.ant.bp.on('detached', () => { this.onDeviceDisconnected(DeviceType.BIKE_POWER_DEVICE_TYPE) });
     this.ant.fec.on('detached', () => { this.onDeviceDisconnected(DeviceType.FEC_DEVICE_TYPE) });
 
-    this.scanner = new ScannerService(this.ant.stick);
     this.scanner.on('deviceInfo', this.onDeviceAvailable);
     this.scanner.start();
 
