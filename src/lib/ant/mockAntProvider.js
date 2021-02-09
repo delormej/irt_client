@@ -12,7 +12,13 @@ class MockSensor extends EventEmitter {
             1000
         );
     }
-    
+ 
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+      }    
+
     getData() {
         return { };
     }
@@ -25,8 +31,8 @@ class MockFitnessEquipmentSensor extends MockSensor {
 
     getData() {
         return {
-            RealSpeed: 3,
-            Distance: 10
+            RealSpeed: this.getRandomInt(1, 10),
+            Distance: this.getRandomInt(10, 1000)
         };
     }
 }
@@ -38,7 +44,7 @@ class MockHeartRateSensor extends MockSensor {
 
     getData() {
         return {
-            ComputedHeartRate: 103
+            ComputedHeartRate: this.getRandomInt(70, 185)
         };
     }
 }
@@ -50,7 +56,7 @@ class MockBicyclePowerSensor extends MockSensor {
 
     getData() {
         return {
-            CalculatedPower: 234
+            CalculatedPower: this.getRandomInt(180, 200)
         };
     }
 }

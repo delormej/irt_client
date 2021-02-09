@@ -11,7 +11,6 @@ export class SpeedMph extends React.Component {
         const MPS_TO_MPH = 2.23694;
         if (isNaN(mps))
             mps = 0;
-        console.log('calculated speed', mps);
         return (mps * MPS_TO_MPH).toFixed(1);
     }
 
