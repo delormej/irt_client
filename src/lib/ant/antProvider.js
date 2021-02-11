@@ -22,6 +22,7 @@ class AntProvider extends React.Component {
       hrmDevicesAvailable: []      
     }
 
+    this.openStick = this.openStick.bind(this);
     this.onStartup = this.onStartup.bind(this);
     this.onRead = this.onRead.bind(this);
     this.setConnected = this.setConnected.bind(this);
@@ -32,6 +33,10 @@ class AntProvider extends React.Component {
     this.connectAll = this.connectAll.bind(this);
     this.clearAvailableDevices = this.clearAvailableDevices.bind(this);
 
+    this.openStick();
+  }
+
+  openStick() {
     this.stick = new GarminStick3();
     this.stick.on('startup', this.onStartup);
     this.stick.on('read', this.onRead);

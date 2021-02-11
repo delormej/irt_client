@@ -76,6 +76,10 @@ export class MockAntProvider extends AntProvider {
         console.log('startup override');
     }
     
+    openStick() {
+        console.log('overriding openStick');
+    }
+    
     render() {
         return (
             <AntContext.Provider
