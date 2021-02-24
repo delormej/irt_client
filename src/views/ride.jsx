@@ -22,7 +22,7 @@ const SpeedMphFromAnt = hocAntMessage(SpeedMph, FecData);
 const DistanceTravelledFromAnt = hocAntMessage(DistanceTravelled, FecData);
 const ElapsedTimeFromAnt = hocAntMessage(ElapsedTime, FecData);
 const TrainerPowerFromAnt = hocAntMessage(TrainerPower, FecData);
-// const PowerMeterFromAnt = hocAntMessage(PowerMeter, BpData);
+const PowerMeterFromAnt = hocAntMessage(PowerMeter, BpData);
 /* const AveragePowerFromAnt = hocAntMessage(powerMessages)(AveragePower); */
 const CadenceFromAnt = hocAntMessage(Cadence, BpData);
 const ResistanceLevelFromAnt = hocAntMessage(ResistanceLevel, FecData);
@@ -42,7 +42,7 @@ export default class Ride extends React.Component {
               <DistanceTravelledFromAnt ant={this.context.ant.fec} Distance={0} />
               <ElapsedTimeFromAnt ant={this.context.ant.fec} ElapsedTime={0} />
               <TrainerPowerFromAnt ant={this.context.ant.fec} />
-              {/* <PowerMeterFromAnt ant={this.context.ant.bp} ftp={this.props.ftp}/> */}
+              <PowerMeterFromAnt ant={this.context.ant.bp} ftp={this.props.ftp}/>
               <TargetPowerFromAnt ant={this.context.ant.fec} target="0" />
               <CadenceFromAnt ant={this.context.ant.bp} />
               {/*<AveragePowerFromAnt ant={this.context.ant.bp} bpAverager={this.context.ant.bpAverager} 

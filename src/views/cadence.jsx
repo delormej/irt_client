@@ -9,7 +9,6 @@ export default class Cadence extends React.Component {
     }
 
     render() {
-        console.log("render");
         return (
             <RideDataComponent class="cadence" label="RPM"
                 value={this.props.Cadence} />
