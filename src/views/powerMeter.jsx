@@ -12,7 +12,6 @@ export default class PowerMeter extends React.Component {
         let power = "0";
 
         if (this.props.Power) {
-            console.log("power==" + this.props.Power);
             power = this.props.Power.toString();
         }
 
