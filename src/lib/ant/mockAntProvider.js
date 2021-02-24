@@ -56,7 +56,8 @@ class MockBicyclePowerSensor extends MockSensor {
 
     getData() {
         return {
-            CalculatedPower: this.getRandomInt(180, 200)
+            CalculatedPower: this.getRandomInt(180, 200),
+            CalculatedCadence: this.getRandomInt(40, 120)
         };
     }
 }

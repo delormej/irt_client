@@ -8,11 +8,12 @@ import ErrorBoundry from '../views/errorBoundry.jsx';
 const remote = require('electron').remote;
 
 window.onload = function(){
+  //MockAntProvider
   ReactDOM.render(
     <ErrorBoundry>
-      <MockAntProvider>
+      <AntProvider>
         <Main />
-      </MockAntProvider>
+      </AntProvider>
     </ErrorBoundry>, 
     document.getElementById('app'));
 
