@@ -5,7 +5,12 @@ let mainWindow,
     loadingScreen,
     windowParams = {
         icon: path.join( __dirname + './images/logo_16x16.png'),
-        show: false
+        show: false,
+        webPreferences: { 
+          nodeIntegration: true,
+          contextIsolation: false,
+          enableRemoteModule: true
+        }
     };
 
 
