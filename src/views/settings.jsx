@@ -21,6 +21,8 @@ import { DeviceType } from '../lib/ant/ts/ant';
 const WrappedHeartRateConnected = hocAntMessage(HeartRateConnected, 'hbData');
 const WrappedTrainerSettings = hocAntMessage(TrainerSettings, 'fitnessData');
 const WrappedPowerMeterSettings = hocAntMessage(PowerMeterSettings, 'powerData');
+const WrappedAdvancedTrainerSettings = hocAntMessage(AdvancedTrainerSettings, 'fitnessData');
+const WrappedAdvancedPowerMeterSettings = hocAntMessage(AdvancedPowerMeterSettings, 'fitnessData');
 
 // function hocAntMessage(WrappedComponent, message) {
 //     class HocAntMessage extends React.Component {
@@ -54,7 +56,7 @@ const WrappedPowerMeterSettings = hocAntMessage(PowerMeterSettings, 'powerData')
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
     if (props.showAdvanced)
-        showAdvanced = <AdvancedTrainerSettings fec={props.fec} />;
+        showAdvanced = <WrappedAdvancedTrainerSettings />;
     else 
         showAdvanced = <button onClick={() => props.onShowAdvanced()}>Advanced</button>;
     return showAdvanced;
@@ -178,9 +180,9 @@ export default class Settings extends React.Component {
                         ant={this.context.ant.fec}
                         onConnectDevice={(deviceType, deviceId) => this.onSelectFec(deviceId)}
                         onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />                    
-                    { /*<ToggleAdvancedTrainerSettings 
+                    <ToggleAdvancedTrainerSettings 
                             showAdvanced={this.state.showAdvanced} 
-                            onShowAdvanced={() => this.onShowAdvanced()} /> */ }
+                            onShowAdvanced={() => this.onShowAdvanced()} /> 
                 </DeviceSettings>
                 <div className="powerMeter">
                     <DeviceSettings {...this.props}
@@ -192,8 +194,8 @@ export default class Settings extends React.Component {
                             onConnectDevice={(deviceType, deviceId) => this.onSelectBp(deviceId)}
                             onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE)} />
                     </DeviceSettings>
-                    {/*this.state.showAdvanced && <AdvancedPowerMeterSettings 
-                        fec={this.fec} onChange={this.props.onChange} /> */}
+                    { this.state.showAdvanced && <WrappedAdvancedPowerMeterSettings 
+                        onChange={this.props.onChange} /> }
                 </div>
                 <DeviceSettings {...this.props}
                         availableDevices={this.context.hrmDevicesAvailable}>

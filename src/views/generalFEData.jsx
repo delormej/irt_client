@@ -27,10 +27,10 @@ export default class GeneralFEData extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('generalFEData', this.onGeneralFEData);
+        // this.fec.on('generalFEData', this.onGeneralFEData);
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('generalFEData', this.onGeneralFEData);
+        // this.fec.removeListener('generalFEData', this.onGeneralFEData);
     }
 }

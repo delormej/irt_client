@@ -27,10 +27,10 @@ export default class IrtExtraInfo extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
     }
 }

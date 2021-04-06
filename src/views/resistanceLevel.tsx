@@ -3,6 +3,7 @@ import ColorScale from '../lib/ant/ts/colorScale';
 
 interface ResistanceLevelProps {
     resistanceLevel: number;
+    ServoPosition: number;
 }
 
 export default class ResistanceLevel extends React.Component<ResistanceLevelProps> {
@@ -14,7 +15,7 @@ export default class ResistanceLevel extends React.Component<ResistanceLevelProp
         return (
             <div className="resistanceLevelBox">
                 <div className="dataLabel">RESISTANCE LEVEL</div>
-                <div className="dataValue">{this.formatResistanceLevel(this.props.resistanceLevel)}</div>
+                <div className="dataValue">{this.formatResistanceLevel(this.props.ServoPosition)}</div>
                 <div className="resistanceLevel" style={this.getResistanceLevelStyle()}></div>
             </div>
         );

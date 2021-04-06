@@ -23,10 +23,10 @@ export default class GeneralSettings extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('generalSettings', this.onGeneralSettings);
+        // this.fec.on('generalSettings', this.onGeneralSettings);
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('generalSettings', this.onGeneralSettings);
+        // this.fec.removeListener('generalSettings', this.onGeneralSettings);
     }
 }

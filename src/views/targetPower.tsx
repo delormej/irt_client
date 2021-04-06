@@ -2,7 +2,7 @@ import * as React from 'react';
 import RideDataComponent from './rideDataComponent';
 
 interface TargetPowerProps {
-    target: string;
+    Target: string;
 }
 export default class TargetPower extends React.Component<TargetPowerProps> {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class TargetPower extends React.Component<TargetPowerProps> {
     render() {
         return (
             <RideDataComponent class="targetPower" label="TARGET"
-                value={this.props.target} />
+                value={this.props.Target} />
           );      
     }
 }  

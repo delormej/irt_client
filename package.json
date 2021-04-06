@@ -18,12 +18,13 @@
     "build": "tsc --project ./src/tsconfig.json",
     "clean": "rmdir ./src/node_modules /s /q",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "debug": "./node_modules/.bin/electron-forge-vscode-win.cmd --remote-debugging-port=9222"
   },
   "dependencies": {
     "@amcharts/amcharts3-react": "^3.0.0",
     "@types/react": "^16.0.40",
-    "ant-plus": "^0.1.24",
+    "ant-plus": "file:../ant-plus/ant-plus-0.2.5.tgz",
     "asar": "^0.14.2",
     "azure-storage": "^2.10.2",
     "babel-preset-env": "^1.6.1",

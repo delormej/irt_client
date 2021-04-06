@@ -7,7 +7,7 @@ import SetResistance from '../views/setResistance';
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
         super(props);
-        this.fec = props.fec;
+        // this.fec = props.fec;
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
         this.onIrtSettings = this.onIrtSettings.bind(this);
@@ -30,18 +30,18 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     componentDidMount() {
-        this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
-        this.fec.on('batteryStatus', this.onBatteryStatus);
-        this.fec.on('irtSettings', this.onIrtSettings);
-        this.fec.on('commandStatus', this.onCommandStatus);
-        this.fec.getSettings();
+        // this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.on('batteryStatus', this.onBatteryStatus);
+        // this.fec.on('irtSettings', this.onIrtSettings);
+        // this.fec.on('commandStatus', this.onCommandStatus);
+        // this.context.ant.fec.getSettings();
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
-        this.fec.removeListener('batteryStatus', this.onBatteryStatus);
-        this.fec.removeListener('irtSettings', this.onIrtSettings);
-        this.fec.removeListener('commandStatus', this.onCommandStatus);
+        // this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.removeListener('batteryStatus', this.onBatteryStatus);
+        // this.fec.removeListener('irtSettings', this.onIrtSettings);
+        // this.fec.removeListener('commandStatus', this.onCommandStatus);
     }    
 
     onIrtExtraInfo(data, timestamp) {
@@ -102,28 +102,28 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     onEnableDFU() {
-        this.fec.setDfuMode();
+        // this.fec.setDfuMode();
     }
 
     onSave() {
         console.log("Sending settings to FE-C...");
-        this.fec.setIrtSettings(this.state.drag, this.state.rr, this.state.servoOffset, 
-            this.state.rawSettings, this.state.saveToFlashEnabled);
+        // this.fec.setIrtSettings(this.state.drag, this.state.rr, this.state.servoOffset, 
+        //     this.state.rawSettings, this.state.saveToFlashEnabled);
     }
 
     handleSetResistance(resistanceType, value) {
         switch (resistanceType) {
             case "servo":
-                this.fec.setServoPosition(value);
+                // this.fec.setServoPosition(value);
                 break;
             case "target":
-                this.fec.setTargetPower(value);
+                // this.fec.setTargetPower(value);
                 break;
             case "resistance":
-                this.fec.setBasicResistance(value);
+                // this.fec.setBasicResistance(value);
                 break;
             case "grade":
-                this.fec.setTrackResistance(value);
+                // this.fec.setTrackResistance(value);
                 break;
             default:
                 break;
@@ -134,8 +134,9 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     onRefresh() {
-        this.fec.getSettings();
-        this.fec.requestLastCommand();
+        // this.fec.getSettings();
+        // this.fec.requestLastCommand();
+        this.context.ant.fec.getSettings();
     }
 
     handleInputChange(event) {
@@ -153,19 +154,19 @@ export default class AdvancedTrainerSettings extends React.Component {
                 <button onClick={() => this.onEnableDFU()}>Firmware Update</button>                    
                 <div className="label">Settings</div>
                 <input name="rawSettings" type="textbox" 
-                    value={this.state.rawSettings} 
+                    value={this.props.Settings} 
                     onChange={this.handleInputChange}/>
                 <div className="label">Servo Offset</div>
                 <input name="servoOffset" type="textbox" 
-                    value={this.state.servoOffset} 
+                    value={this.props.ServoOffset} 
                     onChange={this.handleInputChange}/>
                 <div className="label">Drag</div>
                 <input name="drag" type="textbox" 
-                    value={this.state.drag} 
+                    value={this.props.Drag} 
                     onChange={this.handleInputChange}/>                    
                 <div className="label">Rolling Resistance</div>
                 <input name="rr" type="textbox" 
-                    value={this.state.rr} 
+                    value={this.props.RR} 
                     onChange={this.handleInputChange}/>                           
                 <div className="label">Save to Flash</div>
                 <input name="saveToFlashEnabled" type="checkbox" 

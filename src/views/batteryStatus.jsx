@@ -23,11 +23,11 @@ export default class BatteryStatus extends React.Component {
     }
 
     componentDidMount() {
-        this.antDevice.on('batteryStatus', this.onBatteryStatus);
+        // this.antDevice.on('batteryStatus', this.onBatteryStatus);
     }
 
     componentWillUnmount() {
-        this.antDevice.removeListener('batteryStatus', this.onBatteryStatus);
+        // this.antDevice.removeListener('batteryStatus', this.onBatteryStatus);
     }
 
     getStatusDescription(status) {

@@ -20,8 +20,7 @@ export default class TrainerSettings extends React.Component {
     }
 
     componentDidMount() {
-        // this.fec = this.context.ant.fec;
-        // this.fec.getUserConfiguration();
+        this.context.ant.fec.getUserConfiguration();
     }
 
     componentWillUnmount() {
@@ -70,11 +69,11 @@ export default class TrainerSettings extends React.Component {
                 <div className="advancedTrainerSettings">
                     <div className="label">Rider Weight (kg)</div>
                     <input name="riderWeightKg" type="textbox" 
-                        value={this.state.riderWeightKg} 
+                        value={this.props.UserWeight} 
                         onChange={this.handleInputChange}/>                    
                     <div className="label">Bike Weight (kg)</div>
                     <input name="bikeWeightKg" type="textbox" 
-                        value={this.state.bikeWeightKg} 
+                        value={this.props.BikeWeight} 
                         onChange={this.handleInputChange}/>     
                 </div>
                 <button onClick={() => this.onSave()}>Save</button><br/>

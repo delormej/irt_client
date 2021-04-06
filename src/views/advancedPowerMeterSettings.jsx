@@ -10,7 +10,7 @@ const INVALID_POWER_METER = 65535;
 export default class AdvancedPowerMeterSettings extends DeviceSettings {
     constructor(props) {
         super(props);
-        this.fec = props.fec;
+
         this.handlePairToPowerMeterChange = this.handlePairToPowerMeterChange.bind(this);
         this.onIrtSettingsPowerAdjust = this.onIrtSettingsPowerAdjust.bind(this);
         this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
@@ -27,15 +27,15 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
     }
 
     componentDidMount() {
-        this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
-        this.fec.on('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
-        if (this.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL)
-            this.fec.getSettings();
+        // this.fec.on('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.on('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
+        // if (this.fec.getChannelStatus() == antlib.STATUS_TRACKING_CHANNEL)
+        //     this.fec.getSettings();
     }
 
     componentWillUnmount() {
-        this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
-        this.fec.removeListener('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
+        // this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
+        // this.fec.removeListener('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
     }    
 
     onIrtExtraInfo(data, timestamp) {
@@ -85,14 +85,14 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
 
     onSave() {
         console.log("Saving...");
-        this.fec.setIrtPowerAdjustSettings(
-            this.state.pairToPowerMeter ? this.state.powerMeterId : INVALID_POWER_METER, 
-            this.state.resistanceAdjustSeconds, 
-            this.state.powerMeterAverageSeconds, 
-            this.state.servoSmoothingSteps, 
-            this.convertToMps(this.state.minAdjustSpeedMph), 
-            this.state.saveToFlashEnabled
-        );
+        // this.fec.setIrtPowerAdjustSettings(
+        //     this.state.pairToPowerMeter ? this.state.powerMeterId : INVALID_POWER_METER, 
+        //     this.state.resistanceAdjustSeconds, 
+        //     this.state.powerMeterAverageSeconds, 
+        //     this.state.servoSmoothingSteps, 
+        //     this.convertToMps(this.state.minAdjustSpeedMph), 
+        //     this.state.saveToFlashEnabled
+        // );
     }
 
     render() {
