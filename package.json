@@ -50,9 +50,9 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "electron-prebuilt-compile": "8.2.0",
+    "electron": "^8.2.0",
     "electron-rebuild": "^2.3.5",
-    "react-scripts": "1.0.14"
+    "react-scripts": "^4.0.3"
   },
   "config": {
     "forge": {
@@ -79,6 +79,23 @@
           "config": {}
         }
       ]
+    },
+    "electronPackagerConfig": {
+      "packageManager": "npm",
+      "icon": "src/images/irt.ico"
+    },
+    "electronWinstallerConfig": {
+      "name": "irt_test_client"
+    },
+    "electronInstallerDebian": {},
+    "electronInstallerRedhat": {},
+    "github_repository": {
+      "owner": "",
+      "name": ""
+    },
+    "windowsStoreConfig": {
+      "packageName": "",
+      "name": "irttestclient"
     }
   }
 }

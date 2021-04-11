@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+const { app, BrowserWindow } = require('electron');
 
 let path = require('path');
 let mainWindow,
@@ -37,7 +37,7 @@ function createWindow() {
   mainWindow = new BrowserWindow(windowParams);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
   // mainWindow.setProgressBar(-1); // hack: force icon refresh
   mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.setMenu(null);
@@ -53,7 +53,7 @@ function createWindow() {
   });
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -79,7 +79,7 @@ app.on('ready', () => {
 app.on('activate', function() {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
   }
 })
