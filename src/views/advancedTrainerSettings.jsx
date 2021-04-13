@@ -1,27 +1,24 @@
 'use babel';
 
 import React from 'react';
-import TrainerSettings from '../views/trainerSettings.jsx';
 import SetResistance from '../views/setResistance';
 
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
         super(props);
-        // this.fec = props.fec;
-        this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
+
         this.onBatteryStatus = this.onBatteryStatus.bind(this);
-        this.onIrtSettings = this.onIrtSettings.bind(this);
         this.onCommandStatus = this.onCommandStatus.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSetResistance = this.handleSetResistance.bind(this);
         this.state = {
-            deviceId: props.deviceId,
-            rawSettings: undefined,
-            servoOffset: undefined,
-            drag: undefined,
-            rr: undefined,
+            deviceId: props.DeviceId,
+            rawSettings: props.Settings,
+            servoOffset: props.ServoOffset,
+            drag: props.Drag,
+            rr: props.RR,
             saveToFlashEnabled: true,
-            powerMeterConnected: false,
+            powerMeterConnected: props.PowerMeterConnected,
             resistance: 0,
             grade: 0,
             target: 0,
@@ -43,15 +40,6 @@ export default class AdvancedTrainerSettings extends React.Component {
         // this.fec.removeListener('irtSettings', this.onIrtSettings);
         // this.fec.removeListener('commandStatus', this.onCommandStatus);
     }    
-
-    onIrtExtraInfo(data, timestamp) {
-        this.setState( {
-            servo: data.servoPosition,
-            flywheelRevs: data.flywheelRevs,
-            target: data.target,
-            powerMeterConnected: data.powerMeterConnected
-        });
-    }
 
     onCommandStatus(data, timestamp) {
         const BASIC_RESISTANCE_PAGE = 0x30;
@@ -90,15 +78,6 @@ export default class AdvancedTrainerSettings extends React.Component {
     }
 
     onBatteryStatus(data, timestamp) {
-    }
-
-    onIrtSettings(data, timestamp) {
-        this.setState( {
-            drag: data.drag,
-            rr: data.rr,
-            servoOffset: data.servoOffset,
-            rawSettings: data.settings
-        });
     }
 
     onEnableDFU() {
@@ -154,19 +133,19 @@ export default class AdvancedTrainerSettings extends React.Component {
                 <button onClick={() => this.onEnableDFU()}>Firmware Update</button>                    
                 <div className="label">Settings</div>
                 <input name="rawSettings" type="textbox" 
-                    value={this.props.Settings} 
+                    value={this.state.Settings} 
                     onChange={this.handleInputChange}/>
                 <div className="label">Servo Offset</div>
                 <input name="servoOffset" type="textbox" 
-                    value={this.props.ServoOffset} 
+                    value={this.state.ServoOffset} 
                     onChange={this.handleInputChange}/>
                 <div className="label">Drag</div>
                 <input name="drag" type="textbox" 
-                    value={this.props.Drag} 
+                    value={this.state.Drag} 
                     onChange={this.handleInputChange}/>                    
                 <div className="label">Rolling Resistance</div>
                 <input name="rr" type="textbox" 
-                    value={this.props.RR} 
+                    value={this.state.RR} 
                     onChange={this.handleInputChange}/>                           
                 <div className="label">Save to Flash</div>
                 <input name="saveToFlashEnabled" type="checkbox" 

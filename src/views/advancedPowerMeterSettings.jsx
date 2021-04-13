@@ -12,16 +12,19 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
         super(props);
 
         this.handlePairToPowerMeterChange = this.handlePairToPowerMeterChange.bind(this);
-        this.onIrtSettingsPowerAdjust = this.onIrtSettingsPowerAdjust.bind(this);
-        this.onIrtExtraInfo = this.onIrtExtraInfo.bind(this);
+
+        let powerMeterPaired = false;
+        if (props.PowerMeterPaired != undefined)
+            powerMeterPaired = props.PowerMeterPaired;
+
         this.state = {
-            powerMeterId: 0,
+            powerMeterId: props.PowerMeterId,
             pairToPowerMeter: true,
-            powerMeterAverageSeconds: 0,
-            resistanceAdjustSeconds: 0,
-            minAdjustSpeedMph: 0,
-            servoSmoothingSteps: 0,
-            powerMeterConnected: false,
+            powerMeterAverageSeconds: props.PowerAverageSeconds,
+            resistanceAdjustSeconds: props.PowerAdjustSeconds,
+            minAdjustSpeedMph: props.MinAdjustSpeedMps,
+            servoSmoothingSteps: props.ServoSmoothingSteps,
+            powerMeterConnected: powerMeterPaired,
             saveToFlashEnabled: true
         }
     }
@@ -37,22 +40,6 @@ export default class AdvancedPowerMeterSettings extends DeviceSettings {
         // this.fec.removeListener('irtExtraInfo', this.onIrtExtraInfo);
         // this.fec.removeListener('irtSettingsPowerAdjust', this.onIrtSettingsPowerAdjust);
     }    
-
-    onIrtExtraInfo(data, timestamp) {
-        this.setState( {
-            powerMeterConnected: data.powerMeterConnected
-        })
-    }
-
-    onIrtSettingsPowerAdjust(data, timestamp) {
-        this.setState( {
-            powerMeterId: data.powerMeterId,
-            powerMeterAverageSeconds: data.powerAverageSeconds,
-            resistanceAdjustSeconds: data.powerAdjustSeconds,
-            minAdjustSpeedMph: this.convertToMph(data.minAdjustSpeedMps),
-            servoSmoothingSteps: data.servoSmoothingSteps
-        });
-    }
 
     handleInputChange(event) {
         if (event.target.name === "ftp")

@@ -35,6 +35,7 @@ class AntProvider extends React.Component {
     this.addOrUpdateAvailableDevice = this.addOrUpdateAvailableDevice.bind(this);
     this.connectAll = this.connectAll.bind(this);
     this.clearAvailableDevices = this.clearAvailableDevices.bind(this);
+    this.disconnectDevice = this.disconnectDevice.bind(this);
 
     this.openStick();
   }

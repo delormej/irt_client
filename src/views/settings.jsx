@@ -56,7 +56,7 @@ const WrappedAdvancedPowerMeterSettings = hocAntMessage(AdvancedPowerMeterSettin
 function ToggleAdvancedTrainerSettings(props) {
     let showAdvanced;
     if (props.showAdvanced)
-        showAdvanced = <WrappedAdvancedTrainerSettings />;
+        showAdvanced = <WrappedAdvancedTrainerSettings ant={props.ant} />;
     else 
         showAdvanced = <button onClick={() => props.onShowAdvanced()}>Advanced</button>;
     return showAdvanced;
@@ -181,6 +181,7 @@ export default class Settings extends React.Component {
                         onConnectDevice={(deviceType, deviceId) => this.onSelectFec(deviceId)}
                         onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.FEC_DEVICE_TYPE)}  />                    
                     <ToggleAdvancedTrainerSettings 
+                            ant={this.context.ant.fec}
                             showAdvanced={this.state.showAdvanced} 
                             onShowAdvanced={() => this.onShowAdvanced()} /> 
                 </DeviceSettings>
@@ -194,7 +195,7 @@ export default class Settings extends React.Component {
                             onConnectDevice={(deviceType, deviceId) => this.onSelectBp(deviceId)}
                             onDisconnectDevice={() => this.context.disconnectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE)} />
                     </DeviceSettings>
-                    { this.state.showAdvanced && <WrappedAdvancedPowerMeterSettings 
+                    { this.state.showAdvanced && <WrappedAdvancedPowerMeterSettings ant={this.context.ant.fec}
                         onChange={this.props.onChange} /> }
                 </div>
                 <DeviceSettings {...this.props}
