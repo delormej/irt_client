@@ -2,15 +2,17 @@
 
 import React from 'react';
 import SetResistance from '../views/setResistance';
+import { AntContext } from '../lib/ant/antProvider';
 
 export default class AdvancedTrainerSettings extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onBatteryStatus = this.onBatteryStatus.bind(this);
-        this.onCommandStatus = this.onCommandStatus.bind(this);
+        this.onRefresh = this.onRefresh.bind(this);
+        this.onSave = this.onSave.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSetResistance = this.handleSetResistance.bind(this);
+
         this.state = {
             deviceId: props.DeviceId,
             rawSettings: props.Settings,
@@ -160,3 +162,5 @@ export default class AdvancedTrainerSettings extends React.Component {
         );
     }
 }
+
+AdvancedTrainerSettings.contextType = AntContext;

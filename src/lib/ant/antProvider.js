@@ -41,7 +41,8 @@ class AntProvider extends React.Component {
   }
 
   openStick() {
-    this.stick = new GarminStick3();
+    const DEBUG_LEVEL3 = 3;
+    this.stick = new GarminStick3(DEBUG_LEVEL3);
     this.stick.on('startup', this.onStartup);
     this.stick.on('read', this.onRead);
 
@@ -164,7 +165,9 @@ class AntProvider extends React.Component {
     console.log('disconnected', deviceType);
     
     // Retry connection.
-    this.connectDevice(deviceType);
+    var deviceId = this.getDeviceId(deviceType);
+    if (deviceId > 0)
+      this.connectDevice(deviceType, deviceId);
   }
 
   componentDidMount() {
@@ -178,29 +181,50 @@ class AntProvider extends React.Component {
     // console.log("data", data);
   }
   
+  getDeviceId(deviceType) {
+    var deviceId = 0;
+    switch (deviceType) {
+      case DeviceType.FEC_DEVICE_TYPE:
+        deviceId = this.state.fecDeviceId;
+        break;
+      case DeviceType.BIKE_POWER_DEVICE_TYPE:
+        deviceId = this.state.bpDeviceId;
+        break;
+      case DeviceType.HEART_RATE_DEVICE_TYPE:
+        deviceId = this.state.hrmDeviceId;
+        break;
+      default:
+        break;
+    }
+    return deviceId;
+  }
+
   connectAll(fecDeviceId, bpDeviceId, hrmDeviceId) {
     if (this.stick.isScanning()) {
       // this.scanner.stop();
       this.stick.detach_all();
       this.clearAvailableDevices();
     }
+
+    this.setState( { 
+      hrmDeviceId: hrmDeviceId,
+      fecDeviceId: fecDeviceId,
+      bpDeviceId: bpDeviceId
+     });
+
     if (fecDeviceId > 0) {
-      this.setState( { fecDeviceId: fecDeviceId });
       this.connectDevice(DeviceType.FEC_DEVICE_TYPE, fecDeviceId);
     }
     if (bpDeviceId > 0) {
-        this.setState( { bpDeviceId: bpDeviceId });
         this.connectDevice(DeviceType.BIKE_POWER_DEVICE_TYPE, bpDeviceId);
     }
     if (hrmDeviceId > 0) {
-        this.setState( { hrmDeviceId: hrmDeviceId });
         this.connectDevice(DeviceType.HEART_RATE_DEVICE_TYPE, hrmDeviceId);
     }    
   }
 
-  connectDevice(deviceType) {
+  connectDevice(deviceType, deviceId) {
     let sensor = null;
-    let deviceId = 0;
     let channel = 0;
 
     try {
@@ -208,17 +232,14 @@ class AntProvider extends React.Component {
         case DeviceType.HEART_RATE_DEVICE_TYPE:
           sensor = this.ant.hrm;
           channel = DeviceChannel.ANT_HRM_CHANNEL_ID;
-          deviceId = this.state.hrmDeviceId;
           break;
         case DeviceType.FEC_DEVICE_TYPE:
           sensor = this.ant.fec;
           channel = DeviceChannel.ANT_FEC_CHANNEL_ID;
-          deviceId = this.state.fecDeviceId;
           break;
         case DeviceType.BIKE_POWER_DEVICE_TYPE:
           sensor = this.ant.bp;
           channel = DeviceChannel.ANT_BP_CHANNEL_ID;
-          deviceId = this.state.bpDeviceId;
           break;
         default:
           console.log("ERROR: connectDevice, invalid deviceType!");
